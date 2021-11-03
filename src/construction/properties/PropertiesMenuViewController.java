@@ -204,6 +204,16 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         nameField.setText(data.getName());
     }
 
+    public void setWireMenu(WireData data) {
+        currentObjectData = data;
+
+        // Show correct controls
+        nameControl.setVisible(true);
+
+        // Fill in data
+        nameField.setText(data.getName());
+    }
+
     private void setLinkBreakersMenu() {
         // Show correct controls
         linkBreakersControl.setVisible(true);

@@ -8,4 +8,5 @@ public interface Visitor {
     void setBreakerMenu(BreakerData data);
     void setAssociationMenu(AssociationData data);
     void setSourceMenu(SourceData data);
+    void setWireMenu(WireData data);
 }
