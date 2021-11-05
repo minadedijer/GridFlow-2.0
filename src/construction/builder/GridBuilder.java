@@ -46,7 +46,7 @@ public class GridBuilder {
 
         if(!verifyPlacement(device)) return false;
 
-        Wire inWire = new Wire(position);
+        Wire inWire = new Wire(position, false);
         Component conflictComponent = verifySingleWirePosition(inWire);
         if(conflictComponent == null) { // use new wire
             device.connectInWire(inWire);
@@ -65,7 +65,7 @@ public class GridBuilder {
 
 
         Point outPoint = position.translate(0, device.getComponentIcon().getHeight());
-        Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position));
+        Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position), false);
         conflictComponent = verifySingleWirePosition(outWire);
         if(conflictComponent == null) { // use new wire
             device.connectOutWire(outWire);
@@ -107,7 +107,7 @@ public class GridBuilder {
                 powerSource.setAngle(properties.getRotation());
                 if(!verifyPlacement(powerSource)) return false;
 
-                Wire outWire = new Wire(position);
+                Wire outWire = new Wire(position, false);
                 Component conflictComponent = verifySingleWirePosition(outWire);
                 if(conflictComponent == null) { // use new wire
                     powerSource.connectWire(outWire);
@@ -132,7 +132,7 @@ public class GridBuilder {
                 turbine.setAngle(properties.getRotation());
                 if(!verifyPlacement(turbine)) return false;
 
-                Wire topWire = new Wire(position);
+                Wire topWire = new Wire(position, false);
                 Component conflictComponent = verifySingleWirePosition(topWire);
                 if(conflictComponent == null) { // use new wire
                     turbine.connectTopOutput(topWire);
@@ -151,7 +151,7 @@ public class GridBuilder {
 
                 Point bottomPoint = position.translate(0, turbine.getComponentIcon().getHeight())
                         .rotate(turbine.getAngle(), position);
-                Wire bottomWire = new Wire(bottomPoint);
+                Wire bottomWire = new Wire(bottomPoint, false);
                 conflictComponent = verifySingleWirePosition(bottomWire);
                 if(conflictComponent == null) { // use new wire
                     turbine.connectBottomOutput(bottomWire);
@@ -175,8 +175,8 @@ public class GridBuilder {
     }
 
     public boolean placeWire(Point startPosition, Point endPosition, boolean shouldConnect) {
-        Wire tempWire = new Wire(startPosition, endPosition);
-        Wire wire = new Wire(getTrueStart(tempWire), getTrueEnd(tempWire));
+        Wire tempWire = new Wire(startPosition, endPosition, false);
+        Wire wire = new Wire(getTrueStart(tempWire), getTrueEnd(tempWire), false);
 
         List<Component> wireConflicts = verifyWirePlacement(wire);
 

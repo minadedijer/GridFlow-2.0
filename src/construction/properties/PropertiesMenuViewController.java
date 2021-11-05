@@ -209,9 +209,14 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
 
         // Show correct controls
         nameControl.setVisible(true);
+        namePosControl.setVisible(true);
+        defaultStateControl.setVisible(true);
 
         // Fill in data
         nameField.setText(data.getName());
+        defStateTG.selectToggle(data.isClosed() ? toggleClosed : toggleOpen);
+        orientRightLeft(data.isVertical());
+        namePosTG.selectToggle(data.isNameRight() ? toggleRight : toggleLeft);
     }
 
     private void setLinkBreakersMenu() {
