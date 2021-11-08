@@ -179,7 +179,7 @@ public class Wire extends Closeable{
             icon = ComponentIconCreator.getBlankWireIcon(start, end);
         } else {
             // has isClosed to check for underground!
-            icon = ComponentIconCreator.getWireIcon(start, end, bridgePoints, isClosedByDefault());
+            icon = ComponentIconCreator.getWireIcon(start, end, bridgePoints, !isClosedByDefault());
         }
         icon.setWireIconEnergyState(false);
         icon.setComponentIconID(getId().toString());
