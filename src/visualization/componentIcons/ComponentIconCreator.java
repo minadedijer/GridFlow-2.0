@@ -187,8 +187,7 @@ public class ComponentIconCreator {
     }
 
     public static DeviceIcon getTransformerIcon(Point p) {
-
-        // change to new icon that can't be split energy maybe
+// change to new icon that can't be split energy maybe
         DeviceIcon transformerIcon = new DeviceIcon();
 
         Line inLine = createLine(p, p.translate(0, 1.1 * Globals.UNIT));
@@ -216,6 +215,27 @@ public class ComponentIconCreator {
         transformerIcon.setBoundingRect(new Dimensions(3, 3), p);
         transformerIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
         return transformerIcon;
+
+    }
+
+    public static DeviceIcon getPoleIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        DeviceIcon poleIcon = new DeviceIcon();
+
+        Circle circle = createCircle(p);
+        poleIcon.addInNodeShapes(circle);
+
+        Line outLine = createLine(p.translate(0, 1.9 * Globals.UNIT), p.translate(0, 3 * Globals.UNIT));
+        Line outEdgeL = createLine(p.translate(-1 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(-1 * Globals.UNIT, 2.1 * Globals.UNIT));
+        Line outEdgeR = createLine(p.translate(1 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(1 * Globals.UNIT, 2.1 * Globals.UNIT));
+        poleIcon.addOutNodeShapes(outLine, outEdgeL, outEdgeR);
+
+        poleIcon.setBoundingRect(new Dimensions(3, 3), p);
+        poleIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
+        return poleIcon;
     }
 
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
@@ -498,7 +518,15 @@ public class ComponentIconCreator {
 
         return line;
     }
+    private static Circle createCircle(Point p) {
+        Circle circle = new Circle();
+        circle.setStrokeWidth(Globals.STROKE_WIDTH);
+        circle.setCenterX(p.getX());
+        circle.setCenterY(p.getY());
+        circle.setRadius(1);
 
+        return circle;
+    }
     private static Line createRoundedLine(Point p1, Point p2) {
         Line line = createLine(p1, p2);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
