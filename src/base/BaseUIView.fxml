@@ -1,56 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-
-<?import javafx.scene.input.KeyCodeCombination?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="base.BaseUIViewController"
-      fx:id="TopMenu" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      style="-fx-border-color: LIGHTGRAY; -fx-background-color: LIGHTGRAY" translateX="-1.0" translateY="-2.0"
-      BorderPane.alignment="TOP_LEFT">
+<VBox fx:id="TopMenu" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-border-color: LIGHTGRAY; -fx-background-color: LIGHTGRAY" translateX="-1.0" translateY="-2.0" BorderPane.alignment="TOP_LEFT" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.BaseUIViewController">
     <children>
-        <AnchorPane fx:id="TopMenuPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                    nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0">
+        <AnchorPane fx:id="TopMenuPane" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0">
             <children>
-                <MenuBar fx:id="TopMenuBar" maxHeight="Infinity" maxWidth="Infinity" minHeight="30.0" minWidth="-Infinity"
-                         prefHeight="30.0"
-                         styleClass="solid"
-                         style="-fx-alignment: center-left;"
-                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <MenuBar fx:id="TopMenuBar" minHeight="30.0" minWidth="-Infinity" prefHeight="30.0" style="-fx-alignment: center-left;" styleClass="solid" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <menus>
-                        <Menu fx:id="FileMenu" mnemonicParsing="false"
-                              style="-fx-font-size: 14; -fx-text-alignment: center;" text="File">
+                        <Menu fx:id="FileMenu" mnemonicParsing="false" style="-fx-font-size: 14; -fx-text-alignment: center;" text="File">
                             <items>
-                                <MenuItem fx:id="clearButton" mnemonicParsing="false" text="Clear Grid" onAction="#clearGrid"/>
-                                <MenuItem fx:id="saveButton" mnemonicParsing="false" text="Save Grid" onAction="#saveGrid"/>
-                                <MenuItem mnemonicParsing="false" text="Load Grid" onAction="#loadGrid"/>
-                                <MenuItem fx:id="manageAccountsButton" mnemonicParsing="false" text="Manage Accounts" onAction="#manageAccounts"/>
-                                <MenuItem mnemonicParsing="false" text="Switch Account" onAction="#switchAccounts"/>
-                                <MenuItem mnemonicParsing="false" text="Exit" onAction="#exit"/>
+                                <MenuItem fx:id="clearButton" mnemonicParsing="false" onAction="#clearGrid" text="Clear Grid" />
+                                <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#saveGrid" text="Save Grid" />
+                                <MenuItem mnemonicParsing="false" onAction="#loadGrid" text="Load Grid" />
+                                <MenuItem fx:id="manageAccountsButton" mnemonicParsing="false" onAction="#manageAccounts" text="Manage Accounts" />
+                                <MenuItem mnemonicParsing="false" onAction="#switchAccounts" text="Switch Account" />
+                                <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
                             </items>
                         </Menu>
-                        <Menu fx:id="EditMenu" mnemonicParsing="false"
-                              style="-fx-font-size: 14; -fx-text-alignment: center;" text="Edit">
+                        <Menu fx:id="EditMenu" mnemonicParsing="false" style="-fx-font-size: 14; -fx-text-alignment: center;" text="Edit">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Select All" onAction="#selectAll"/>
-                                <MenuItem fx:id="deleteButton" text="Delete" onAction="#delete"/>
-                                <MenuItem fx:id="undoButton" text="Undo" onAction="#undo"/>
-                                <MenuItem fx:id="redoButton" text="Redo" onAction="#redo"/>
+                                <MenuItem mnemonicParsing="false" onAction="#selectAll" text="Select All" />
+                                <MenuItem fx:id="deleteButton" onAction="#delete" text="Delete" />
+                                <MenuItem fx:id="undoButton" onAction="#undo" text="Undo" />
+                                <MenuItem fx:id="redoButton" onAction="#redo" text="Redo" />
                             </items>
                         </Menu>
-                        <Menu fx:id="ViewMenu" mnemonicParsing="false"
-                              style="-fx-text-alignment: center; -fx-font-size: 14;" text="View">
+                        <Menu fx:id="ViewMenu" mnemonicParsing="false" style="-fx-text-alignment: center; -fx-font-size: 14;" text="View">
                             <items>
-                                <MenuItem fx:id="ZoomToFit" mnemonicParsing="false" text="Center on Grid" onAction="#zoomToFit"/>
+                                <MenuItem fx:id="ZoomToFit" mnemonicParsing="false" onAction="#zoomToFit" text="Center on Grid" />
                                 <!--MenuItem fx:id="AboutItem" mnemonicParsing="false" text="About"  onAction="#openAboutPage"/-->
-                                <MenuItem fx:id="Fullscreen" mnemonicParsing="false" text="Toggle Fullscreen" onAction="#toggleFullscreen"/>
+                                <MenuItem fx:id="Fullscreen" mnemonicParsing="false" onAction="#toggleFullscreen" text="Toggle Fullscreen" />
                             </items>
                         </Menu>
                     </menus>

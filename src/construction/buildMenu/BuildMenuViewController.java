@@ -24,7 +24,7 @@ public class BuildMenuViewController {
     // JavaFX Elements
     public AnchorPane rootNode;
     public HBox MenuContainer;
-    public VBox componentMenu;
+    public HBox componentMenu;
 
     public Button InteractToolButton;
     public Button SelectToolButton;
@@ -38,6 +38,9 @@ public class BuildMenuViewController {
     public Button TransformerButton;
     public Button JumperButton;
     public Button CutoutButton;
+
+    //messing with buttons
+    public Button TestButton;
 
     private Button currentButton;
 
@@ -63,6 +66,12 @@ public class BuildMenuViewController {
         buildMenuFunctions.setBuildMenuData(ToolType.INTERACT, null);
         InteractToolButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
         currentButton = InteractToolButton;
+    }
+
+    public void selectTestTool() {
+        buildMenuFunctions.setBuildMenuData(ToolType.INTERACT, null);
+        TestButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
+        currentButton = TestButton;
     }
 
     public void selectSelectTool() {
