@@ -3,6 +3,7 @@ package construction.builder;
 import construction.AssociationMoveContext;
 import construction.properties.PropertiesData;
 import construction.ComponentType;
+import construction.properties.objectData.ObjectData;
 import domain.Association;
 import domain.Grid;
 import domain.components.*;
@@ -10,6 +11,7 @@ import domain.geometry.Point;
 import javafx.scene.shape.Rectangle;
 import visualization.componentIcons.ComponentIcon;
 
+import javax.print.attribute.standard.OrientationRequested;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +20,12 @@ public class GridBuilder {
 
     private Grid grid;
     private PropertiesData properties;
+
+    // Added by Ali, to keep track of which components are copied
+    private String copiedComponentName;
+    private boolean isCopying;
+    private ObjectData originalComponentData;
+
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -38,13 +46,20 @@ public class GridBuilder {
     // TODO: abstract conflictcomponent logic to it's own method to avoid duplicate code
     //  this is done in multiple places in this file.
 
+    // Ali: Changing placeDevice so that it checks if the component is being copied, and if so, changes the
+    //      name of the component
     public boolean placeDevice(Point position, ComponentType componentType) {
 
         Device device = createDevice(position, componentType);
         if (device == null) return false;
         device.setAngle(properties.getRotation());
+        System.out.println("placeDevice in GridBuilder: \n ");
+        System.out.println("\n Copying:  " + isCopying);
+        // Added by ali, checks if component is a copy, and if so, fills it with its necessary data
+        checkIfComponentIsACopy(device);
 
         if(!verifyPlacement(device)) return false;
+        // Return the data to the copied component
 
         Wire inWire = new Wire(position);
         Component conflictComponent = verifySingleWirePosition(inWire);
@@ -105,6 +120,7 @@ public class GridBuilder {
             case POWER_SOURCE -> {
                 PowerSource powerSource = new PowerSource("", position, true);
                 powerSource.setAngle(properties.getRotation());
+                checkIfComponentIsACopy(powerSource);
                 if(!verifyPlacement(powerSource)) return false;
 
                 Wire outWire = new Wire(position);
@@ -130,6 +146,7 @@ public class GridBuilder {
             case TURBINE -> {
                 Turbine turbine = new Turbine("", position, true);
                 turbine.setAngle(properties.getRotation());
+                checkIfComponentIsACopy(turbine);
                 if(!verifyPlacement(turbine)) return false;
 
                 Wire topWire = new Wire(position);
@@ -173,6 +190,14 @@ public class GridBuilder {
         }
         return true;
     }
+
+    private void checkIfComponentIsACopy (Component component) {
+
+        if (isCopying) {
+            component.applyComponentData(originalComponentData);
+        }
+    }
+
 
     public boolean placeWire(Point startPosition, Point endPosition, boolean shouldConnect) {
         Wire tempWire = new Wire(startPosition, endPosition);
@@ -327,6 +352,8 @@ public class GridBuilder {
                 conflicts = conflicts + 1;
             }
         }
+        System.out.println("THis is conflicts: " + conflicts);
+
         return conflicts == 0;
     }
 
@@ -439,6 +466,23 @@ public class GridBuilder {
             default -> false;
         };
     }
+    public String getCopiedComponentName () {
+        return copiedComponentName;
+    }
+    public boolean getIsCopying () {
+        return isCopying;
+    }
+    public ObjectData getOriginalComponentData () {
+         return originalComponentData;
+    }
+    public void setCopiedComponentName(String nameOfOriginalComponent) {
+        copiedComponentName = nameOfOriginalComponent;
+    }
+    public void setIsCopying(boolean isComponentBeingCopied) {
+        isCopying = isComponentBeingCopied;
+    }
 
-
+    public void setOriginalComponentData(ObjectData dataToBeCopied) {
+        originalComponentData = dataToBeCopied;
+    }
 }

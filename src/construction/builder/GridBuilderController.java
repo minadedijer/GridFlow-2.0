@@ -4,6 +4,7 @@ import application.events.*;
 import construction.*;
 import construction.buildMenu.BuildMenuData;
 import construction.canvas.GridCanvasFacade;
+import construction.ghosts.GhostManagerController;
 import construction.history.GridMemento;
 import construction.properties.objectData.ObjectData;
 import construction.properties.PropertiesData;
@@ -42,9 +43,12 @@ public class GridBuilderController {
     // used for double click actions, like placing a wire or placing an association
     private DoubleClickPlacementContext doubleClickPlacementContext;
 
+    // Added by Ali to be able to copy components.
+    private GhostManagerController ghostManagerController;
+
     public GridBuilderController(Grid grid, GridFlowEventManager gridFlowEventManager,
                                  DoubleClickPlacementContext doubleClickPlacementContext, BuildMenuData buildMenuData,
-                                 PropertiesData propertiesData, GridCanvasFacade canvasFacade) {
+                                 PropertiesData propertiesData, GridCanvasFacade canvasFacade, GhostManagerController GMC) {
         this.model = new GridBuilder(grid, propertiesData);
         this.gridFlowEventManager = gridFlowEventManager;
         this.doubleClickPlacementContext = doubleClickPlacementContext;
@@ -52,6 +56,8 @@ public class GridBuilderController {
         this.propertiesData = new PropertiesData();
         this.grid = grid;
         this.canvasFacade = canvasFacade;
+        this.ghostManagerController = GMC;
+
     }
 
     public void buildDataChanged() {
@@ -180,15 +186,20 @@ public class GridBuilderController {
 
         event.consume();
     };
-
+// Changed by Ali to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if (buildData.toolType != ToolType.PLACE) return;
         if (!event.isPrimaryButtonDown()) return;
 
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
-
+        System.out.println("THis is coordPoint: " + coordPoint);
         SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
         boolean res = model.placeComponent(coordPoint, buildData.componentType);
+        if (model.getIsCopying()) {
+            buildData.toolType = ToolType.SELECT;
+            ghostManagerController.buildMenuDataChanged();
+            model.setIsCopying(false);
+        }
         if (res) {
             gridFlowEventManager.sendEvent(e); // save the pre place grid state
             gridFlowEventManager.sendEvent(new GridChangedEvent());
@@ -424,4 +435,7 @@ public class GridBuilderController {
     public EventHandler<MouseEvent> getShowMoveCursorOnTextHoverHandler() {
         return showMoveCursorOnTextHoverHandler;
     }
+
+    public GridBuilder getModel() { return model;}
+
 }

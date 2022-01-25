@@ -27,6 +27,9 @@ public class GridCanvasFacade {
     private EventHandler<MouseEvent> lockComponentEventHandler;
     private EventHandler<MouseEvent> selectSingleComponentHandler;
 
+    // Added by Ali
+    private EventHandler<MouseEvent> copyComponentEventHandler;
+
     // Association Event Handlers
     // Handlers to resize the association box using the handles on each corner
     private EventHandler<MouseEvent> beginResizeAssociationHandler;
@@ -91,7 +94,10 @@ public class GridCanvasFacade {
         Rectangle boundingRect = icon.getBoundingRect();
         boundingRect.addEventHandler(MouseEvent.MOUSE_PRESSED, toggleComponentEventHandler);
         boundingRect.addEventHandler(MouseEvent.MOUSE_PRESSED, lockComponentEventHandler);
-        boundingRect.addEventHandler(MouseEvent.MOUSE_PRESSED, selectSingleComponentHandler);
+        //boundingRect.addEventHandler(MouseEvent.MOUSE_PRESSED, selectSingleComponentHandler);
+
+        // Added by Ali
+        //boundingRect.addEventHandler(MouseEvent.MOUSE_PRESSED, copyComponentEventHandler);
 
         canvas.componentGroup.getChildren().add(componentNode);
         canvas.energyOutlineGroup.getChildren().add(energyOutlineNodes);
@@ -189,6 +195,11 @@ public class GridCanvasFacade {
 
     public void setSelectSingleComponentHandler(EventHandler<MouseEvent> selectSingleComponentHandler) {
         this.selectSingleComponentHandler = selectSingleComponentHandler;
+    }
+
+    // Added by Ali
+    public void setCopyComponentEventHandler(EventHandler<MouseEvent> copyComponentEventHandler) {
+        this.copyComponentEventHandler = copyComponentEventHandler;
     }
 
     public void setBeginResizeAssociationHandler(EventHandler<MouseEvent> beginResizeAssociationHandler) {

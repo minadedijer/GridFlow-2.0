@@ -35,6 +35,9 @@ public class AssociationGhostManager {
 
         crosshair.getChildren().addAll(hline, vline);
         crosshair.setOpacity(0.5);
+
+        System.out.println("This is in ghosts/associationghostmanager \n");
+
         return crosshair;
     }
 
@@ -53,6 +56,7 @@ public class AssociationGhostManager {
         ghostRect.setStroke(Color.BLACK);
         ghostRect.setStrokeWidth(2);
 
+
         ghost = ghostRect;
         canvasFacade.addOverlayNode(ghost);
     }
@@ -60,6 +64,8 @@ public class AssociationGhostManager {
     public void updateGhostPosition(Point pos) {
         ghost.setTranslateX(pos.getX());
         ghost.setTranslateY(pos.getY());
+        System.out.println("This is in ghosts/associationghostmanager, func updateGhostPos \n");
+
     }
 
     public void setGhostEnabled(boolean enabled) {

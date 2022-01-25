@@ -72,10 +72,29 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         // Wire Placing and Association Placing
         // Used to share if a double click is in progress, and where the first click was if so
         DoubleClickPlacementContext doubleClickContext = new DoubleClickPlacementContext();
-        gridBuilderController = new GridBuilderController(grid, gridFlowEventManager, doubleClickContext, buildMenuData,
-                propertiesData, canvasFacade);
+
+
+        // To create copying, Ali gave SelectionManagerController (SMC) access to the functions and variables of ghostmanagercontroller (GMC) and
+        //      gridBuilderController (GBC).
+        // Explanation: Since SMC needs the functionality to copy SINGLE components, it needed the abilities to activate the ghost mode from GMC, and
+        //      the placeComponent from GBC. Additionally, SMC and GBC now share the same gridBuilder class, so that both can pass accurate data to the
+        //      placeComponent function.
+
+        // Ali: Passing in the gridBuilderController(GBC) into the selectionManagerController(SMC), so that SMC can have access
+        //      to the same grid that GBC has.
         ghostManagerController = new GhostManagerController(canvasFacade, doubleClickContext, buildMenuData, propertiesData);
-        selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid, gridFlowEventManager);
+
+        gridBuilderController = new GridBuilderController(grid, gridFlowEventManager, doubleClickContext, buildMenuData,
+                propertiesData, canvasFacade, ghostManagerController);
+        // Original:
+        //selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
+        //        gridFlowEventManager, propertiesData);
+        // changed what's going into SelectionManagerController (SMC), added the above ghostmanagercontroller (GMC).
+        //      I did this so that SMC could have access to GMC functions when copying components on the grid
+        selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
+                gridFlowEventManager, propertiesData, ghostManagerController, gridBuilderController);
+
+
         gridHistorianController = new GridHistorianController(grid, gridFlowEventManager);
         canvasExpandController = new CanvasExpandController(stage.getScene(), canvasFacade);
         gridFlowEventManager.addListener(gridHistorianController);
@@ -251,6 +270,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     @Override
     public void delete() {
+        System.out.println("This is in Construction Controller, function delete\n");
         selectionManagerController.delete();
     }
 
@@ -319,7 +339,9 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_DRAGGED, selectionManagerController.getExpandSelectionEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, selectionManagerController.getEndSelectionEventHandler());
         canvasFacade.setSelectSingleComponentHandler(selectionManagerController.getSelectSingleComponentHandler());
-
+        // Added by Ali
+        //canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, selectionManagerController.getCopyComponentEventHandler());
+        canvasFacade.setCopyComponentEventHandler(selectionManagerController.getCopyComponentEventHandler());
         // association events
         canvasFacade.setConsumeAssociationClicksHandler(consumeAssociationClicksHandler);
 

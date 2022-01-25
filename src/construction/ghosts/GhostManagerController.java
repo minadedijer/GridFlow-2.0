@@ -69,11 +69,43 @@ public class GhostManagerController implements GridFlowEventListener {
     // responds to mouse moving and moves the ghost
     private final EventHandler<MouseEvent> ghostMoveEventHandler = event -> {
         if (ghostModel.isGhostEnabled()) {
+            System.out.println("This is in ghosts/associationghostmanager, from0 ghost Move EventHandler\n");
             Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
 
             if (doubleClickContext.placing) {
                 Point endPoint = coordPoint.clampPerpendicular(doubleClickContext.beginPoint);
                 ghostModel.extendGhostWire(doubleClickContext.beginPoint, endPoint);
+                System.out.println("Placing the wire component\n");
+
+
+            } else {
+                ghostModel.updateGhostPosition(coordPoint);
+            }
+        } else if (associationModel.isGhostEnabled()) {
+            Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
+            if (doubleClickContext.placing) {
+                associationModel.setAssociationRectangleGhost(doubleClickContext.beginPoint, coordPoint);
+                System.out.println("Placing the association component\n");
+
+            } else {
+                associationModel.updateGhostPosition(coordPoint);
+            }
+        }
+    };
+
+    // Added by Ali
+
+    private final EventHandler<MouseEvent> ghostCopyAndMoveEventHandler = event -> {
+        if (ghostModel.isGhostEnabled()) {
+            System.out.println("This is in ghosts/associationghostmanager, from0 ghost Move EventHandler\n");
+            Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
+
+            if (doubleClickContext.placing) {
+                Point endPoint = coordPoint.clampPerpendicular(doubleClickContext.beginPoint);
+                ghostModel.extendGhostWire(doubleClickContext.beginPoint, endPoint);
+
+
+
             } else {
                 ghostModel.updateGhostPosition(coordPoint);
             }
@@ -112,4 +144,9 @@ public class GhostManagerController implements GridFlowEventListener {
     public EventHandler<MouseEvent> getBeginHoverAssociationHandler() {
         return beginHoverAssociationHandler;
     }
+
+    public EventHandler<MouseEvent> getGhostCopyAndMoveEventHandler() {return ghostCopyAndMoveEventHandler;}
+
+    public GhostManager getGhostModel() { return ghostModel;}
+
 }
