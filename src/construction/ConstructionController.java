@@ -190,9 +190,23 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     private final EventHandler<KeyEvent> handleRKeyRotation = event -> {
         if (event.getCode() != KeyCode.R) return;
+
         rotate(event.isControlDown());
         event.consume();
     };
+// Added by Ali to copy components with ctrl + c
+    private final EventHandler<KeyEvent> handleCtrlCKey = event -> {
+        if (event.getCode() != KeyCode.C) return;
+        if (event.isControlDown()) {
+            copySingleComponent();
+        }
+        event.consume();
+
+    };
+
+    private void copySingleComponent () {
+        this.selectionManagerController.copySingleComponent();
+    }
 
     private final EventHandler<MouseEvent> handleMiddleMouseRotation = event -> {
         if (!event.isMiddleButtonDown()) return;
@@ -324,6 +338,10 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         stage.addEventFilter(KeyEvent.KEY_PRESSED, handleToggleDefaultState);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, handleComponentShortcut);
 
+        // Added by Ali to implement Ctrl + C by copying handleRKeyRotation
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, handleCtrlCKey);
+
+
         // builder events
         canvasFacade.setToggleComponentEventHandler(gridBuilderController.getToggleComponentEventHandler());
         canvasFacade.setLockComponentEventHandler(gridBuilderController.getLockComponentEventHandler());
@@ -340,8 +358,6 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, selectionManagerController.getEndSelectionEventHandler());
         canvasFacade.setSelectSingleComponentHandler(selectionManagerController.getSelectSingleComponentHandler());
         // Added by Ali
-        //canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, selectionManagerController.getCopyComponentEventHandler());
-        canvasFacade.setCopyComponentEventHandler(selectionManagerController.getCopyComponentEventHandler());
         // association events
         canvasFacade.setConsumeAssociationClicksHandler(consumeAssociationClicksHandler);
 

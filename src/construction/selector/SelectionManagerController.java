@@ -40,6 +40,7 @@ public class SelectionManagerController {
     private GhostManagerController ghostController;
     private GhostManager ghostModel;
     private GridBuilderController gridBuilderController;
+    private String targetIDForSingleComponent;
 
     public SelectionManagerController(GridCanvasFacade canvasFacade, BuildMenuData buildMenuData,
                                       Grid grid, GridFlowEventManager gridFlowEventManager,
@@ -66,29 +67,13 @@ public class SelectionManagerController {
     }
 
     private final EventHandler<MouseEvent> startSelectionEventHandler = event -> {
+
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
         System.out.println("Got to Start Selection\n\n");
-        String targetID = ((Node)event.getTarget()).getId();
+        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
-        if(event.isAltDown()) {
-            System.out.println("Alt is pressed\n\n");
-            Component comp = grid.getComponent(targetID);
-            buildMenuData.componentType = comp.getComponentType();
-            buildMenuData.toolType = ToolType.PLACE;
-            ghostController.buildMenuDataChanged();
-            String compName = comp.getName();
-            ObjectData originalComponentData = comp.getComponentObjectData();
-            System.out.println("This is the name: \n" +compName +"\n");
 
-            modelGrid.setCopiedComponentName(compName);
-            modelGrid.setIsCopying(true);
-            modelGrid.setOriginalComponentData(originalComponentData);
-
-        }
-        else {
-            System.out.println("Alt is NOT pressed\n\n");
-        }
         dragSelecting = true;
         model.beginSelection(event.getX(), event.getY());
 
@@ -112,33 +97,6 @@ public class SelectionManagerController {
         model.endSelection();
         event.consume();
     };
-    // Added by Ali
-    private final EventHandler<MouseEvent> copyComponentEventHandler = event -> {
-        if (buildMenuData.toolType != ToolType.SELECT) return;
-        if (!event.isPrimaryButtonDown()) return;
-        ghostModel.setGhostEnabled(true);
-        ghostModel.setGhostIcon(buildMenuData.componentType);
-        /*
-        Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
-        System.out.println("THis is coordPoint: " + coordPoint);
-        SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
-        String targetID = ((Node)event.getTarget()).getId();
-        boolean res = false;
-        if (event.isAltDown()) {
-            res = modelGrid.placeComponent(coordPoint, ComponentType.CUTOUT);
-        }
-        if (res) {
-            gridFlowEventManager.sendEvent(e); // save the pre place grid state
-            gridFlowEventManager.sendEvent(new GridChangedEvent());
-        } else {
-            gridFlowEventManager.sendEvent(new PlacementFailedEvent());
-        }
-    */
-        event.consume();
-    };
-
-
-
 
 
 
@@ -168,8 +126,35 @@ public class SelectionManagerController {
         }
     }
 
+    // Added by Ali to copy a single component.
+    // To activate this function, select a single item, and press CTRL + C
+    public void copySingleComponent () {
+        if (this.model.getSelectedIDs().size() == 1) {
+            // In the case that an association was selected
+            if (grid.getComponent(targetIDForSingleComponent) == null) {
+                return;
+            }
+            else {
+                // Find the specific component from the targetID
+                Component comp = grid.getComponent(targetIDForSingleComponent);
 
+                // Activate the ghost mode to place the new component
+                buildMenuData.componentType = comp.getComponentType();
+                buildMenuData.toolType = ToolType.PLACE;
+                ghostController.buildMenuDataChanged();
 
+                // Gather the component's data to be sent to the right class object
+                String compName = comp.getName();
+                ObjectData originalComponentData = comp.getComponentObjectData();
+
+                // Set the details of the copied component in the modelGrid
+                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setIsCopying(true);
+                modelGrid.setOriginalComponentData(originalComponentData);
+
+            }
+        }
+    }
 
 
     public void selectAll() {
@@ -191,9 +176,7 @@ public class SelectionManagerController {
     public EventHandler<MouseEvent> getSelectSingleComponentHandler() {
         return selectSingleComponentHandler;
     }
-    // Added by Ali
-    public EventHandler<MouseEvent> getCopyComponentEventHandler() {
-        return copyComponentEventHandler;
-    }
+
+    public SelectionManager getModel() {return model;}
 
 }

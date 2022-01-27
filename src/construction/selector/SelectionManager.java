@@ -189,8 +189,11 @@ public class SelectionManager {
                     // comp1 and comp2 are not wires
                     return 0;
                 }
+
             }
         });
     }
+
+    public TriggeredObservableList<String> getSelectedIDs() {return selectedIDs;}
 
 }
