@@ -226,13 +226,6 @@ public class ComponentIconCreator {
         Circle circle = createCircle(p);
         poleIcon.addInNodeShapes(circle);
 
-        Line outLine = createLine(p.translate(0, 1.9 * Globals.UNIT), p.translate(0, 3 * Globals.UNIT));
-        Line outEdgeL = createLine(p.translate(-1 * Globals.UNIT, 1.9 * Globals.UNIT),
-                p.translate(-1 * Globals.UNIT, 2.1 * Globals.UNIT));
-        Line outEdgeR = createLine(p.translate(1 * Globals.UNIT, 1.9 * Globals.UNIT),
-                p.translate(1 * Globals.UNIT, 2.1 * Globals.UNIT));
-        poleIcon.addOutNodeShapes(outLine, outEdgeL, outEdgeR);
-
         poleIcon.setBoundingRect(new Dimensions(3, 3), p);
         poleIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
         return poleIcon;
@@ -523,7 +516,7 @@ public class ComponentIconCreator {
         circle.setStrokeWidth(Globals.STROKE_WIDTH);
         circle.setCenterX(p.getX());
         circle.setCenterY(p.getY());
-        circle.setRadius(1);
+        circle.setRadius(4);
 
         return circle;
     }
