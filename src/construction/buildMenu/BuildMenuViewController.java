@@ -36,6 +36,7 @@ public class BuildMenuViewController {
     public Button Breaker12Button;
     public Button Breaker70Button;
     public Button TransformerButton;
+    public Button PoleButton;
     public Button JumperButton;
     public Button CutoutButton;
 
@@ -136,7 +137,12 @@ public class BuildMenuViewController {
         TransformerButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
         currentButton = TransformerButton;
     }
-
+    public void selectPoleTool() {
+        currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
+        buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.POLE);
+        PoleButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
+        currentButton = PoleButton;
+    }
     public void selectCutoutTool() {
         currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
         buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.CUTOUT);
