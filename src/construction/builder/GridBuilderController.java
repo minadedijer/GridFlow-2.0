@@ -186,10 +186,18 @@ public class GridBuilderController {
 
         event.consume();
     };
+
 // Changed by Ali to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
+        if(event.getEventType()==MouseEvent.MOUSE_RELEASED)
+        {
+            if(model.getIsDragging() == false) {
+                return;
+            }
+        }
+        else if (!event.isPrimaryButtonDown()) return;
         if (buildData.toolType != ToolType.PLACE) return;
-        if (!event.isPrimaryButtonDown()) return;
+
 
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
         System.out.println("THis is coordPoint: " + coordPoint);
@@ -199,6 +207,11 @@ public class GridBuilderController {
             buildData.toolType = ToolType.SELECT;
             ghostManagerController.buildMenuDataChanged();
             model.setIsCopying(false);
+        }
+        if (model.getIsDragging()) {
+            buildData.toolType = ToolType.SELECT;
+            ghostManagerController.buildMenuDataChanged();
+            model.setIsDragging(false);
         }
         if (res) {
             gridFlowEventManager.sendEvent(e); // save the pre place grid state

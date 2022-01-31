@@ -59,6 +59,13 @@ public class GhostManagerController implements GridFlowEventListener {
         }
     }
 
+    //Regina made this for dragging components
+    public void dragGhost()
+    {
+        ghostModel.setGhostEnabled(true);
+        ghostModel.setGhostIcon(buildData.componentType);
+    }
+
     public void propertiesDataChanged(boolean rotationChanged, boolean defaultStateChanged) {
         if (buildData.toolType == ToolType.PLACE) {
             if (rotationChanged) ghostModel.rotateGhostIcon();

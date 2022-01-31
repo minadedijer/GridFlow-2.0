@@ -76,20 +76,21 @@ public class SelectionManagerController {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
         System.out.println("Got to Start Selection\n\n");
-        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
+        //targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
-        /*if(targetIDForSingleComponent != null)
-        {
-            dragSelecting = false;
-            dragMoving = false;
-
+        if(targetIDForSingleComponent != null) {
+            String newId = ((Node) event.getTarget()).getId();
+            //select same component again
+            if(newId != null) {
+                if (newId.equals(targetIDForSingleComponent)) {
+                    dragSelecting = false;
+                    dragMoving = true;
+                    dragSingleComponent();
+                    return;
+                }
+            }
         }
-        else
-        {
-            dragSelecting = true;
-            dragMoving = false;
-            model.beginSelection(event.getX(), event.getY());
-        }*/
+        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
         dragSelecting = true;
         dragMoving = false;
@@ -103,10 +104,10 @@ public class SelectionManagerController {
         if (buildMenuData.toolType != ToolType.SELECT) return;
         if (!dragSelecting)
         {
-            if(!dragMoving) {
+            /*if(!dragMoving) {
                 dragMoving = true;
                 dragSingleComponent();
-            }
+            }*/
             return;
         }
 
@@ -167,8 +168,13 @@ public class SelectionManagerController {
 
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
+
+
                 buildMenuData.toolType = ToolType.PLACE;
-                ghostController.buildMenuDataChanged();
+                //ghostController.buildMenuDataChanged();
+                System.out.println("DRAG GHOST");
+                ghostController.dragGhost();
+
 
                 // Gather the component's data to be sent to the right class object
                 String compName = comp.getName();
@@ -176,8 +182,12 @@ public class SelectionManagerController {
 
                 // Set the details of the copied component in the modelGrid
                 modelGrid.setCopiedComponentName(compName);
-                modelGrid.setIsCopying(true);
                 modelGrid.setOriginalComponentData(originalComponentData);
+
+                modelGrid.setIsDragging(true);
+
+                model.deleteSelectedItems();
+
 
             }
         }

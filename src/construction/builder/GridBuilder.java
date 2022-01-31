@@ -26,6 +26,9 @@ public class GridBuilder {
     private boolean isCopying;
     private ObjectData originalComponentData;
 
+    //Added by Regina for drag components
+    private boolean isDragging = false;
+
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -193,7 +196,7 @@ public class GridBuilder {
 
     private void checkIfComponentIsACopy (Component component) {
 
-        if (isCopying) {
+        if (isCopying || isDragging) {
             component.applyComponentData(originalComponentData);
         }
     }
@@ -466,6 +469,7 @@ public class GridBuilder {
             default -> false;
         };
     }
+
     public String getCopiedComponentName () {
         return copiedComponentName;
     }
@@ -484,5 +488,16 @@ public class GridBuilder {
 
     public void setOriginalComponentData(ObjectData dataToBeCopied) {
         originalComponentData = dataToBeCopied;
+    }
+
+
+    //Drag functions
+    public void setIsDragging(boolean drag)
+    {
+        isDragging=drag;
+    }
+    public boolean getIsDragging()
+    {
+        return isDragging;
     }
 }
