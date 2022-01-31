@@ -42,6 +42,11 @@ public class SelectionManagerController {
     private GridBuilderController gridBuilderController;
     private String targetIDForSingleComponent;
 
+
+    //Regina added this to keep track of the drag state
+    private boolean dragMoving = false;
+
+
     public SelectionManagerController(GridCanvasFacade canvasFacade, BuildMenuData buildMenuData,
                                       Grid grid, GridFlowEventManager gridFlowEventManager,
                                       PropertiesData propertiesData, GhostManagerController GMC,
@@ -73,8 +78,21 @@ public class SelectionManagerController {
         System.out.println("Got to Start Selection\n\n");
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
+        /*if(targetIDForSingleComponent != null)
+        {
+            dragSelecting = false;
+            dragMoving = false;
+
+        }
+        else
+        {
+            dragSelecting = true;
+            dragMoving = false;
+            model.beginSelection(event.getX(), event.getY());
+        }*/
 
         dragSelecting = true;
+        dragMoving = false;
         model.beginSelection(event.getX(), event.getY());
 
         event.consume();
@@ -83,7 +101,14 @@ public class SelectionManagerController {
     private final EventHandler<MouseEvent> expandSelectionEventHandler = event -> {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
-        if (!dragSelecting) return;
+        if (!dragSelecting)
+        {
+            if(!dragMoving) {
+                dragMoving = true;
+                dragSingleComponent();
+            }
+            return;
+        }
 
         model.expandSelection(event.getX(), event.getY());
         event.consume();
@@ -104,6 +129,7 @@ public class SelectionManagerController {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
 
+        System.out.println("single select!");
 
         String targetID = ((Node)event.getTarget()).getId();
 
@@ -123,6 +149,37 @@ public class SelectionManagerController {
         if (numDeleted != 0) {
             gridFlowEventManager.sendEvent(new SaveStateEvent(preDeleteState));
             gridFlowEventManager.sendEvent(new GridChangedEvent());
+        }
+    }
+
+    //Added by Regina - drags a single component
+    public void dragSingleComponent()
+    {
+        System.out.println("YOU HAVE REACHED THE DRAG FUNCTION");
+        if (this.model.getSelectedIDs().size() == 1) {
+            // In the case that an association was selected
+            if (grid.getComponent(targetIDForSingleComponent) == null) {
+                return;
+            }
+            else {
+                // Find the specific component from the targetID
+                Component comp = grid.getComponent(targetIDForSingleComponent);
+
+                // Activate the ghost mode to place the new component
+                buildMenuData.componentType = comp.getComponentType();
+                buildMenuData.toolType = ToolType.PLACE;
+                ghostController.buildMenuDataChanged();
+
+                // Gather the component's data to be sent to the right class object
+                String compName = comp.getName();
+                ObjectData originalComponentData = comp.getComponentObjectData();
+
+                // Set the details of the copied component in the modelGrid
+                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setIsCopying(true);
+                modelGrid.setOriginalComponentData(originalComponentData);
+
+            }
         }
     }
 
