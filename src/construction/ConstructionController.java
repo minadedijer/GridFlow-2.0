@@ -74,23 +74,19 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         DoubleClickPlacementContext doubleClickContext = new DoubleClickPlacementContext();
 
 
-        // To create copying, Ali gave SelectionManagerController (SMC) access to the functions and variables of ghostmanagercontroller (GMC) and
+        // To create copying, SelectionManagerController (SMC) has access to the functions and variables of ghostmanagercontroller (GMC) and
         //      gridBuilderController (GBC).
-        // Explanation: Since SMC needs the functionality to copy SINGLE components, it needed the abilities to activate the ghost mode from GMC, and
+        // Since SMC needs the functionality to copy SINGLE components, it needed the abilities to activate the ghost mode from GMC, and
         //      the placeComponent from GBC. Additionally, SMC and GBC now share the same gridBuilder class, so that both can pass accurate data to the
         //      placeComponent function.
 
-        // Ali: Passing in the gridBuilderController(GBC) into the selectionManagerController(SMC), so that SMC can have access
+        // Passing in the gridBuilderController(GBC) into the selectionManagerController(SMC), so that SMC can have access
         //      to the same grid that GBC has.
         ghostManagerController = new GhostManagerController(canvasFacade, doubleClickContext, buildMenuData, propertiesData);
 
         gridBuilderController = new GridBuilderController(grid, gridFlowEventManager, doubleClickContext, buildMenuData,
                 propertiesData, canvasFacade, ghostManagerController);
-        // Original:
-        //selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
-        //        gridFlowEventManager, propertiesData);
-        // changed what's going into SelectionManagerController (SMC), added the above ghostmanagercontroller (GMC).
-        //      I did this so that SMC could have access to GMC functions when copying components on the grid
+
         selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
                 gridFlowEventManager, propertiesData, ghostManagerController, gridBuilderController);
 
@@ -194,7 +190,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         rotate(event.isControlDown());
         event.consume();
     };
-// Added by Ali to copy components with ctrl + c
+    // creates event handler for when user presses ctrl+c
     private final EventHandler<KeyEvent> handleCtrlCKey = event -> {
         if (event.getCode() != KeyCode.C) return;
         if (event.isControlDown()) {
@@ -338,7 +334,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         stage.addEventFilter(KeyEvent.KEY_PRESSED, handleToggleDefaultState);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, handleComponentShortcut);
 
-        // Added by Ali to implement Ctrl + C by copying handleRKeyRotation
+        // Implements Ctrl + C
         stage.addEventFilter(KeyEvent.KEY_PRESSED, handleCtrlCKey);
 
 
@@ -349,13 +345,13 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceWireEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceAssociationEventHandler());
 
-        //Regina added this for drag
+        // Tracks when the mouse is dragging a component, and places newly moved component
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, gridBuilderController.getPlaceComponentEventHandler());
 
 
         // ghost manager events
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_MOVED, ghostManagerController.getGhostMoveEventHandler());
-        //Regina Added fo drag
+        // Tracks when a mouse is dragging component, and visually creates the component being dragged
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_DRAGGED, ghostManagerController.getGhostMoveEventHandler());
 
 
@@ -364,7 +360,6 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_DRAGGED, selectionManagerController.getExpandSelectionEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, selectionManagerController.getEndSelectionEventHandler());
         canvasFacade.setSelectSingleComponentHandler(selectionManagerController.getSelectSingleComponentHandler());
-        // Added by Ali
         // association events
         canvasFacade.setConsumeAssociationClicksHandler(consumeAssociationClicksHandler);
 

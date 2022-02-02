@@ -34,16 +34,19 @@ public class SelectionManagerController {
     private PropertiesData propertiesData;
     private GridBuilder modelGrid;
 
-    // Ali added this: Trying to give ghost capabilities and gridbuilding capabilities to selection manager.
-    //      This is so that the user can select a single item, copy it, and place it somewhere else.
+    // To implement copying and pasting, the selection manager needs to be able to copy data and place a new component.
+    //      To do that, SMC needs the functonality of the below controllers.
+    //      Ghost controls visual placement, gridBuilder control placement of the component logically.
 
     private GhostManagerController ghostController;
     private GhostManager ghostModel;
     private GridBuilderController gridBuilderController;
+
+    // This variable is to store the targetID for a single component, to be used in the copy-paste functions.
     private String targetIDForSingleComponent;
 
 
-    //Regina added this to keep track of the drag state
+    // This boolean keeps track of the drag state.
     private boolean dragMoving = false;
 
 
@@ -56,7 +59,7 @@ public class SelectionManagerController {
         this.gridFlowEventManager = gridFlowEventManager;
         this.grid = grid;
         this.propertiesData = propertiesData;
-        // Added by ali
+        // Added to accomodate the new controllers
         this.modelGrid = GBC.getModel();
         this.ghostController = GMC;
         this.ghostModel = ghostController.getGhostModel();
@@ -75,8 +78,8 @@ public class SelectionManagerController {
 
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
-        System.out.println("Got to Start Selection\n\n");
-        //targetIDForSingleComponent = ((Node)event.getTarget()).getId();
+        System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
+        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
         if(targetIDForSingleComponent != null) {
             String newId = ((Node) event.getTarget()).getId();
@@ -104,10 +107,6 @@ public class SelectionManagerController {
         if (buildMenuData.toolType != ToolType.SELECT) return;
         if (!dragSelecting)
         {
-            /*if(!dragMoving) {
-                dragMoving = true;
-                dragSingleComponent();
-            }*/
             return;
         }
 
@@ -119,8 +118,13 @@ public class SelectionManagerController {
         if (buildMenuData.toolType != ToolType.SELECT) return;
         if (!dragSelecting) return;
 
-        dragSelecting = false;
+            dragSelecting = false;
         model.endSelection();
+        if (this.model.getSelectedIDs().size() != 0) {
+            targetIDForSingleComponent = this.model.getSelectedIDs().get(0);
+            System.out.println(targetIDForSingleComponent);
+
+        }
         event.consume();
     };
 
@@ -130,9 +134,10 @@ public class SelectionManagerController {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
 
-        System.out.println("single select!");
+        System.out.println("Function: selectSingleComponentHandler, in src/construction/selector/selectionManagerController\n");
 
         String targetID = ((Node)event.getTarget()).getId();
+        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
 
         if (event.isControlDown()) {
@@ -153,10 +158,10 @@ public class SelectionManagerController {
         }
     }
 
-    //Added by Regina - drags a single component
+    // Drags a single component. To use, click-and-hold on a single component and move mouse.
     public void dragSingleComponent()
     {
-        System.out.println("YOU HAVE REACHED THE DRAG FUNCTION");
+        System.out.println("Function: DragSingleComponent, in src/construction/selector/selectionManagerController\n");
         if (this.model.getSelectedIDs().size() == 1) {
             // In the case that an association was selected
             if (grid.getComponent(targetIDForSingleComponent) == null) {
@@ -171,7 +176,6 @@ public class SelectionManagerController {
 
 
                 buildMenuData.toolType = ToolType.PLACE;
-                //ghostController.buildMenuDataChanged();
                 System.out.println("DRAG GHOST");
                 ghostController.dragGhost();
 
@@ -193,11 +197,14 @@ public class SelectionManagerController {
         }
     }
 
-    // Added by Ali to copy a single component.
     // To activate this function, select a single item, and press CTRL + C
     public void copySingleComponent () {
+
         if (this.model.getSelectedIDs().size() == 1) {
             // In the case that an association was selected
+            System.out.println("This is targetID :  \n");
+            System.out.println(targetIDForSingleComponent);
+
             if (grid.getComponent(targetIDForSingleComponent) == null) {
                 return;
             }

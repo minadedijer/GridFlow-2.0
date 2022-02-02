@@ -21,12 +21,13 @@ public class GridBuilder {
     private Grid grid;
     private PropertiesData properties;
 
-    // Added by Ali, to keep track of which components are copied
+    // Additional variables so that the copy and drag functions can be implemented after components
+    //      have been clicked on.
     private String copiedComponentName;
     private boolean isCopying;
     private ObjectData originalComponentData;
 
-    //Added by Regina for drag components
+    // Variable that keeps track of whether the component is being dragged
     private boolean isDragging = false;
 
 
@@ -37,6 +38,8 @@ public class GridBuilder {
 
     // This is what runs when a component is placed on the canvas standalone
     public boolean placeComponent(Point position, ComponentType componentType) {
+        System.out.println("Function: placeComponent, in src/construction/builder/GridBuilder\n");
+
         if (isDevice(componentType)) {
             return placeDevice(position, componentType);
         }
@@ -49,8 +52,9 @@ public class GridBuilder {
     // TODO: abstract conflictcomponent logic to it's own method to avoid duplicate code
     //  this is done in multiple places in this file.
 
-    // Ali: Changing placeDevice so that it checks if the component is being copied, and if so, changes the
-    //      name of the component
+    // PlaceDevice checks if the component is being copied, and if so, copies the
+    //      data to the new placed device. Otherwise, it verifies placement and places
+    //      components.
     public boolean placeDevice(Point position, ComponentType componentType) {
 
         Device device = createDevice(position, componentType);
@@ -58,7 +62,6 @@ public class GridBuilder {
         device.setAngle(properties.getRotation());
         System.out.println("placeDevice in GridBuilder: \n ");
         System.out.println("\n Copying:  " + isCopying);
-        // Added by ali, checks if component is a copy, and if so, fills it with its necessary data
         checkIfComponentIsACopy(device);
 
         if(!verifyPlacement(device)) return false;
