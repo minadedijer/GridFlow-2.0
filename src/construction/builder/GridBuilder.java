@@ -90,6 +90,7 @@ public class GridBuilder {
     public Device createDevice(Point point, ComponentType componentType) {
         return switch (componentType) {
             case TRANSFORMER -> new Transformer("", point);
+            case POLE -> new Pole("", point);
             case BREAKER_12KV -> new Breaker("", point, Voltage.KV12, properties.getDefaultState(), null);
             case BREAKER_70KV -> new Breaker("", point, Voltage.KV70, properties.getDefaultState(), null);
             case JUMPER -> new Jumper("", point, properties.getDefaultState());
