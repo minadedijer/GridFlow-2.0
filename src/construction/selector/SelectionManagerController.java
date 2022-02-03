@@ -50,7 +50,7 @@ public class SelectionManagerController {
     private boolean dragMoving = false;
 
     //this keeps the grid state before dragging
-    private SaveStateEvent preDragState = null;
+    //private SaveStateEvent preDragState = null;
 
 
     public SelectionManagerController(GridCanvasFacade canvasFacade, BuildMenuData buildMenuData,
@@ -81,7 +81,7 @@ public class SelectionManagerController {
 
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
-        if(dragMoving) return;
+        //if(dragMoving) return;
 
         System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
@@ -175,8 +175,9 @@ public class SelectionManagerController {
                 return;
             }
             else {
-                preDragState =new SaveStateEvent(grid.makeSnapshot());
-                gridFlowEventManager.sendEvent(preDragState);
+                SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
+                modelGrid.setPreDragSaveState(e);
+                gridFlowEventManager.sendEvent(e);
 
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
@@ -184,11 +185,9 @@ public class SelectionManagerController {
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
 
-
                 buildMenuData.toolType = ToolType.PLACE;
                 System.out.println("DRAG GHOST");
                 ghostController.dragGhost();
-
 
                 // Gather the component's data to be sent to the right class object
                 String compName = comp.getName();

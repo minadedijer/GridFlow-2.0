@@ -1,5 +1,6 @@
 package construction.builder;
 
+import application.events.SaveStateEvent;
 import construction.AssociationMoveContext;
 import construction.properties.PropertiesData;
 import construction.ComponentType;
@@ -29,6 +30,7 @@ public class GridBuilder {
 
     // Variable that keeps track of whether the component is being dragged
     private boolean isDragging = false;
+    private SaveStateEvent preDragState = null;
 
 
     public GridBuilder(Grid grid, PropertiesData properties) {
@@ -502,5 +504,14 @@ public class GridBuilder {
     public boolean getIsDragging()
     {
         return isDragging;
+    }
+
+    public void setPreDragSaveState(SaveStateEvent e)
+    {
+        preDragState = e;
+    }
+    public SaveStateEvent getPreDragSaveState()
+    {
+        return preDragState;
     }
 }
