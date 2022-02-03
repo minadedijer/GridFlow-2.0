@@ -43,7 +43,7 @@ public class GridBuilderController {
     // used for double click actions, like placing a wire or placing an association
     private DoubleClickPlacementContext doubleClickPlacementContext;
 
-    // Added by Ali to be able to copy components.
+    // To be able to copy components.
     private GhostManagerController ghostManagerController;
 
     public GridBuilderController(Grid grid, GridFlowEventManager gridFlowEventManager,
@@ -206,6 +206,14 @@ public class GridBuilderController {
         System.out.println("THis is coordPoint: " + coordPoint);
         SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
         boolean res = model.placeComponent(coordPoint, buildData.componentType);
+
+        if (res) {
+            if(!model.getIsDragging()) gridFlowEventManager.sendEvent(e); // save the pre place grid state
+            gridFlowEventManager.sendEvent(new GridChangedEvent());
+        } else {
+            gridFlowEventManager.sendEvent(new PlacementFailedEvent());
+        }
+
         if (model.getIsCopying()) {
             buildData.toolType = ToolType.SELECT;
             ghostManagerController.buildMenuDataChanged();
@@ -215,12 +223,6 @@ public class GridBuilderController {
             buildData.toolType = ToolType.SELECT;
             ghostManagerController.buildMenuDataChanged();
             model.setIsDragging(false);
-        }
-        if (res) {
-            gridFlowEventManager.sendEvent(e); // save the pre place grid state
-            gridFlowEventManager.sendEvent(new GridChangedEvent());
-        } else {
-            gridFlowEventManager.sendEvent(new PlacementFailedEvent());
         }
 
         event.consume();

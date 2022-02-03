@@ -49,6 +49,9 @@ public class SelectionManagerController {
     // This boolean keeps track of the drag state.
     private boolean dragMoving = false;
 
+    //this keeps the grid state before dragging
+    private SaveStateEvent preDragState = null;
+
 
     public SelectionManagerController(GridCanvasFacade canvasFacade, BuildMenuData buildMenuData,
                                       Grid grid, GridFlowEventManager gridFlowEventManager,
@@ -82,22 +85,6 @@ public class SelectionManagerController {
 
         System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
-
-
-        /*if(targetIDForSingleComponent != null) {
-            String newId = ((Node) event.getTarget()).getId();
-            //select same component again
-            if(newId != null) {
-                if (newId.equals(targetIDForSingleComponent)) {
-                    dragSelecting = false;
-                    dragMoving = true;
-                    dragSingleComponent();
-                    return;
-                }
-            }
-        }*/
-        targetIDForSingleComponent = ((Node)event.getTarget()).getId();
-
         dragSelecting = true;
         dragMoving = false;
         model.beginSelection(event.getX(), event.getY());
@@ -136,6 +123,7 @@ public class SelectionManagerController {
     private final EventHandler<MouseEvent> selectSingleComponentHandler = event -> {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
+
 
         System.out.println("Function: selectSingleComponentHandler, in src/construction/selector/selectionManagerController\n");
 
@@ -187,6 +175,9 @@ public class SelectionManagerController {
                 return;
             }
             else {
+                preDragState =new SaveStateEvent(grid.makeSnapshot());
+                gridFlowEventManager.sendEvent(preDragState);
+
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
 
