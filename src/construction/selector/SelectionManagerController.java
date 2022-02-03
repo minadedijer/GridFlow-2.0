@@ -78,10 +78,13 @@ public class SelectionManagerController {
 
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
+        if(dragMoving) return;
+
         System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
-        if(targetIDForSingleComponent != null) {
+
+        /*if(targetIDForSingleComponent != null) {
             String newId = ((Node) event.getTarget()).getId();
             //select same component again
             if(newId != null) {
@@ -92,7 +95,7 @@ public class SelectionManagerController {
                     return;
                 }
             }
-        }
+        }*/
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
         dragSelecting = true;
@@ -136,7 +139,23 @@ public class SelectionManagerController {
 
         System.out.println("Function: selectSingleComponentHandler, in src/construction/selector/selectionManagerController\n");
 
+
         String targetID = ((Node)event.getTarget()).getId();
+
+        //Drag if clicking the same thing twice
+        if(targetIDForSingleComponent != null) {
+            String newId = ((Node) event.getTarget()).getId();
+            //select same component again
+            if(newId != null) {
+                if (newId.equals(targetIDForSingleComponent)) {
+                    dragSelecting = false;
+                    dragMoving = true;
+                    dragSingleComponent();
+                    return;
+                }
+            }
+        }
+
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
 
 

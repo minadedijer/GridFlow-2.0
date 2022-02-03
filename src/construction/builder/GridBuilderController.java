@@ -189,9 +189,12 @@ public class GridBuilderController {
 
 // Changed by Ali to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
+        if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
+            return;
+        }
         if(event.getEventType()==MouseEvent.MOUSE_RELEASED)
         {
-            if(model.getIsDragging() == false) {
+            if(!model.getIsDragging()) {
                 return;
             }
         }
