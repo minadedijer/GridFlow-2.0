@@ -212,7 +212,7 @@ public class GridBuilderController {
             gridFlowEventManager.sendEvent(new GridChangedEvent());
         } else {
             gridFlowEventManager.sendEvent(new PlacementFailedEvent());
-            if(model.getIsDragging()) gridFlowEventManager.sendEvent(model.getPreDragSaveState());
+            if(model.getIsDragging()) gridFlowEventManager.sendEvent(new InternalUndoEvent());
             gridFlowEventManager.sendEvent(new GridChangedEvent());
         }
 

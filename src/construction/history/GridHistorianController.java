@@ -19,6 +19,10 @@ public class GridHistorianController implements GridFlowEventListener {
             GridMemento memento = ((SaveStateEvent)gridFlowEvent).getMemento();
             model.saveState(memento);
         }
+        if (gridFlowEvent instanceof InternalUndoEvent) {
+            undo();
+
+        }
     }
 
     public void undo() {

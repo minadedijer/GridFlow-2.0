@@ -81,7 +81,7 @@ public class SelectionManagerController {
 
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
-        //if(dragMoving) return;
+        if(targetIDForSingleComponent == ((Node)event.getTarget()).getId() && (targetIDForSingleComponent != null)) return;
 
         System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
@@ -95,11 +95,15 @@ public class SelectionManagerController {
     private final EventHandler<MouseEvent> expandSelectionEventHandler = event -> {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
+        if(dragMoving)
+        {
+            dragSingleComponent();
+            dragMoving = false;
+        }
         if (!dragSelecting)
         {
             return;
         }
-
         model.expandSelection(event.getX(), event.getY());
         event.consume();
     };
@@ -138,7 +142,7 @@ public class SelectionManagerController {
                 if (newId.equals(targetIDForSingleComponent)) {
                     dragSelecting = false;
                     dragMoving = true;
-                    dragSingleComponent();
+                    //dragSingleComponent();
                     return;
                 }
             }
