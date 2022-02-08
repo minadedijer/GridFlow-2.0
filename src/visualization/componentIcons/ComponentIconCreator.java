@@ -226,7 +226,7 @@ public class ComponentIconCreator {
         Circle circle = createCircle(p);
         poleIcon.addInNodeShapes(circle);
 
-        poleIcon.setBoundingRect(new Dimensions(3, 3), p);
+        poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-0.75*Globals.UNIT));
         poleIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
         return poleIcon;
     }
