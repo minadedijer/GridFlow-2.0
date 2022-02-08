@@ -179,12 +179,18 @@ public class SelectionManagerController {
                 return;
             }
             else {
+                // Find the specific component from the targetID
+                Component comp = grid.getComponent(targetIDForSingleComponent);
+                //Can't Drag Wires yet
+                if(comp.getComponentType()==ComponentType.WIRE){
+                    return;
+                }
+
                 SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
                 modelGrid.setPreDragSaveState(e);
                 gridFlowEventManager.sendEvent(e);
 
-                // Find the specific component from the targetID
-                Component comp = grid.getComponent(targetIDForSingleComponent);
+
 
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
