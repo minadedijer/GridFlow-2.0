@@ -72,6 +72,9 @@ public class SelectionManager {
 
     private void setSelect(String ID, boolean select) {
         Selectable item = grid.getSelectableByID(ID);
+        if(item==null){
+            return;
+        }
         item.setSelect(select);
     }
 
