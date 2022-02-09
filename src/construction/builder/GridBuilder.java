@@ -475,6 +475,14 @@ public class GridBuilder {
         };
     }
 
+    // Created to define when a component is a group of devices and sources.
+    private boolean IsGroup (ComponentType componentType) {
+        return switch (componentType) {
+            case ATS -> true;
+            default -> false;
+        };
+    }
+
     public String getCopiedComponentName () {
         return copiedComponentName;
     }

@@ -187,7 +187,8 @@ public class GridBuilderController {
         event.consume();
     };
 
-// Changed by Ali to add the copy feature in place component
+// Place component now checks if an object is being dragged or copied, and sets the respective variables.
+
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
             return;

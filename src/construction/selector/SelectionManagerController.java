@@ -242,6 +242,7 @@ public class SelectionManagerController {
 
                 // Set the details of the copied component in the modelGrid
                 modelGrid.setCopiedComponentName(compName);
+
                 modelGrid.setIsCopying(true);
                 modelGrid.setOriginalComponentData(originalComponentData);
 
