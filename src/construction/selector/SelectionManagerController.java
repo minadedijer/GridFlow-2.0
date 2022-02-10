@@ -186,9 +186,9 @@ public class SelectionManagerController {
                     return;
                 }
 
-                SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
-                modelGrid.setPreDragSaveState(e);
-                gridFlowEventManager.sendEvent(e);
+//                SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
+//                modelGrid.setPreDragSaveState(e);
+//                gridFlowEventManager.sendEvent(e);
 
 
 
@@ -209,6 +209,9 @@ public class SelectionManagerController {
 
                 modelGrid.setIsDragging(true);
 
+                SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
+                modelGrid.setPreDragSaveState(e);
+                gridFlowEventManager.sendEvent(e);
                 model.deleteSelectedItems();
 
 
