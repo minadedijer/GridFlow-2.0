@@ -1,0 +1,3 @@
+To copy components, select the SELECT tool, and (left click + Alt) the target component. 
+
+A ghost will appear of the component, place it as you would any other component.
