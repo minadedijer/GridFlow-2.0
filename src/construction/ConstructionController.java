@@ -225,6 +225,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         componentShortcutMap.put(KeyCode.A, () -> buildMenuViewController.selectAssociationTool());
         componentShortcutMap.put(KeyCode.W, () -> buildMenuViewController.selectWireTool());
         componentShortcutMap.put(KeyCode.S, () -> buildMenuViewController.selectSelectTool());
+        componentShortcutMap.put(KeyCode.T, () -> buildMenuViewController.selectTestTool());
         componentShortcutMap.put(KeyCode.DIGIT1, () -> buildMenuViewController.selectPowerSourceTool());
         componentShortcutMap.put(KeyCode.DIGIT2, () -> buildMenuViewController.selectTurbineTool());
         componentShortcutMap.put(KeyCode.DIGIT3, () -> buildMenuViewController.selectSwitchTool());
