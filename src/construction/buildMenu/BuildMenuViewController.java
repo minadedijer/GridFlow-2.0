@@ -101,6 +101,7 @@ public class BuildMenuViewController {
     }
 
     public void selectSwitchTool() {
+        System.out.println("TGot to Switch tool ");
         currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
         buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.SWITCH);
         SwitchButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);

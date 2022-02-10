@@ -72,10 +72,25 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         // Wire Placing and Association Placing
         // Used to share if a double click is in progress, and where the first click was if so
         DoubleClickPlacementContext doubleClickContext = new DoubleClickPlacementContext();
-        gridBuilderController = new GridBuilderController(grid, gridFlowEventManager, doubleClickContext, buildMenuData,
-                propertiesData, canvasFacade);
+
+
+        // To create copying, SelectionManagerController (SMC) has access to the functions and variables of ghostmanagercontroller (GMC) and
+        //      gridBuilderController (GBC).
+        // Since SMC needs the functionality to copy SINGLE components, it needed the abilities to activate the ghost mode from GMC, and
+        //      the placeComponent from GBC. Additionally, SMC and GBC now share the same gridBuilder class, so that both can pass accurate data to the
+        //      placeComponent function.
+
+        // Passing in the gridBuilderController(GBC) into the selectionManagerController(SMC), so that SMC can have access
+        //      to the same grid that GBC has.
         ghostManagerController = new GhostManagerController(canvasFacade, doubleClickContext, buildMenuData, propertiesData);
-        selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid, gridFlowEventManager);
+
+        gridBuilderController = new GridBuilderController(grid, gridFlowEventManager, doubleClickContext, buildMenuData,
+                propertiesData, canvasFacade, ghostManagerController);
+
+        selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
+                gridFlowEventManager, propertiesData, ghostManagerController, gridBuilderController);
+
+
         gridHistorianController = new GridHistorianController(grid, gridFlowEventManager);
         canvasExpandController = new CanvasExpandController(stage.getScene(), canvasFacade);
         gridFlowEventManager.addListener(gridHistorianController);
@@ -171,9 +186,23 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     private final EventHandler<KeyEvent> handleRKeyRotation = event -> {
         if (event.getCode() != KeyCode.R) return;
+
         rotate(event.isControlDown());
         event.consume();
     };
+    // creates event handler for when user presses ctrl+c
+    private final EventHandler<KeyEvent> handleCtrlCKey = event -> {
+        if (event.getCode() != KeyCode.C) return;
+        if (event.isControlDown()) {
+            copySingleComponent();
+        }
+        event.consume();
+
+    };
+
+    private void copySingleComponent () {
+        this.selectionManagerController.copySingleComponent();
+    }
 
     private final EventHandler<MouseEvent> handleMiddleMouseRotation = event -> {
         if (!event.isMiddleButtonDown()) return;
@@ -251,6 +280,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     @Override
     public void delete() {
+        System.out.println("This is in Construction Controller, function delete\n");
         selectionManagerController.delete();
     }
 
@@ -304,6 +334,10 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         stage.addEventFilter(KeyEvent.KEY_PRESSED, handleToggleDefaultState);
         stage.addEventHandler(KeyEvent.KEY_PRESSED, handleComponentShortcut);
 
+        // Implements Ctrl + C
+        stage.addEventFilter(KeyEvent.KEY_PRESSED, handleCtrlCKey);
+
+
         // builder events
         canvasFacade.setToggleComponentEventHandler(gridBuilderController.getToggleComponentEventHandler());
         canvasFacade.setLockComponentEventHandler(gridBuilderController.getLockComponentEventHandler());
@@ -311,15 +345,21 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceWireEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceAssociationEventHandler());
 
+        // Tracks when the mouse is dragging a component, and places newly moved component
+        canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, gridBuilderController.getPlaceComponentEventHandler());
+
+
         // ghost manager events
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_MOVED, ghostManagerController.getGhostMoveEventHandler());
+        // Tracks when a mouse is dragging component, and visually creates the component being dragged
+        canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_DRAGGED, ghostManagerController.getGhostMoveEventHandler());
+
 
         // selection events
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, selectionManagerController.getStartSelectionEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_DRAGGED, selectionManagerController.getExpandSelectionEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, selectionManagerController.getEndSelectionEventHandler());
         canvasFacade.setSelectSingleComponentHandler(selectionManagerController.getSelectSingleComponentHandler());
-
         // association events
         canvasFacade.setConsumeAssociationClicksHandler(consumeAssociationClicksHandler);
 
