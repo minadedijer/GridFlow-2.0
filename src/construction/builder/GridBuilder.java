@@ -360,7 +360,7 @@ public class GridBuilder {
                 conflicts = conflicts + 1;
             }
         }
-        System.out.println("THis is conflicts: " + conflicts);
+        System.out.println("Conflicts found in src/construction/builder/GridBuilder/verifyPlacement: " + conflicts);
 
         return conflicts == 0;
     }

@@ -46,6 +46,9 @@ public class GhostManagerController implements GridFlowEventListener {
     // switches the ghosts on or off when a different tool is selected
     public void buildMenuDataChanged() {
         if (buildData.toolType == ToolType.PLACE || buildData.toolType == ToolType.WIRE) {
+            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+            System.out.println("Ghost is enabled\n");
+
             ghostModel.setGhostEnabled(true);
             ghostModel.setGhostIcon(buildData.componentType);
             associationModel.setGhostEnabled(false);
@@ -54,6 +57,8 @@ public class GhostManagerController implements GridFlowEventListener {
             associationModel.setAssociationGhost();
             ghostModel.setGhostEnabled(false);
         } else {
+            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+            System.out.println("Ghost is disabled\n");
             ghostModel.setGhostEnabled(false);
             associationModel.setGhostEnabled(false);
         }
@@ -76,7 +81,6 @@ public class GhostManagerController implements GridFlowEventListener {
     // responds to mouse moving and moves the ghost
     private final EventHandler<MouseEvent> ghostMoveEventHandler = event -> {
         if (ghostModel.isGhostEnabled()) {
-            System.out.println("Function: ghostMoveEventHandler, in src/construction/ghosts/GhostManagerController\n");
             Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
 
             if (doubleClickContext.placing) {
