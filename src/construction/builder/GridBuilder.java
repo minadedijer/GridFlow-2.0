@@ -44,27 +44,32 @@ public class GridBuilder {
         if (device == null) return false;
         device.setAngle(properties.getRotation());
 
-        if(!verifyPlacement(device)) return false;
+        if (!verifyPlacement(device)) return false;
 
         Wire inWire = new Wire(position, false);
         Component conflictComponent = verifySingleWirePosition(inWire);
-        if(conflictComponent == null) { // use new wire
+        if (conflictComponent == null) { // use new wire
             device.connectInWire(inWire);
             inWire.connect(device);
             grid.addComponent(inWire);
-        }
-        else if (conflictComponent instanceof Wire){
+        } else if (conflictComponent instanceof Wire) {
             inWire = (Wire) conflictComponent;
             device.connectInWire(inWire);
             inWire.connect(device);
-        }
-        else{
+        } else {
             conflictComponent.getComponentIcon().showError();
             return false;
         }
 
+        Point outPoint;
+        if (componentType == ComponentType.POLE) {
+            outPoint = position.translate(0, 0);
+        }
+        else
+        {
+            outPoint = position.translate(0, device.getComponentIcon().getHeight());
+        }
 
-        Point outPoint = position.translate(0, device.getComponentIcon().getHeight());
         Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position), false);
         conflictComponent = verifySingleWirePosition(outWire);
         if(conflictComponent == null) { // use new wire
