@@ -348,7 +348,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
         // Tracks when the mouse is dragging a component, and places newly moved component
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, gridBuilderController.getPlaceComponentEventHandler());
-
+        canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, gridBuilderController.getPlaceWireEventHandler());
 
         // ghost manager events
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_MOVED, ghostManagerController.getGhostMoveEventHandler());

@@ -18,6 +18,7 @@ import construction.properties.objectData.ObjectData;
 import construction.selector.observable.Observer;
 import domain.Grid;
 import domain.components.Component;
+import domain.components.Wire;
 import domain.geometry.Point;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
@@ -183,6 +184,7 @@ public class SelectionManagerController {
                 Component comp = grid.getComponent(targetIDForSingleComponent);
                 //Can't Drag Wires yet
                 if(comp.getComponentType()==ComponentType.WIRE){
+                    modelGrid.setDragWireBeginPoint(((Wire)comp).getStart());
                     return;
                 }
 

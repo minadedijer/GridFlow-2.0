@@ -32,6 +32,8 @@ public class GridBuilder {
     private boolean isDragging = false;
     private SaveStateEvent preDragState = null;
 
+    //variables for dragging wires
+    private Point dragWireBeginPoint = null;
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -513,5 +515,13 @@ public class GridBuilder {
     public SaveStateEvent getPreDragSaveState()
     {
         return preDragState;
+    }
+
+    public Point getDragWireBeginPoint() {
+        return dragWireBeginPoint;
+    }
+
+    public void setDragWireBeginPoint(Point dragWireBeginPoint) {
+        this.dragWireBeginPoint = dragWireBeginPoint;
     }
 }
