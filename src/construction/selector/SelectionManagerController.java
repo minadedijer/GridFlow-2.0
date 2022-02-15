@@ -185,6 +185,7 @@ public class SelectionManagerController {
                 //Can't Drag Wires yet
                 if(comp.getComponentType()==ComponentType.WIRE){
                     modelGrid.setDragWireBeginPoint(((Wire)comp).getStart());
+                    buildMenuData.toolType = ToolType.WIRE;
                     return;
                 }
 

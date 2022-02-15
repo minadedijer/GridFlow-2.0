@@ -114,8 +114,8 @@ public class GridBuilderController {
     // this event handler is for placing wires with the wire tool
     // it is run once per click, so the event either begin a placement or finishes a placement
     private final EventHandler<MouseEvent> placeWireEventHandler = event -> {
-        /*if (buildData.toolType != ToolType.WIRE) return;
-        if (!event.isPrimaryButtonDown()) return;*/
+        if (buildData.toolType != ToolType.WIRE) return;
+        //if (!event.isPrimaryButtonDown()) return;
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
             return;
         }
@@ -130,6 +130,7 @@ public class GridBuilderController {
             System.out.println("Dragging a wire!");
             doubleClickPlacementContext.placing = true;
             doubleClickPlacementContext.beginPoint = model.getDragWireBeginPoint();
+            getModel().setIsDragging(false);
         }
 
 
