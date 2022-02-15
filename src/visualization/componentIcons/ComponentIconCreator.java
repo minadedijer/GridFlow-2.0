@@ -227,7 +227,7 @@ public class ComponentIconCreator {
         poleIcon.addInNodeShapes(circle);
 
         poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
-        poleIcon.setFittingRect(new Dimensions(0, 0, -0.3, -0.3, -0.3, -0.3), p.translate(0,0));
+        poleIcon.setFittingRect(new Dimensions(0, 0), p);
         return poleIcon;
     }
 
