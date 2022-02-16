@@ -8,6 +8,7 @@ public enum ComponentType {
     POWER_SOURCE,
     SWITCH,
     TRANSFORMER,
+    POLE,
     TURBINE,
     WIRE
 }
