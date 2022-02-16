@@ -76,7 +76,8 @@ public class PowerSource extends Source {
     }
 
     protected void createComponentIcon() {
-        SourceIcon icon = ComponentIconCreator.getPowerSourceIcon(getPosition(), getName(), isOn(), isLocked());
+        //changed name field to fix double name printing bug
+        SourceIcon icon = ComponentIconCreator.getPowerSourceIcon(getPosition(), " ", isOn(), isLocked());
         icon.setSourceNodeEnergyState(isOn());
         icon.setWireEnergyState(false, 0);
         icon.setComponentIconID(getId().toString());

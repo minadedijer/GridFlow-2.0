@@ -79,6 +79,7 @@ public class Grid {
             return association.getAssociationObjectData();
         } else {
             return comp.getComponentObjectData();
+
         }
     }
 

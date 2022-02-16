@@ -46,6 +46,9 @@ public class GhostManagerController implements GridFlowEventListener {
     // switches the ghosts on or off when a different tool is selected
     public void buildMenuDataChanged() {
         if (buildData.toolType == ToolType.PLACE || buildData.toolType == ToolType.WIRE) {
+            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+            System.out.println("Ghost is enabled\n");
+
             ghostModel.setGhostEnabled(true);
             ghostModel.setGhostIcon(buildData.componentType);
             associationModel.setGhostEnabled(false);
@@ -54,9 +57,18 @@ public class GhostManagerController implements GridFlowEventListener {
             associationModel.setAssociationGhost();
             ghostModel.setGhostEnabled(false);
         } else {
+            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+            System.out.println("Ghost is disabled\n");
             ghostModel.setGhostEnabled(false);
             associationModel.setGhostEnabled(false);
         }
+    }
+
+    // Function that is used to enable the ghost mode when dragging components
+    public void dragGhost()
+    {
+        ghostModel.setGhostEnabled(true);
+        ghostModel.setGhostIcon(buildData.componentType);
     }
 
     public void propertiesDataChanged(boolean rotationChanged, boolean defaultStateChanged) {
@@ -74,6 +86,9 @@ public class GhostManagerController implements GridFlowEventListener {
             if (doubleClickContext.placing) {
                 Point endPoint = coordPoint.clampPerpendicular(doubleClickContext.beginPoint);
                 ghostModel.extendGhostWire(doubleClickContext.beginPoint, endPoint);
+                System.out.println("Placing the wire component\n");
+
+
             } else {
                 ghostModel.updateGhostPosition(coordPoint);
             }
@@ -81,11 +96,14 @@ public class GhostManagerController implements GridFlowEventListener {
             Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
             if (doubleClickContext.placing) {
                 associationModel.setAssociationRectangleGhost(doubleClickContext.beginPoint, coordPoint);
+                System.out.println("Placing the association component\n");
+
             } else {
                 associationModel.updateGhostPosition(coordPoint);
             }
         }
     };
+
 
     private final EventHandler<MouseEvent> endHoverAssociationHandler = event -> {
         if (buildData.toolType != ToolType.ASSOCIATION) return;
@@ -112,4 +130,8 @@ public class GhostManagerController implements GridFlowEventListener {
     public EventHandler<MouseEvent> getBeginHoverAssociationHandler() {
         return beginHoverAssociationHandler;
     }
+
+
+    public GhostManager getGhostModel() { return ghostModel;}
+
 }

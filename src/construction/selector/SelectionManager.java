@@ -72,6 +72,9 @@ public class SelectionManager {
 
     private void setSelect(String ID, boolean select) {
         Selectable item = grid.getSelectableByID(ID);
+        if(item==null){
+            return;
+        }
         item.setSelect(select);
     }
 
@@ -189,8 +192,11 @@ public class SelectionManager {
                     // comp1 and comp2 are not wires
                     return 0;
                 }
+
             }
         });
     }
+
+    public TriggeredObservableList<String> getSelectedIDs() {return selectedIDs;}
 
 }
