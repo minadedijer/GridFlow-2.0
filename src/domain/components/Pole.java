@@ -33,7 +33,7 @@ public class Pole extends Device {
         DeviceIcon icon = ComponentIconCreator.getPoleIcon(getPosition());
         icon.setDeviceEnergyStates(false, false);
         icon.setComponentIconID(getId().toString());
-        icon.setAngle(getAngle(), getPosition());
+        icon.setAngle(-45, getPosition());
         icon.setComponentName(getName(), isNameRight());
         setComponentIcon(icon);
     }
