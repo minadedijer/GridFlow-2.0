@@ -119,7 +119,7 @@ public class ComponentIcon {
             componentNamePositioner.setMinHeight(boundingRect.getHeight());
 
             // Setup Text
-            //componentName.setWrappingWidth(Globals.UNIT * 5);
+            componentName.setWrappingWidth(Globals.UNIT * 2);
             componentName.setFont(Font.font(null, 10));
         }
 
@@ -132,50 +132,44 @@ public class ComponentIcon {
         AnchorPane.setTopAnchor(componentName, componentNamePositioner.getPrefHeight()/2 - componentName.prefHeight(-1) * .4);
         double angle = -componentName.getRotate();
 
-        if(angle == -45)
-        {
-            AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth());
-            componentName.setTextAlignment(TextAlignment.LEFT);
-        }
-        else
-        {
-            if (right) {
-                if (angle == 0) {
-                    // Name on right
-                    AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth());
-                    componentName.setTextAlignment(TextAlignment.LEFT);
+        if (right) {
+            if (angle == 0) {
+                // Name on right
+                AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth());
+                componentName.setTextAlignment(TextAlignment.LEFT);
 
-                } else if (angle == 90) {
-                    AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
-                    componentName.setTextAlignment(TextAlignment.CENTER);
+            } else if (angle == 90) {
+                AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
+                componentName.setTextAlignment(TextAlignment.CENTER);
 
-                } else if (angle == 180) {
-                    // Name on left
-                    AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth());
-                    componentName.setTextAlignment(TextAlignment.RIGHT);
+            } else if (angle == 180) {
+                // Name on left
+                AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth());
+                componentName.setTextAlignment(TextAlignment.RIGHT);
 
-                } else { // angle == 270
-                    AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
-                    componentName.setTextAlignment(TextAlignment.CENTER);
-                }
-            } else {
-                if (angle == 0) {
-                    // Name on left
-                    AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth());
-                    componentName.setTextAlignment(TextAlignment.RIGHT);
-                } else if (angle == 90) {
-                    AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
-                    componentName.setTextAlignment(TextAlignment.CENTER);
+            } else { // angle == 270
+                AnchorPane.setLeftAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
+                componentName.setTextAlignment(TextAlignment.CENTER);
 
-                } else if (angle == 180) {
-                    // Name on right
-                    AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth());
-                    componentName.setTextAlignment(TextAlignment.LEFT);
+            }
+        } else {
+            if (angle == 0) {
+                // Name on left
+                AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth());
+                componentName.setTextAlignment(TextAlignment.RIGHT);
+            } else if (angle == 90) {
+                AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
+                componentName.setTextAlignment(TextAlignment.CENTER);
 
-                } else { // angle == 270
-                    AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
-                    componentName.setTextAlignment(TextAlignment.CENTER);
-                }
+            } else if (angle == 180) {
+                // Name on right
+                AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth());
+                componentName.setTextAlignment(TextAlignment.LEFT);
+
+            } else { // angle == 270
+                AnchorPane.setRightAnchor(componentName, componentNamePositioner.getPrefWidth()/2);
+                componentName.setTextAlignment(TextAlignment.CENTER);
+
             }
         }
     }
