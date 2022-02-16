@@ -87,8 +87,17 @@ public class GridBuilder {
         }
 
 
-        Point outPoint = position.translate(0, device.getComponentIcon().getHeight());
+        Point outPoint;
+        if (componentType == ComponentType.POLE) {
+            outPoint = position.translate(0, 0);
+        }
+        else
+        {
+            outPoint = position.translate(0, device.getComponentIcon().getHeight());
+        }
+
         Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position));
+
         conflictComponent = verifySingleWirePosition(outWire);
         if(conflictComponent == null) { // use new wire
             device.connectOutWire(outWire);
@@ -113,6 +122,7 @@ public class GridBuilder {
     public Device createDevice(Point point, ComponentType componentType) {
         return switch (componentType) {
             case TRANSFORMER -> new Transformer("", point);
+            case POLE -> new Pole("", point);
             case BREAKER_12KV -> new Breaker("", point, Voltage.KV12, properties.getDefaultState(), null);
             case BREAKER_70KV -> new Breaker("", point, Voltage.KV70, properties.getDefaultState(), null);
             case JUMPER -> new Jumper("", point, properties.getDefaultState());
@@ -463,7 +473,7 @@ public class GridBuilder {
 
     private boolean isDevice(ComponentType componentType) {
         return switch (componentType) {
-            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER -> true;
+            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER,POLE -> true;
             default -> false;
         };
     }

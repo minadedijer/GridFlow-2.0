@@ -216,6 +216,20 @@ public class ComponentIconCreator {
         transformerIcon.setBoundingRect(new Dimensions(3, 3), p);
         transformerIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
         return transformerIcon;
+
+    }
+
+    public static DeviceIcon getPoleIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        DeviceIcon poleIcon = new DeviceIcon();
+
+        Circle circle = createCircle(p);
+        poleIcon.addInNodeShapes(circle);
+
+        poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
+        poleIcon.setFittingRect(new Dimensions(0, 0), p);
+        return poleIcon;
     }
 
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
@@ -479,7 +493,15 @@ public class ComponentIconCreator {
 
         return line;
     }
+    private static Circle createCircle(Point p) {
+        Circle circle = new Circle();
+        circle.setStrokeWidth(Globals.STROKE_WIDTH);
+        circle.setCenterX(p.getX());
+        circle.setCenterY(p.getY());
+        circle.setRadius(4);
 
+        return circle;
+    }
     private static Line createRoundedLine(Point p1, Point p2) {
         Line line = createLine(p1, p2);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
