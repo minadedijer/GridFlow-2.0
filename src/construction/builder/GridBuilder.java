@@ -1,10 +1,12 @@
 package construction.builder;
 
+
 import application.events.SaveStateEvent;
 import construction.AssociationMoveContext;
 import construction.properties.PropertiesData;
 import construction.ComponentType;
 import construction.properties.objectData.ObjectData;
+
 import domain.Association;
 import domain.Grid;
 import domain.components.*;
@@ -12,7 +14,9 @@ import domain.geometry.Point;
 import javafx.scene.shape.Rectangle;
 import visualization.componentIcons.ComponentIcon;
 
+
 import javax.print.attribute.standard.OrientationRequested;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +25,7 @@ public class GridBuilder {
 
     private Grid grid;
     private PropertiesData properties;
+
 
     // Additional variables so that the copy and drag functions can be implemented after components
     //      have been clicked on.
@@ -33,6 +38,7 @@ public class GridBuilder {
     private SaveStateEvent preDragState = null;
 
 
+
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
         this.properties = properties;
@@ -40,7 +46,9 @@ public class GridBuilder {
 
     // This is what runs when a component is placed on the canvas standalone
     public boolean placeComponent(Point position, ComponentType componentType) {
+
         System.out.println("Function: placeComponent, in src/construction/builder/GridBuilder\n");
+
 
         if (isDevice(componentType)) {
             return placeDevice(position, componentType);
@@ -54,14 +62,17 @@ public class GridBuilder {
     // TODO: abstract conflictcomponent logic to it's own method to avoid duplicate code
     //  this is done in multiple places in this file.
 
+
     // PlaceDevice checks if the component is being copied, and if so, copies the
     //      data to the new placed device. Otherwise, it verifies placement and places
     //      components.
+
     public boolean placeDevice(Point position, ComponentType componentType) {
 
         Device device = createDevice(position, componentType);
         if (device == null) return false;
         device.setAngle(properties.getRotation());
+
         System.out.println("placeDevice in GridBuilder: \n ");
         System.out.println("\n Copying:  " + isCopying);
         checkIfComponentIsACopy(device);
@@ -82,13 +93,23 @@ public class GridBuilder {
             inWire.connect(device);
         }
         else{
+
             conflictComponent.getComponentIcon().showError();
             return false;
         }
 
 
-        Point outPoint = position.translate(0, device.getComponentIcon().getHeight());
-        Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position));
+        Point outPoint;
+        if (componentType == ComponentType.POLE) {
+            outPoint = position.translate(0, 0);
+        }
+        else
+        {
+            outPoint = position.translate(0, device.getComponentIcon().getHeight());
+        }
+
+        Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position), false);
+
         conflictComponent = verifySingleWirePosition(outWire);
         if(conflictComponent == null) { // use new wire
             device.connectOutWire(outWire);
@@ -113,6 +134,7 @@ public class GridBuilder {
     public Device createDevice(Point point, ComponentType componentType) {
         return switch (componentType) {
             case TRANSFORMER -> new Transformer("", point);
+            case POLE -> new Pole("", point);
             case BREAKER_12KV -> new Breaker("", point, Voltage.KV12, properties.getDefaultState(), null);
             case BREAKER_70KV -> new Breaker("", point, Voltage.KV70, properties.getDefaultState(), null);
             case JUMPER -> new Jumper("", point, properties.getDefaultState());
@@ -128,10 +150,12 @@ public class GridBuilder {
             case POWER_SOURCE -> {
                 PowerSource powerSource = new PowerSource("", position, true);
                 powerSource.setAngle(properties.getRotation());
+
                 checkIfComponentIsACopy(powerSource);
                 if(!verifyPlacement(powerSource)) return false;
 
                 Wire outWire = new Wire(position);
+
                 Component conflictComponent = verifySingleWirePosition(outWire);
                 if(conflictComponent == null) { // use new wire
                     powerSource.connectWire(outWire);
@@ -154,10 +178,12 @@ public class GridBuilder {
             case TURBINE -> {
                 Turbine turbine = new Turbine("", position, true);
                 turbine.setAngle(properties.getRotation());
+
                 checkIfComponentIsACopy(turbine);
                 if(!verifyPlacement(turbine)) return false;
 
                 Wire topWire = new Wire(position);
+
                 Component conflictComponent = verifySingleWirePosition(topWire);
                 if(conflictComponent == null) { // use new wire
                     turbine.connectTopOutput(topWire);
@@ -176,7 +202,9 @@ public class GridBuilder {
 
                 Point bottomPoint = position.translate(0, turbine.getComponentIcon().getHeight())
                         .rotate(turbine.getAngle(), position);
-                Wire bottomWire = new Wire(bottomPoint);
+
+                Wire bottomWire = new Wire(bottomPoint, false);
+
                 conflictComponent = verifySingleWirePosition(bottomWire);
                 if(conflictComponent == null) { // use new wire
                     turbine.connectBottomOutput(bottomWire);
@@ -199,6 +227,7 @@ public class GridBuilder {
         return true;
     }
 
+
     private void checkIfComponentIsACopy (Component component) {
 
         if (isCopying || isDragging) {
@@ -210,6 +239,7 @@ public class GridBuilder {
     public boolean placeWire(Point startPosition, Point endPosition, boolean shouldConnect) {
         Wire tempWire = new Wire(startPosition, endPosition);
         Wire wire = new Wire(getTrueStart(tempWire), getTrueEnd(tempWire));
+
 
         List<Component> wireConflicts = verifyWirePlacement(wire);
 
@@ -360,7 +390,9 @@ public class GridBuilder {
                 conflicts = conflicts + 1;
             }
         }
+
         System.out.println("Conflicts found in src/construction/builder/GridBuilder/verifyPlacement: " + conflicts);
+
 
         return conflicts == 0;
     }
@@ -463,7 +495,9 @@ public class GridBuilder {
 
     private boolean isDevice(ComponentType componentType) {
         return switch (componentType) {
-            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER -> true;
+
+            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER,POLE -> true;
+
             default -> false;
         };
     }
@@ -474,6 +508,7 @@ public class GridBuilder {
             default -> false;
         };
     }
+
 
     public String getCopiedComponentName () {
         return copiedComponentName;
@@ -514,4 +549,5 @@ public class GridBuilder {
     {
         return preDragState;
     }
+
 }

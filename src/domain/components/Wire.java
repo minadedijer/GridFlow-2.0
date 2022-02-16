@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class Wire extends Component {
+public class Wire extends Closeable{
 
     private List<Component> connections = new ArrayList<>();
     private Point start;
@@ -25,22 +25,33 @@ public class Wire extends Component {
     private boolean energized = false;
     private List<Point> bridgePoints = new ArrayList<>();
 
-    public Wire(Point p1, Point p2) {
-        super("", Point.midpoint(p1, p2));
+    public Wire(Point p1, Point p2, boolean closedByDefault) {
+        //extends component
+        //super("", Point.midpoint(p1, p2));
+        //extends closeable
+        super("", Point.midpoint(p1, p2), closedByDefault);
+
         start = p1;
         end = p2;
         createComponentIcon();
     }
 
-    public Wire(Point p) {
-        super("", p);
+    public Wire(Point p, boolean closedByDefault) {
+        //extends component
+        //super("", p);
+        //extends closeable
+        super("", p, closedByDefault);
         start = p;
         end = p;
         createComponentIcon();
     }
 
-    public Wire(String id, String name, Point start, Point end, double angle, List<Point> bridgePoints, boolean energized, boolean nameRight) {
-        super(UUID.fromString(id), name, Point.midpoint(start, end), angle, nameRight);
+    public Wire(String id, String name, Point start, Point end, double angle, List<Point> bridgePoints, boolean energized, boolean nameRight, boolean closedByDefault) {
+        //extends component
+        //super(UUID.fromString(id), name, Point.midpoint(start, end), angle, nameRight);
+        //extends closeable
+        super(UUID.fromString(id), name, Point.midpoint(start, end), angle, closedByDefault, false, false, nameRight);
+
         this.bridgePoints = bridgePoints;
         this.energized = energized;
         this.start = start;
@@ -48,9 +59,13 @@ public class Wire extends Component {
         createComponentIcon();
     }
 
-    public Wire(JsonNode node, Point start, Point end) {
+    public Wire(JsonNode node, Point start, Point end, boolean closedByDefault) {
+        //super for extending Component
+//        super(UUID.fromString(node.get("id").asText()), node.get("name").asText(),
+//                Point.midpoint(start, end), node.get("angle").asDouble(), node.get("namepos").asBoolean());
+        //super for extending Closeable
         super(UUID.fromString(node.get("id").asText()), node.get("name").asText(),
-                Point.midpoint(start, end), node.get("angle").asDouble(), node.get("namepos").asBoolean());
+                Point.midpoint(start, end), node.get("angle").asDouble(), closedByDefault, false, false, node.get("namepos").asBoolean());
 
         this.start = start;
         this.end = end;
@@ -61,6 +76,19 @@ public class Wire extends Component {
                 addBridgePoint(Point.fromString(jbp.asText()))
         );
     }
+
+    public void toggleState()
+    {
+        toggleClosed();
+        createComponentIcon();
+    }
+
+    @Override
+    public void toggleLockedState() {
+        toggleLocked(); // Changes the locked state in the parent class (closeable)
+        createComponentIcon(); // Updates the component icon to show the new state
+    }
+
 
     public void energize() {
         energized = true;
@@ -150,7 +178,8 @@ public class Wire extends Component {
         {
             icon = ComponentIconCreator.getBlankWireIcon(start, end);
         } else {
-            icon = ComponentIconCreator.getWireIcon(start, end, bridgePoints);
+            // has isClosed to check for underground!
+            icon = ComponentIconCreator.getWireIcon(start, end, bridgePoints, !isClosedByDefault());
         }
         icon.setWireIconEnergyState(false);
         icon.setComponentIconID(getId().toString());
@@ -200,7 +229,7 @@ public class Wire extends Component {
     @Override
     public ComponentMemento makeSnapshot() {
         List<String> connectionIDs = connections.stream().map(connection -> connection.getId().toString()).collect(Collectors.toList());
-        return new WireSnapshot(getId().toString(), getName(), start, end, bridgePoints, energized, connectionIDs, isNameRight());
+        return new WireSnapshot(getId().toString(), getName(), start, end, bridgePoints, energized, connectionIDs, isNameRight(), isClosedByDefault());
     }
 }
 
@@ -213,8 +242,9 @@ class WireSnapshot implements ComponentMemento {
     private boolean energized;
     private List<String> connectionIDs;
     private boolean namepos;
+    private boolean closedByDefault;
 
-    public WireSnapshot(String id, String name, Point start, Point end, List<Point> bps, boolean energized, List<String> connectionIDs, boolean namepos) {
+    public WireSnapshot(String id, String name, Point start, Point end, List<Point> bps, boolean energized, List<String> connectionIDs, boolean namepos, boolean closedByDefault) {
         this.id = id;
         this.name = name;
         this.start = start.copy();
@@ -224,12 +254,15 @@ class WireSnapshot implements ComponentMemento {
         this.energized = energized;
         this.connectionIDs = connectionIDs;
         this.namepos = namepos;
+        this.closedByDefault = closedByDefault;
+
     }
 
     @Override
     public Component getComponent() {
-        return new Wire(id, name, start, end, 0, bridgePoints, energized, namepos);
+        return new Wire(id, name, start, end, 0, bridgePoints, energized, namepos, closedByDefault);
     }
+
 
     @Override
     public List<String> getConnectionIDs() {

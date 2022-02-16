@@ -187,8 +187,7 @@ public class ComponentIconCreator {
     }
 
     public static DeviceIcon getTransformerIcon(Point p) {
-
-        // change to new icon that can't be split energy maybe
+// change to new icon that can't be split energy maybe
         DeviceIcon transformerIcon = new DeviceIcon();
 
         Line inLine = createLine(p, p.translate(0, 1.1 * Globals.UNIT));
@@ -216,6 +215,20 @@ public class ComponentIconCreator {
         transformerIcon.setBoundingRect(new Dimensions(3, 3), p);
         transformerIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
         return transformerIcon;
+
+    }
+
+    public static DeviceIcon getPoleIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        DeviceIcon poleIcon = new DeviceIcon();
+
+        Circle circle = createCircle(p);
+        poleIcon.addInNodeShapes(circle);
+
+        poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
+        poleIcon.setFittingRect(new Dimensions(0, 0), p);
+        return poleIcon;
     }
 
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
@@ -352,17 +365,34 @@ public class ComponentIconCreator {
         return turbineIcon;
     }
 
-    public static WireIcon getWireIcon(Point p1, Point p2, List<Point> bridgePoints) {
+    public static WireIcon getWireIcon(Point p1, Point p2, List<Point> bridgePoints, boolean isUnderground) {
         WireIcon wireIcon = new WireIcon();
 
-        if (p1.equals(p2)) {
-            Circle wireDot = createCircle(p1, 1, Color.BLACK, Color.BLACK);
-            wireIcon.addWireShape(wireDot);
-        } else if (bridgePoints.isEmpty()) {
-            Line wireLine = createLine(p1, p2);
-            wireIcon.addWireShape(wireLine);
-        } else { // create a line with gaps
-            createBridgeWire(p1, p2, bridgePoints).forEach(wireIcon::addWireShape);
+        if(isUnderground) {
+
+            if (p1.equals(p2)) {
+                Circle wireDot = createCircle(p1, 1, Color.BLACK, Color.BLACK);
+                wireIcon.addWireShape(wireDot);
+            } else if (bridgePoints.isEmpty()) {
+                Line wireLine = createLine(p1, p2);
+                wireIcon.addWireShape(wireLine);
+            } else { // create a line with gaps
+                createBridgeWire(p1, p2, bridgePoints).forEach(wireIcon::addWireShape);
+            }
+        }
+        else
+        {
+            if (p1.equals(p2)) {
+                Circle wireDot = createCircle(p1, 1, Color.BLACK, Color.BLACK);
+                wireIcon.addWireShape(wireDot);
+            } else if (bridgePoints.isEmpty()) {
+                Line wireLine = createLine(p1, p2);
+                wireLine.getStrokeDashArray().addAll(5.0, 5.0, 5.0);
+                wireLine.setStrokeDashOffset(5);
+                wireIcon.addWireShape(wireLine);
+            } else { // create a line with gaps
+                createBridgeWire(p1, p2, bridgePoints).forEach(wireIcon::addWireShape);
+            }
         }
 
         Dimensions dim = new Dimensions(p1.differenceX(p2)/Globals.UNIT, p1.differenceY(p2)/Globals.UNIT, 0.25);
@@ -371,6 +401,8 @@ public class ComponentIconCreator {
         Point mid = Point.midpoint(p1, p2);
         wireIcon.setBoundingRect(dim, mid);
         wireIcon.setFittingRect(dim2, mid);
+
+
 
         return wireIcon;
     }
@@ -479,7 +511,15 @@ public class ComponentIconCreator {
 
         return line;
     }
+    private static Circle createCircle(Point p) {
+        Circle circle = new Circle();
+        circle.setStrokeWidth(Globals.STROKE_WIDTH);
+        circle.setCenterX(p.getX());
+        circle.setCenterY(p.getY());
+        circle.setRadius(4);
 
+        return circle;
+    }
     private static Line createRoundedLine(Point p1, Point p2) {
         Line line = createLine(p1, p2);
         line.setStrokeLineCap(StrokeLineCap.ROUND);
