@@ -5,6 +5,7 @@ import application.events.GridFlowEventManager;
 import application.events.PlacementFailedEvent;
 import application.events.SaveStateEvent;
 import construction.ComponentType;
+import construction.DoubleClickPlacementContext;
 import construction.buildMenu.BuildMenuData;
 import construction.ToolType;
 import construction.builder.GridBuilder;
@@ -34,6 +35,7 @@ public class SelectionManagerController {
     private Grid grid;
     private PropertiesData propertiesData;
     private GridBuilder modelGrid;
+    private DoubleClickPlacementContext doubleClickContext;
 
     // To implement copying and pasting, the selection manager needs to be able to copy data and place a new component.
     //      To do that, SMC needs the functonality of the below controllers.
@@ -57,7 +59,7 @@ public class SelectionManagerController {
     public SelectionManagerController(GridCanvasFacade canvasFacade, BuildMenuData buildMenuData,
                                       Grid grid, GridFlowEventManager gridFlowEventManager,
                                       PropertiesData propertiesData, GhostManagerController GMC,
-                                      GridBuilderController GBC) {
+                                      GridBuilderController GBC, DoubleClickPlacementContext doubleClickContext) {
         this.model = new SelectionManager(canvasFacade, grid);
         this.buildMenuData = buildMenuData;
         this.gridFlowEventManager = gridFlowEventManager;
@@ -68,6 +70,7 @@ public class SelectionManagerController {
         this.ghostController = GMC;
         this.ghostModel = ghostController.getGhostModel();
         this.gridBuilderController = GBC;
+        this.doubleClickContext = doubleClickContext;
     }
 
     public void addSelectedIDObserver(Observer<String> observer) {
@@ -98,7 +101,7 @@ public class SelectionManagerController {
         if (buildMenuData.toolType != ToolType.SELECT) return;
         if(dragMoving)
         {
-            dragSingleComponent();
+            dragSingleComponent(new Point(event.getX(), event.getY()));
             dragMoving = false;
         }
         if (!dragSelecting)
@@ -170,8 +173,36 @@ public class SelectionManagerController {
         }
     }
 
+    //returns the endpoint of wire closest to point p
+    public Point getClosestEndpoint(Point p, Wire wire)
+    {
+        double x1 = wire.getStart().getX();
+        double x2 = wire.getEnd().getX();
+        double y1 = wire.getStart().getY();
+        double y2 = wire.getEnd().getY();
+        double px = p.getX();
+        double py = p.getY();
+
+        double sideA1 = Math.abs(py - y1);
+        double sideB1 = Math.abs(px - x1);
+        double sideA2 = Math.abs(py - y2);
+        double sideB2 = Math.abs(px - x2);
+
+        double dist1 = Math.hypot(sideA1, sideB1);
+        double dist2 = Math.hypot(sideA2, sideB2);
+
+        if(dist1 > dist2)
+        {
+            return wire.getStart();
+        }
+        else{
+            return wire.getEnd();
+        }
+
+    }
+
     // Drags a single component. To use, click-and-hold on a single component and move mouse.
-    public void dragSingleComponent()
+    public void dragSingleComponent(Point eventPoint)
     {
         System.out.println("Function: DragSingleComponent, in src/construction/selector/selectionManagerController\n");
         if (this.model.getSelectedIDs().size() == 1) {
@@ -182,10 +213,23 @@ public class SelectionManagerController {
             else {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
+
                 //Can't Drag Wires yet
                 if(comp.getComponentType()==ComponentType.WIRE){
-                    modelGrid.setDragWireBeginPoint(((Wire)comp).getStart());
+                    modelGrid.setIsDragging(true);
+
+                    doubleClickContext.placing = true;
+                    doubleClickContext.beginPoint = getClosestEndpoint(eventPoint, (Wire)comp);
+
                     buildMenuData.toolType = ToolType.WIRE;
+                    ghostController.dragGhost();
+
+                    SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
+                    modelGrid.setPreDragSaveState(e);
+                    gridFlowEventManager.sendEvent(e);
+                    model.deleteSelectedItems();
+                    ghostController.buildMenuDataChanged();
+                    gridFlowEventManager.sendEvent(new GridChangedEvent());
                     return;
                 }
 

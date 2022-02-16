@@ -124,13 +124,11 @@ public class GridBuilderController {
             if(!model.getIsDragging()) {
                 return;
             }
-        }
+            else{
+                getModel().setIsDragging(false);
+                buildData.toolType = ToolType.SELECT;
 
-        if(getModel().getIsDragging()){
-            System.out.println("Dragging a wire!");
-            doubleClickPlacementContext.placing = true;
-            doubleClickPlacementContext.beginPoint = model.getDragWireBeginPoint();
-            getModel().setIsDragging(false);
+            }
         }
 
 

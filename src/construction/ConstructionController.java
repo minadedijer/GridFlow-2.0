@@ -88,7 +88,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
                 propertiesData, canvasFacade, ghostManagerController);
 
         selectionManagerController = new SelectionManagerController(canvasFacade, buildMenuData, grid,
-                gridFlowEventManager, propertiesData, ghostManagerController, gridBuilderController);
+                gridFlowEventManager, propertiesData, ghostManagerController, gridBuilderController, doubleClickContext);
 
 
         gridHistorianController = new GridHistorianController(grid, gridFlowEventManager);
