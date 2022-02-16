@@ -131,14 +131,14 @@
                         </graphic>
                         <tooltip><Tooltip text="Cutout (8)"/></tooltip>
                     </Button>
-                <Button fx:id="PoleButton" styleClass="component-button" onMousePressed="#selectPoleTool" prefHeight="$ButtonSize" prefWidth="$ButtonSize">
+                <Button fx:id="TestButton" styleClass="component-button" onMousePressed="#selectInteractTool" prefHeight="$ButtonSize" prefWidth="$ButtonSize">
                     <graphic>
                         <ImageView fitHeight="$ButtonSize" fitWidth="$ButtonSize" pickOnBounds="true"
                                    preserveRatio="true">
-                            <Image url="@../../resources/PoleIcon.png"/>
+                            <Image url="@../../resources/InteractIcon.png"/>
                         </ImageView>
                     </graphic>
-                    <tooltip><Tooltip text="Pole (P)"/></tooltip>
+                    <tooltip><Tooltip text="Test (T)"/></tooltip>
                 </Button>
             </HBox>
             <Button fx:id="ShowMenuButton" onMousePressed="#toggleMenu" alignment="CENTER" contentDisplay="CENTER" prefHeight="25" prefWidth="25" maxWidth="25" minWidth="25" styleClass="expand-button" focusTraversable="false">

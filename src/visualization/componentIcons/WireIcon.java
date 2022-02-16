@@ -24,10 +24,6 @@ public class WireIcon extends ComponentIcon {
         energyOutline.setStroke(Color.YELLOW);
         energyOutline.setFill(Color.TRANSPARENT);
 
-//        //testing dashed lines here
-//        wireShape.getStrokeDashArray().addAll(5.0, 5.0, 5.0);
-//        wireShape.setStrokeDashOffset(5);
-
         addNodesToIconNode(wireShape);
         addShapesToEnergyOutlineNode(energyOutlines, wireShape);
     }

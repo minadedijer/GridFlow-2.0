@@ -93,7 +93,7 @@ public class GridFileManager {
     private Wire createWireFromJson(JsonNode node) {
         Point start = Point.fromString(node.get("start").asText());
         Point end = Point.fromString(node.get("end").asText());
-        return new Wire(node, start, end, false);
+        return new Wire(node, start, end);
     }
 
     private List<Component> getConnectionsList(JsonNode node) {
