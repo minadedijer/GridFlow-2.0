@@ -124,11 +124,11 @@ public class GridBuilderController {
             if(!model.getIsDragging()) {
                 return;
             }
-            else{
+            /*else{
                 getModel().setIsDragging(false);
                 buildData.toolType = ToolType.SELECT;
 
-            }
+            }*/
         }
 
 
@@ -141,12 +141,18 @@ public class GridBuilderController {
             boolean res = model.placeWire(doubleClickPlacementContext.beginPoint, lockedEndPoint, ctrlPressed);
             if (res) {
                 // if the wire was successfully placed
-                gridFlowEventManager.sendEvent(new SaveStateEvent(prePlaceWireMemento)); // save the snapshot to the undo history
+                if(!model.getIsDragging()) gridFlowEventManager.sendEvent(new SaveStateEvent(prePlaceWireMemento)); // save the snapshot to the undo history
                 GridChangedEvent e = new GridChangedEvent();
                 e.toolCausingChange = ToolType.WIRE;
                 gridFlowEventManager.sendEvent(e);
             } else {
+                if(model.getIsDragging()) gridFlowEventManager.sendEvent(new InternalUndoEvent());
                 gridFlowEventManager.sendEvent(new PlacementFailedEvent());
+            }
+            if (model.getIsDragging()) {
+                buildData.toolType = ToolType.SELECT;
+                ghostManagerController.buildMenuDataChanged();
+                model.setIsDragging(false);
             }
 
         } else { // begin placement
@@ -201,7 +207,7 @@ public class GridBuilderController {
         event.consume();
     };
 
-// Changed by Ali to add the copy feature in place component
+// Changed to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
             return;
