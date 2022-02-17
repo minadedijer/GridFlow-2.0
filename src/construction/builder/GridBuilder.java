@@ -42,6 +42,9 @@ public class GridBuilder {
     public boolean placeComponent(Point position, ComponentType componentType) {
         System.out.println("Function: placeComponent, in src/construction/builder/GridBuilder\n");
 
+        if (isGroup(componentType)) {
+            return placeGroup(position, componentType);
+        }
         if (isDevice(componentType)) {
             return placeDevice(position, componentType);
         }
@@ -51,12 +54,57 @@ public class GridBuilder {
         return false;
     }
 
-    // TODO: abstract conflictcomponent logic to it's own method to avoid duplicate code
+    public boolean placeGroup(Point position, ComponentType componentType) {
+
+        if (componentType == componentType.ATS) {
+
+            double rotation = 0;
+            boolean cutOutPlacement = true;
+            Point CutoutPoint = position.translate(-40, -80);
+
+            if (this.properties.getRotation() != 0) {
+                rotation = 90;
+            }
+            else
+                rotation = 0;
+            this.properties.setRotation(rotation);
+            cutOutPlacement = placeDevice(CutoutPoint, componentType.CUTOUT);
+
+            if (!cutOutPlacement) {
+                return false;
+            }
+
+
+            boolean generatorPlacement = true;
+            Point generatorPoint = position.translate(40, -20);
+            if (rotation == 90) {
+                rotation = 0;
+                generatorPoint = position.translate(40, -20);
+            }
+            else
+                rotation = 90;
+            this.properties.setRotation(rotation);
+            generatorPlacement = placeSource(generatorPoint, componentType.GENERATOR);
+
+            this.properties.setRotation(0);
+            if (!generatorPlacement) {
+                return false;
+            }
+
+        }
+        return true;
+
+    }
+
+
+
+        // TODO: abstract conflictcomponent logic to it's own method to avoid duplicate code
     //  this is done in multiple places in this file.
 
     // PlaceDevice checks if the component is being copied, and if so, copies the
     //      data to the new placed device. Otherwise, it verifies placement and places
     //      components.
+
     public boolean placeDevice(Point position, ComponentType componentType) {
 
         Device device = createDevice(position, componentType);
@@ -118,6 +166,7 @@ public class GridBuilder {
             case JUMPER -> new Jumper("", point, properties.getDefaultState());
             case CUTOUT -> new Cutout("", point, properties.getDefaultState());
             case SWITCH -> new Switch("", point, properties.getDefaultState());
+            case ATS -> new ATS("", point, properties.getDefaultState());
             default -> null;
         };
     }
@@ -194,6 +243,33 @@ public class GridBuilder {
                 }
 
                 grid.addComponents(turbine);
+            }
+            // Added by Ali to create an ATS system, which uses a generator
+            case GENERATOR -> {
+                Generator generator = new Generator("", position, true);
+                generator.setAngle(properties.getRotation());
+                checkIfComponentIsACopy(generator);
+                if(!verifyPlacement(generator)) return false;
+
+                Wire outWire = new Wire(position);
+                Component conflictComponent = verifySingleWirePosition(outWire);
+                if(conflictComponent == null) { // use new wire
+                    generator.connectWire(outWire);
+                    outWire.connect(generator);
+                    grid.addComponent(outWire);
+                }
+                else if (conflictComponent instanceof Wire){ // there is a wire conflict, connect this wire
+                    outWire = (Wire) conflictComponent;
+                    generator.connectWire(outWire);
+                    outWire.connect(generator);
+                }
+                else{
+                    conflictComponent.getComponentIcon().showError();
+                    return false;
+                }
+
+                grid.addComponents(generator);
+
             }
         }
         return true;
@@ -461,9 +537,19 @@ public class GridBuilder {
     }
 
 
+    // created by Ali to determine if a group placement is occuring
+
+    private boolean isGroup(ComponentType componentType) {
+        return switch (componentType) {
+            case ATS -> true;
+            default -> false;
+        };
+    }
+
+
     private boolean isDevice(ComponentType componentType) {
         return switch (componentType) {
-            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER -> true;
+            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER, ATS -> true;
             default -> false;
         };
     }

@@ -61,6 +61,9 @@ public class GhostManager {
             case TRANSFORMER -> ComponentIconCreator.getTransformerIcon(pos);
             case TURBINE -> ComponentIconCreator.getTurbineIcon(pos, true, false);
             case WIRE -> ComponentIconCreator.getWireIcon(pos, pos, List.of());
+            // Added by Ali, need to have component Icon Creator for ATS
+            case GENERATOR -> ComponentIconCreator.getPowerSourceIcon(pos, "", true, false);
+            case ATS -> ComponentIconCreator.getSwitchIcon(pos, properties.getDefaultState(), properties.getDefaultState(), false);
         };
     }
 

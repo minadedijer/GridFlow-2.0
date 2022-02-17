@@ -192,14 +192,25 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
     };
     // creates event handler for when user presses ctrl+c
     private final EventHandler<KeyEvent> handleCtrlCKey = event -> {
+
+
+        // adding temporary functionality to place ATS
+        if (event.isControlDown() && event.getCode() == KeyCode.H) {
+            temporaryATS();
+        }
+
         if (event.getCode() != KeyCode.C) return;
+
         if (event.isControlDown()) {
             copySingleComponent();
         }
         event.consume();
 
     };
-
+    // further temporary by Ali
+    private void temporaryATS() {
+        this.selectionManagerController.temporaryATSComponent();
+    }
     private void copySingleComponent () {
         this.selectionManagerController.copySingleComponent();
     }

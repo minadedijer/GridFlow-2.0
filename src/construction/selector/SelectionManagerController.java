@@ -219,6 +219,14 @@ public class SelectionManagerController {
         }
     }
 
+    public void temporaryATSComponent() {
+
+        buildMenuData.componentType = ComponentType.ATS;
+        buildMenuData.toolType = ToolType.PLACE;
+        ghostController.buildMenuDataChanged();
+    }
+
+
     // To activate this function, select a single item, and press CTRL + C
     public void copySingleComponent () {
 
