@@ -232,6 +232,40 @@ public class ComponentIconCreator {
         return poleIcon;
     }
 
+    //THIS JUST MAKES A TRANSFORMER NEEDS UPDATE
+    public static DeviceIcon getATSIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        DeviceIcon ATSIcon = new DeviceIcon();
+
+        Line inLine = createLine(p, p.translate(0, 1.1 * Globals.UNIT));
+        Line inEdgeL = createLine(p.translate(-1 * Globals.UNIT, 0.9 * Globals.UNIT),
+                p.translate(-1 * Globals.UNIT, 1.1 * Globals.UNIT));
+        Line inEdgeR = createLine(p.translate(1 * Globals.UNIT, 0.9 * Globals.UNIT),
+                p.translate(1 * Globals.UNIT, 1.1 * Globals.UNIT));
+        Arc arcIn1 = createHalfArc(p.translate(-0.75 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
+        Arc arcIn2 = createHalfArc(p.translate(-0.25 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
+        Arc arcIn3 = createHalfArc(p.translate(0.25 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
+        Arc arcIn4 = createHalfArc(p.translate(0.75 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
+        ATSIcon.addInNodeShapes(inLine, inEdgeL, inEdgeR, arcIn1, arcIn2, arcIn3, arcIn4);
+
+        Line outLine = createLine(p.translate(0, 1.9 * Globals.UNIT), p.translate(0, 3 * Globals.UNIT));
+        Line outEdgeL = createLine(p.translate(-1 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(-1 * Globals.UNIT, 2.1 * Globals.UNIT));
+        Line outEdgeR = createLine(p.translate(1 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(1 * Globals.UNIT, 2.1 * Globals.UNIT));
+        Arc arcOut1 = createHalfArc(p.translate(-0.75 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
+        Arc arcOut2 = createHalfArc(p.translate(-0.25 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
+        Arc arcOut3 = createHalfArc(p.translate(0.25 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
+        Arc arcOut4 = createHalfArc(p.translate(0.75 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
+        ATSIcon.addOutNodeShapes(outLine, outEdgeL, outEdgeR, arcOut1, arcOut2, arcOut3, arcOut4);
+
+        ATSIcon.setBoundingRect(new Dimensions(3, 3), p);
+        ATSIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
+        return ATSIcon;
+
+    }
+
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
         DeviceIcon jumperIcon = new DeviceIcon();
 

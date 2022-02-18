@@ -33,8 +33,7 @@ public class ATS extends Device {
     }
 
     protected void createComponentIcon() {
-        //NEED TO CHANGE TRANSFORMER ICON TO ATS ICON
-        DeviceIcon icon = ComponentIconCreator.getTransformerIcon(getPosition());
+        DeviceIcon icon = ComponentIconCreator.getATSIcon(getPosition());
         icon.setDeviceEnergyStates(false, false);
         icon.setComponentIconID(getId().toString());
         icon.setAngle(getAngle(), getPosition());
