@@ -122,6 +122,7 @@ public class GridBuilder {
     public Device createDevice(Point point, ComponentType componentType) {
         return switch (componentType) {
             case TRANSFORMER -> new Transformer("", point);
+            case ATS -> new ATS("", point);
             case POLE -> new Pole("", point);
             case BREAKER_12KV -> new Breaker("", point, Voltage.KV12, properties.getDefaultState(), null);
             case BREAKER_70KV -> new Breaker("", point, Voltage.KV70, properties.getDefaultState(), null);
@@ -473,7 +474,7 @@ public class GridBuilder {
 
     private boolean isDevice(ComponentType componentType) {
         return switch (componentType) {
-            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER,POLE -> true;
+            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER,POLE,ATS -> true;
             default -> false;
         };
     }

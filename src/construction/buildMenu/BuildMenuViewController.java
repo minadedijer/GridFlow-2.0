@@ -39,6 +39,7 @@ public class BuildMenuViewController {
     public Button PoleButton;
     public Button JumperButton;
     public Button CutoutButton;
+    public Button ATSButton;
 
     //messing with buttons
     public Button TestButton;
@@ -158,6 +159,13 @@ public class BuildMenuViewController {
         buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.JUMPER);
         JumperButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
         currentButton = JumperButton;
+    }
+
+    public void selectATSTool() {
+        currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
+        buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.ATS);
+        ATSButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
+        currentButton = ATSButton;
     }
 
     @FXML

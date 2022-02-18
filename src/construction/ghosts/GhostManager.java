@@ -62,6 +62,8 @@ public class GhostManager {
             case POLE -> ComponentIconCreator.getPoleIcon(pos);
             case TURBINE -> ComponentIconCreator.getTurbineIcon(pos, true, false);
             case WIRE -> ComponentIconCreator.getWireIcon(pos, pos, List.of());
+            //Need to update with ATS ICON
+            case ATS -> ComponentIconCreator.getTransformerIcon(pos);
         };
     }
 

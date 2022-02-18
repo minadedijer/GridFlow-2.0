@@ -234,6 +234,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         componentShortcutMap.put(KeyCode.DIGIT6, () -> buildMenuViewController.selectTransformerTool());
         componentShortcutMap.put(KeyCode.DIGIT7, () -> buildMenuViewController.selectJumperTool());
         componentShortcutMap.put(KeyCode.DIGIT8, () -> buildMenuViewController.selectCutoutTool());
+        componentShortcutMap.put(KeyCode.T, () -> buildMenuViewController.selectATSTool());
     }
 
     private final EventHandler<KeyEvent> handleComponentShortcut = event -> {
