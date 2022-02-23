@@ -13,6 +13,7 @@ import domain.Association;
 import domain.Grid;
 import domain.components.Breaker;
 import domain.components.Component;
+import domain.components.Wire;
 import domain.geometry.Point;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
@@ -110,6 +111,55 @@ public class GridBuilderController {
         return comp instanceof Breaker;
     }
 
+    public void placeEntireWire(Point eventPoint)
+    {
+        Wire w = model.getDragWire();
+        System.out.println("PLACE ENTIRE WIRE");
+        Point refPoint = model.getDragWireBeginPoint();
+        Point startPoint;
+        Point endPoint;
+
+        if(w == null){
+            System.out.println("Null wire!");
+            return;
+        }
+
+        if(w.getStart().getX() == w.getEnd().getX())
+        {
+            startPoint = new Point(eventPoint.getX(), eventPoint.getY() - (refPoint.getY() - w.getStart().getY()));
+            endPoint = new Point(eventPoint.getX(), eventPoint.getY() - (refPoint.getY() - w.getEnd().getY()));
+
+        }
+        else{
+            startPoint = new Point(eventPoint.getX() - (refPoint.getX() - w.getStart().getX()), eventPoint.getY());
+            endPoint =new Point(eventPoint.getX() - (refPoint.getX() - w.getEnd().getX()), eventPoint.getY());
+        }
+
+
+        doubleClickPlacementContext.beginPoint = Point.nearestCoordinate(startPoint.getX(), startPoint.getY());
+        Point lockedEndPoint = endPoint.clampPerpendicular(doubleClickPlacementContext.beginPoint);
+        lockedEndPoint = Point.nearestCoordinate(lockedEndPoint.getX(), lockedEndPoint.getY());
+        GridMemento prePlaceWireMemento = grid.makeSnapshot(); // create a snapshot of the grid before the wire is placed
+        boolean res = model.placeWire(doubleClickPlacementContext.beginPoint, lockedEndPoint, false);
+        if (res) {
+            // if the wire was successfully placed
+            if(!model.getIsDragging()) gridFlowEventManager.sendEvent(new SaveStateEvent(prePlaceWireMemento)); // save the snapshot to the undo history
+            GridChangedEvent e = new GridChangedEvent();
+            e.toolCausingChange = ToolType.WIRE;
+            gridFlowEventManager.sendEvent(e);
+        } else {
+            if(model.getIsDragging()) gridFlowEventManager.sendEvent(new InternalUndoEvent());
+            gridFlowEventManager.sendEvent(new PlacementFailedEvent());
+        }
+        if (model.getIsDragging()) {
+            buildData.toolType = ToolType.SELECT;
+            ghostManagerController.buildMenuDataChanged();
+            model.setIsDragging(false);
+        }
+
+        model.setDragEntireWire(false);
+    }
+
 
     // this event handler is for placing wires with the wire tool
     // it is run once per click, so the event either begin a placement or finishes a placement
@@ -124,11 +174,12 @@ public class GridBuilderController {
             if(!model.getIsDragging()) {
                 return;
             }
-            /*else{
-                getModel().setIsDragging(false);
-                buildData.toolType = ToolType.SELECT;
+            else{
+                if(model.getDragEntireWire()){
+                    placeEntireWire(new Point(event.getX(), event.getY()));
+                }
+            }
 
-            }*/
         }
 
 

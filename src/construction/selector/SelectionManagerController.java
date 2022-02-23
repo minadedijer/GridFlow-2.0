@@ -176,29 +176,51 @@ public class SelectionManagerController {
     //returns the endpoint of wire closest to point p
     public Point getClosestEndpoint(Point p, Wire wire)
     {
-        double x1 = wire.getStart().getX();
-        double x2 = wire.getEnd().getX();
-        double y1 = wire.getStart().getY();
-        double y2 = wire.getEnd().getY();
-        double px = p.getX();
-        double py = p.getY();
 
-        double sideA1 = Math.abs(py - y1);
-        double sideB1 = Math.abs(px - x1);
-        double sideA2 = Math.abs(py - y2);
-        double sideB2 = Math.abs(px - x2);
+        Point start = wire.getStart();
+        Point end = wire.getEnd();
+        Point mid = Point.midpoint(start, end);
+        double dy_start = p.differenceY(start);
+        double dx_start = p.differenceX(start);
+        double dy_end = p.differenceY(end);
+        double dx_end = p.differenceX(end);
+        double dy_mid = p.differenceY(mid);
+        double dx_mid = p.differenceX(mid);
 
-        double dist1 = Math.hypot(sideA1, sideB1);
-        double dist2 = Math.hypot(sideA2, sideB2);
-
-        if(dist1 > dist2)
+        if(start.getY() == end.getY())
         {
-            return wire.getStart();
-        }
-        else{
-            return wire.getEnd();
-        }
+            double endpoint_range = 0.25 * start.differenceX(end);
+            if(dx_end < dx_start && dx_end < endpoint_range){
+                System.out.println("End");
+                return start;
+            }
+            else if (dx_start < dx_end && dx_start < endpoint_range){
+                System.out.println("start");
+                return end;
+            }
+            else{
+                System.out.println("MID");
+                return p;
 
+            }
+        }
+        else
+        {
+            double endpoint_range = 0.25 * start.differenceY(end);
+            if(dy_end < dy_start && dy_end < endpoint_range){
+                System.out.println("End");
+                return start;
+            }
+            else if (dy_start < dy_end && dy_start < endpoint_range){
+                System.out.println("start");
+                return end;
+            }
+            else{
+                System.out.println("MID");
+                return p;
+
+            }
+        }
     }
 
     // Drags a single component. To use, click-and-hold on a single component and move mouse.
@@ -221,14 +243,23 @@ public class SelectionManagerController {
                     doubleClickContext.placing = true;
                     doubleClickContext.beginPoint = getClosestEndpoint(eventPoint, (Wire)comp);
 
+                    //dragging from the middle
+                    if(doubleClickContext.beginPoint == eventPoint)
+                    {
+                        System.out.println("Middle");
+                        modelGrid.setDragWire((Wire)comp);
+                        modelGrid.setDragEntireWire(true);
+                        modelGrid.setDragWireBeginPoint(eventPoint);
+                    }
+
                     buildMenuData.toolType = ToolType.WIRE;
-                    ghostController.dragGhost();
+                    if(!modelGrid.getDragEntireWire()) ghostController.dragGhost();
 
                     SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
                     modelGrid.setPreDragSaveState(e);
                     gridFlowEventManager.sendEvent(e);
                     model.deleteSelectedItems();
-                    ghostController.buildMenuDataChanged();
+                    if(!modelGrid.getDragEntireWire()) ghostController.buildMenuDataChanged();
                     gridFlowEventManager.sendEvent(new GridChangedEvent());
                     return;
                 }

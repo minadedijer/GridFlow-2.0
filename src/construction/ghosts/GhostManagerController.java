@@ -88,7 +88,7 @@ public class GhostManagerController implements GridFlowEventListener {
             if (doubleClickContext.placing) {
                 Point endPoint = coordPoint.clampPerpendicular(doubleClickContext.beginPoint);
                 ghostModel.extendGhostWire(doubleClickContext.beginPoint, endPoint);
-                System.out.println("Placing the wire component\n");
+                //System.out.println("Placing the wire component\n");
 
 
             } else {
