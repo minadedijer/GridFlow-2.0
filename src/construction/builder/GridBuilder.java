@@ -32,6 +32,14 @@ public class GridBuilder {
     private boolean isDragging = false;
     private SaveStateEvent preDragState = null;
 
+    // Variables to enable group components to keep track of their individual components
+    private Source sourceComponent;
+    private Device deviceComponent;
+    // Possible to have more components, ideally these variables will be wiped after the complete
+    //      placement of the group component.
+    //      Ie: An XYZ is made up of a generator and a switch. When creating a new XYZ, store the
+    //      generator as the sourceComponent,amd the switch as a deviceComponent. Then,
+
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -56,8 +64,12 @@ public class GridBuilder {
 
     public boolean placeGroup(Point position, ComponentType componentType) {
 
-        if (componentType == componentType.ATS) {
+        if (componentType == componentType.ATS)
 
+            return placeSource(position, componentType);
+        else
+            return false;
+/*
             double rotation = 0;
             boolean cutOutPlacement = true;
             Point CutoutPoint = position.translate(-40, -80);
@@ -93,7 +105,7 @@ public class GridBuilder {
 
         }
         return true;
-
+*/
     }
 
 
@@ -119,6 +131,7 @@ public class GridBuilder {
 
         Wire inWire = new Wire(position);
         Component conflictComponent = verifySingleWirePosition(inWire);
+
         if(conflictComponent == null) { // use new wire
             device.connectInWire(inWire);
             inWire.connect(device);
@@ -166,7 +179,6 @@ public class GridBuilder {
             case JUMPER -> new Jumper("", point, properties.getDefaultState());
             case CUTOUT -> new Cutout("", point, properties.getDefaultState());
             case SWITCH -> new Switch("", point, properties.getDefaultState());
-            case ATS -> new ATS("", point, properties.getDefaultState());
             default -> null;
         };
     }
@@ -268,9 +280,66 @@ public class GridBuilder {
                     return false;
                 }
 
+
                 grid.addComponents(generator);
 
+
             }
+
+            // Added by Ali to create a single piece ATS, which acts as a powersource.
+            //      The ATS will shift from main power to generator power when the sensorWire becomes
+            //      de-energized. Otherwise, the sensorWire has no effect on the power output of the ATS.
+            //      This means that the ATS will always be supplying power, with no option to turn off said power.
+            case ATS -> {
+                ATS ats = new ATS("", position, true);
+                ats.setAngle(properties.getRotation());
+                checkIfComponentIsACopy(ats);
+                if(!verifyPlacement(ats)) return false;
+
+                Wire outWire = new Wire(position);
+                Component conflictComponent = verifySingleWirePosition(outWire);
+                if(conflictComponent == null) { // use new wire
+                    ats.connectWire(outWire);
+                    outWire.connect(ats);
+                    grid.addComponent(outWire);
+                }
+                else if (conflictComponent instanceof Wire){ // there is a wire conflict, connect this wire
+                    outWire = (Wire) conflictComponent;
+                    ats.connectWire(outWire);
+                    outWire.connect(ats);
+                }
+
+                else{
+                    conflictComponent.getComponentIcon().showError();
+                    return false;
+                }
+                Point sensorPoint = position.translate(0, 60);
+                Wire sensorWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
+                Wire tempWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
+
+                conflictComponent = verifySingleWirePosition(sensorWire);
+
+                if(conflictComponent == null) { // use new wire
+
+                    grid.addComponent(sensorWire);
+                }
+                else if (conflictComponent instanceof Wire){
+                    tempWire = (Wire) conflictComponent;
+                    sensorWire.connect(tempWire);
+                }
+                else{
+                    conflictComponent.getComponentIcon().showError();
+                    return false;
+                }
+
+
+                ats.setMainLineNode(tempWire);
+                grid.addComponents(ats);
+            }
+
+
+
+
         }
         return true;
     }
@@ -549,14 +618,14 @@ public class GridBuilder {
 
     private boolean isDevice(ComponentType componentType) {
         return switch (componentType) {
-            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER, ATS -> true;
+            case BREAKER_12KV, BREAKER_70KV, CUTOUT, JUMPER, SWITCH, TRANSFORMER -> true;
             default -> false;
         };
     }
 
     private boolean isSource(ComponentType componentType) {
         return switch (componentType) {
-            case POWER_SOURCE, TURBINE -> true;
+            case POWER_SOURCE, TURBINE, ATS -> true;
             default -> false;
         };
     }
