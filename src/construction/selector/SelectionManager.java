@@ -7,15 +7,13 @@ import domain.Grid;
 import domain.Selectable;
 import domain.components.Wire;
 import domain.geometry.Point;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class SelectionManager {
@@ -60,14 +58,16 @@ public class SelectionManager {
     public int deleteSelectedItems() {
         // Wires cannot be deleted if they are connected to a device or source, so delete the selected devices first
         sortWiresToBack();
+        AtomicInteger nitems = new AtomicInteger(selectedIDs.size());
         selectedIDs.forEach(id -> {
             setSelect(id, false);
-            grid.deleteSelectedItem(id);
+            int res = grid.deleteSelectedItem(id);
+            nitems.set(nitems.get() - res);
         });
-        int nitems = selectedIDs.size();
+
         selectedIDs.clear();
         selectedIDs.notifyObservers();
-        return nitems;
+        return nitems.get();
     }
 
     private void setSelect(String ID, boolean select) {

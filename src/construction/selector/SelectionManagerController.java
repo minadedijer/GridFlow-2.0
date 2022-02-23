@@ -184,39 +184,40 @@ public class SelectionManagerController {
         double dx_start = p.differenceX(start);
         double dy_end = p.differenceY(end);
         double dx_end = p.differenceX(end);
-        double dy_mid = p.differenceY(mid);
-        double dx_mid = p.differenceX(mid);
+
+        //this determines how close to the ends of a wire dragging will determine if it is a drag or an extension
+        double endpointScale = 0.25;
 
         if(start.getY() == end.getY())
         {
-            double endpoint_range = 0.25 * start.differenceX(end);
+            double endpoint_range = endpointScale * start.differenceX(end);
             if(dx_end < dx_start && dx_end < endpoint_range){
-                System.out.println("End");
+                //System.out.println("End");
                 return start;
             }
             else if (dx_start < dx_end && dx_start < endpoint_range){
-                System.out.println("start");
+                //System.out.println("start");
                 return end;
             }
             else{
-                System.out.println("MID");
+                //System.out.println("MID");
                 return p;
 
             }
         }
         else
         {
-            double endpoint_range = 0.25 * start.differenceY(end);
+            double endpoint_range = endpointScale * start.differenceY(end);
             if(dy_end < dy_start && dy_end < endpoint_range){
-                System.out.println("End");
+                //System.out.println("End");
                 return start;
             }
             else if (dy_start < dy_end && dy_start < endpoint_range){
-                System.out.println("start");
+                //System.out.println("start");
                 return end;
             }
             else{
-                System.out.println("MID");
+                //System.out.println("MID");
                 return p;
 
             }
@@ -252,13 +253,24 @@ public class SelectionManagerController {
                         modelGrid.setDragWireBeginPoint(eventPoint);
                     }
 
-                    buildMenuData.toolType = ToolType.WIRE;
-                    if(!modelGrid.getDragEntireWire()) ghostController.dragGhost();
+
 
                     SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot());
                     modelGrid.setPreDragSaveState(e);
                     gridFlowEventManager.sendEvent(e);
-                    model.deleteSelectedItems();
+
+                    int numDeleted = model.deleteSelectedItems();
+                    if (numDeleted == 0){
+                        doubleClickContext.placing = false;
+                        modelGrid.setDragEntireWire(false);
+                        modelGrid.setIsDragging(false);
+                        buildMenuData.toolType = ToolType.SELECT;
+                        return;
+                    }
+
+                    buildMenuData.toolType = ToolType.WIRE;
+                    if(!modelGrid.getDragEntireWire()) ghostController.dragGhost();
+
                     if(!modelGrid.getDragEntireWire()) ghostController.buildMenuDataChanged();
                     gridFlowEventManager.sendEvent(new GridChangedEvent());
                     return;
@@ -274,7 +286,7 @@ public class SelectionManagerController {
                 buildMenuData.componentType = comp.getComponentType();
 
                 buildMenuData.toolType = ToolType.PLACE;
-                System.out.println("DRAG GHOST");
+                //System.out.println("DRAG GHOST");
                 ghostController.dragGhost();
 
                 // Gather the component's data to be sent to the right class object
