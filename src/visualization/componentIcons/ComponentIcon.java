@@ -54,9 +54,9 @@ public class ComponentIcon {
         boundingRect.setStroke(DEFAULT_BOUNDING_COLOR);
         boundingRect.setOpacity(0.5);
 
-        fittingRect.setFill(Color.TRANSPARENT);
+        fittingRect.setFill(Color.RED);
         fittingRect.setStroke(DEFAULT_FITTING_COLOR);
-        fittingRect.setOpacity(0.5);
+        fittingRect.setOpacity(0.3);
     }
 
     public void setComponentIconID(String id) {

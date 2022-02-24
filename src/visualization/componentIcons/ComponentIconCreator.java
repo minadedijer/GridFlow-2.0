@@ -224,7 +224,7 @@ public class ComponentIconCreator {
         // change to new icon that can't be split energy maybe
         DeviceIcon poleIcon = new DeviceIcon();
 
-        Circle circle = createCircle(p);
+        Circle circle = createCircle(p,4);
         poleIcon.addInNodeShapes(circle);
 
         poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
@@ -233,35 +233,96 @@ public class ComponentIconCreator {
     }
 
     //THIS JUST MAKES A TRANSFORMER NEEDS UPDATE
-    public static DeviceIcon getATSIcon(Point p) {
+    public static DeviceIcon getATSIcon(Point p,boolean energized) {
 
         // change to new icon that can't be split energy maybe
         DeviceIcon ATSIcon = new DeviceIcon();
 
-        Line inLine = createLine(p, p.translate(0, 1.1 * Globals.UNIT));
-        Line inEdgeL = createLine(p.translate(-1 * Globals.UNIT, 0.9 * Globals.UNIT),
-                p.translate(-1 * Globals.UNIT, 1.1 * Globals.UNIT));
-        Line inEdgeR = createLine(p.translate(1 * Globals.UNIT, 0.9 * Globals.UNIT),
-                p.translate(1 * Globals.UNIT, 1.1 * Globals.UNIT));
-        Arc arcIn1 = createHalfArc(p.translate(-0.75 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
-        Arc arcIn2 = createHalfArc(p.translate(-0.25 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
-        Arc arcIn3 = createHalfArc(p.translate(0.25 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
-        Arc arcIn4 = createHalfArc(p.translate(0.75 * Globals.UNIT, 1.1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
-        ATSIcon.addInNodeShapes(inLine, inEdgeL, inEdgeR, arcIn1, arcIn2, arcIn3, arcIn4);
+        Line inLine = createLine(p, p.translate(0, .9 * Globals.UNIT));
+        //LeftDashed
+        Line inEdgeL1 = createLine(p.translate(-.2 * Globals.UNIT, 0.9 * Globals.UNIT),
+                p.translate(-.2 * Globals.UNIT, 1.1 * Globals.UNIT));
+        Line inEdgeL2 = createLine(p.translate(-.2 * Globals.UNIT, 1.4 * Globals.UNIT),
+                p.translate(-.2 * Globals.UNIT, 1.6 * Globals.UNIT));
+        Line inEdgeL3 = createLine(p.translate(-.2 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(-.2 * Globals.UNIT, 2.1 * Globals.UNIT));
+        //TopDashed
+        Line inEdgeT1 = createLine(p.translate( -.1 * Globals.UNIT,.8 * Globals.UNIT),
+                p.translate( .1 * Globals.UNIT,.8 * Globals.UNIT));
+        Line inEdgeT2 = createLine(p.translate(.4 * Globals.UNIT, .8 * Globals.UNIT),
+                p.translate(.6 * Globals.UNIT, .8 * Globals.UNIT));
+        Line inEdgeT3 = createLine(p.translate(.9 * Globals.UNIT, .8 * Globals.UNIT),
+                p.translate(1.1 * Globals.UNIT, .8 * Globals.UNIT));
+        //RightDashed
+        Line inEdgeR1 = createLine(p.translate(1.2 * Globals.UNIT, 0.9 * Globals.UNIT),
+                p.translate(1.2 * Globals.UNIT, 1.1 * Globals.UNIT));
+        Line inEdgeR2 = createLine(p.translate(1.2 * Globals.UNIT, 1.4 * Globals.UNIT),
+                p.translate(1.2 * Globals.UNIT, 1.6 * Globals.UNIT));
+        Line inEdgeR3 = createLine(p.translate(1.2 * Globals.UNIT, 1.9 * Globals.UNIT),
+                p.translate(1.2 * Globals.UNIT, 2.1 * Globals.UNIT));
+        //BotDashed
+        Line inEdgeB1 = createLine(p.translate( -.1 * Globals.UNIT,2.2 * Globals.UNIT),
+                p.translate( .1 * Globals.UNIT,2.2 * Globals.UNIT));
+        Line inEdgeB2 = createLine(p.translate(.4 * Globals.UNIT, 2.2 * Globals.UNIT),
+                p.translate(.6 * Globals.UNIT, 2.2 * Globals.UNIT));
+        Line inEdgeB3 = createLine(p.translate(.9 * Globals.UNIT, 2.2 * Globals.UNIT),
+                p.translate(1.1 * Globals.UNIT, 2.2 * Globals.UNIT));
 
-        Line outLine = createLine(p.translate(0, 1.9 * Globals.UNIT), p.translate(0, 3 * Globals.UNIT));
-        Line outEdgeL = createLine(p.translate(-1 * Globals.UNIT, 1.9 * Globals.UNIT),
-                p.translate(-1 * Globals.UNIT, 2.1 * Globals.UNIT));
-        Line outEdgeR = createLine(p.translate(1 * Globals.UNIT, 1.9 * Globals.UNIT),
-                p.translate(1 * Globals.UNIT, 2.1 * Globals.UNIT));
-        Arc arcOut1 = createHalfArc(p.translate(-0.75 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
-        Arc arcOut2 = createHalfArc(p.translate(-0.25 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
-        Arc arcOut3 = createHalfArc(p.translate(0.25 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
-        Arc arcOut4 = createHalfArc(p.translate(0.75 * Globals.UNIT, 1.9 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.UP);
-        ATSIcon.addOutNodeShapes(outLine, outEdgeL, outEdgeR, arcOut1, arcOut2, arcOut3, arcOut4);
+        Circle inCirc = createCircle(p.translate(0,1*Globals.UNIT),2);
+        //GenLines
+        Line genLine = createLine(p.translate(1.1*Globals.UNIT,1*Globals.UNIT),
+                p.translate(2*Globals.UNIT,1*Globals.UNIT));
+        Circle genCirc = createCircle(p.translate(1*Globals.UNIT,1*Globals.UNIT),2);
 
-        ATSIcon.setBoundingRect(new Dimensions(3, 3), p);
-        ATSIcon.setFittingRect(new Dimensions(3, 3, -0.75, -0.75, -0.5, -0.5), p);
+        //Adding shapes to Icon
+
+
+        ATSIcon.addStaticNodes(inEdgeL1,inEdgeL2,inEdgeL3,inEdgeT1,inEdgeT2,inEdgeT3,
+                inEdgeR1,inEdgeR2,inEdgeR3,inEdgeB1,inEdgeB2,inEdgeB3);
+
+
+        Line SwitchLine;
+
+        if(energized)
+        {
+            ATSIcon.addInNodeShapes(inLine,inCirc);
+            ATSIcon.addStaticNodes(genCirc,genLine);
+            SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
+                    p.translate(0,1*Globals.UNIT));
+
+        }
+        else
+        {
+            ATSIcon.addInNodeShapes(genCirc,genLine);
+            ATSIcon.addStaticNodes(inLine,inCirc);
+            SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
+                    p.translate(1*Globals.UNIT,1*Globals.UNIT));
+
+        }
+
+        ATSIcon.addInNodeShapes(SwitchLine);
+
+        //SwitchWire
+        //PSEUDOCODE//
+        /*
+        * If Powered, Draw Line with these values,
+        *   Line SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
+        *           p.translate(0,1*Globals.UNIT))
+        * Else Draw with These values
+        *   Line SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
+        *           p.translate(1*Globals.UNIT,1*Globals.UNIT))
+        */
+
+        //OutLines
+        Line outLine = createLine(p.translate(0, 2 * Globals.UNIT), p.translate(0, 3 * Globals.UNIT));
+        Line outCircConnect = createLine(p.translate(0, 2 * Globals.UNIT), p.translate(.5*Globals.UNIT, 2 * Globals.UNIT));
+
+        Circle outCirc = createCircle(p.translate(.5*Globals.UNIT,2*Globals.UNIT),2);
+
+        ATSIcon.addOutNodeShapes(outLine,outCircConnect,outCirc);
+
+        ATSIcon.setBoundingRect(new Dimensions(3, 3), p.translate(.5*Globals.UNIT,0));
+        ATSIcon.setFittingRect(new Dimensions(3, 3, -0.5, -0.5, -1, 0), p);
         return ATSIcon;
 
     }
@@ -527,15 +588,16 @@ public class ComponentIconCreator {
 
         return line;
     }
-    private static Circle createCircle(Point p) {
+    private static Circle createCircle(Point p,int radius) {
         Circle circle = new Circle();
         circle.setStrokeWidth(Globals.STROKE_WIDTH);
         circle.setCenterX(p.getX());
         circle.setCenterY(p.getY());
-        circle.setRadius(4);
+        circle.setRadius(radius);
 
         return circle;
     }
+
     private static Line createRoundedLine(Point p1, Point p2) {
         Line line = createLine(p1, p2);
         line.setStrokeLineCap(StrokeLineCap.ROUND);

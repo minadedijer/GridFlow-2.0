@@ -33,7 +33,7 @@ public class ATS extends Device {
     }
 
     protected void createComponentIcon() {
-        DeviceIcon icon = ComponentIconCreator.getATSIcon(getPosition());
+        DeviceIcon icon = ComponentIconCreator.getATSIcon(getPosition(),isInWireEnergized());
         icon.setDeviceEnergyStates(false, false);
         icon.setComponentIconID(getId().toString());
         icon.setAngle(getAngle(), getPosition());
@@ -48,6 +48,7 @@ public class ATS extends Device {
 
     @Override
     public void updateComponentIcon() {
+        System.out.println(isInWireEnergized());
         DeviceIcon icon = (DeviceIcon)getComponentIcon();
         icon.setDeviceEnergyStates(isInWireEnergized(), isOutWireEnergized());
     }
