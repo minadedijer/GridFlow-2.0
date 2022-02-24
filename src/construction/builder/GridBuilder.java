@@ -33,6 +33,14 @@ public class GridBuilder {
     private SaveStateEvent preDragState = null;
 
 
+    private boolean dragEntireWire = false;
+
+    //variables for dragging wires
+    private Point dragWireBeginPoint = null;
+
+    private Wire dragWire;
+
+
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
         this.properties = properties;
@@ -524,4 +532,30 @@ public class GridBuilder {
     {
         return preDragState;
     }
+
+    public Point getDragWireBeginPoint() {
+        return dragWireBeginPoint;
+    }
+
+    public void setDragWireBeginPoint(Point dragWireBeginPoint) {
+        this.dragWireBeginPoint = dragWireBeginPoint;
+    }
+
+    public boolean getDragEntireWire() {
+        return dragEntireWire;
+    }
+
+    public void setDragEntireWire(boolean dragEntireWire) {
+        this.dragEntireWire = dragEntireWire;
+    }
+
+    public Wire getDragWire() {
+        return dragWire;
+    }
+
+    public void setDragWire(Wire dragWire) {
+        this.dragWire = dragWire;
+    }
+
 }
+

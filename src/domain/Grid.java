@@ -45,27 +45,31 @@ public class Grid {
         associations.add(association);
     }
 
-    public void deleteSelectedItem(String ID) {
+    public int deleteSelectedItem(String ID) {
         Component comp = getComponent(ID);
+        int res = 0;
         if (comp == null) {
             Association association = getAssociation(ID);
             if (association != null) {
                 deleteAssociation(association);
             }
         } else {
-            deleteComponent(comp);
+            res = deleteComponent(comp);
         }
+        return res;
     }
 
-    private void deleteComponent(Component component) {
+    private int deleteComponent(Component component) {
         try {
             component.delete();
             if(component instanceof Wire) {
                 removeCausedBridgePoints((Wire) component);
             }
             components.remove(component);
+            return 0;
         } catch (UnsupportedOperationException e) {
             System.err.println("Cannot delete Wire: " + component.getId());
+            return 1;
         }
     }
 
