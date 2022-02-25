@@ -10,5 +10,6 @@ public enum ComponentType {
     TRANSFORMER,
     POLE,
     TURBINE,
-    WIRE
+    WIRE,
+    CONNECTED_LOAD_TEXT
 }
