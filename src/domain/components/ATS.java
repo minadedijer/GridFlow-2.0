@@ -22,6 +22,13 @@ public class ATS extends Source {
     private Wire mainLineNode;
     private Wire generatorLineNode;
     private Wire outputLineNode;
+    private boolean connectedToPower;
+    private boolean changeTheState;
+    // the states which the ATS can be in
+    private int STATE = 0;
+    private final int POWEREDBYGENERATOR = 2;
+    private final int POWEREDBYMAIN = 1;
+
     public ATS(String name, Point position, boolean on) {
         super(name, position, on);
         createComponentIcon();
@@ -99,6 +106,24 @@ public class ATS extends Source {
 
         if (mainLineNode != null ) {
             System.out.println(mainLineNode.isEnergized());
+
+
+// go by checking the state, not the isenergized.
+            // if changeTheState = false,
+            //  check if its energized, if it is, toggle
+            //  if it isnt energized, change the state = false;
+            //
+            if (mainLineNode.isEnergized() && STATE != POWEREDBYMAIN) {
+                toggleState();
+                STATE = POWEREDBYMAIN;
+            }
+
+            if (!mainLineNode.isEnergized() && STATE != POWEREDBYGENERATOR) {
+                toggleState();
+                STATE = POWEREDBYGENERATOR;
+            }
+
+
         }
 
         SourceIcon icon = (SourceIcon) getComponentIcon();

@@ -333,7 +333,7 @@ public class GridBuilder {
                 }
 
 
-                ats.setMainLineNode(tempWire);
+                ats.setMainLineNode(sensorWire);
                 grid.addComponents(ats);
             }
 
