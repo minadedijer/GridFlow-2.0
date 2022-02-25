@@ -275,7 +275,10 @@ public class ComponentIconCreator {
         Circle genCirc = createCircle(p.translate(1*Globals.UNIT,1*Globals.UNIT),2);
 
         //Adding shapes to Icon
-
+        Circle Generator = createCircle(p.translate(2.5*Globals.UNIT,1*Globals.UNIT),.5*Globals.UNIT,Color.LIME,Color.BLACK);
+        Arc LeftG = createHalfArc(p.translate(2.5*Globals.UNIT, 1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.LEFT);
+        Arc BotG = createHalfArc(p.translate(2.5*Globals.UNIT, 1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
+        Line LineG = createLine(p.translate(2.5*Globals.UNIT, 1 * Globals.UNIT),p.translate(2.75*Globals.UNIT, 1 * Globals.UNIT));
 
         ATSIcon.addStaticNodes(inEdgeL1,inEdgeL2,inEdgeL3,inEdgeT1,inEdgeT2,inEdgeT3,
                 inEdgeR1,inEdgeR2,inEdgeR3,inEdgeB1,inEdgeB2,inEdgeB3);
@@ -286,14 +289,15 @@ public class ComponentIconCreator {
         if(energized)
         {
             ATSIcon.addInNodeShapes(inLine,inCirc);
-            ATSIcon.addStaticNodes(genCirc,genLine);
+            ATSIcon.addStaticNodes(genCirc,genLine,Generator);
             SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
                     p.translate(0,1*Globals.UNIT));
 
         }
         else
         {
-            ATSIcon.addInNodeShapes(genCirc,genLine);
+            Generator.setFill(Color.RED);
+            ATSIcon.addInNodeShapes(genCirc,genLine,Generator);
             ATSIcon.addStaticNodes(inLine,inCirc);
             SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
                     p.translate(1*Globals.UNIT,1*Globals.UNIT));
@@ -301,6 +305,7 @@ public class ComponentIconCreator {
         }
 
         ATSIcon.addInNodeShapes(SwitchLine);
+        ATSIcon.addStaticNodes(LeftG,BotG,LineG);
 
         //SwitchWire
         //PSEUDOCODE//
