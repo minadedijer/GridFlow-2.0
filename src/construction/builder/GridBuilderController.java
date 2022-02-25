@@ -203,10 +203,10 @@ public class GridBuilderController {
 
 
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
-        System.out.println("THis is coordPoint: " + coordPoint);
+        System.out.println("This is coordPoint: " + coordPoint);
         SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
         boolean res = model.placeComponent(coordPoint, buildData.componentType);
-
+        System.out.println("Got past placemnet");
         if (res) {
             if(!model.getIsDragging()) gridFlowEventManager.sendEvent(e); // save the pre place grid state
             gridFlowEventManager.sendEvent(new GridChangedEvent());

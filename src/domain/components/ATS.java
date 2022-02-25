@@ -8,33 +8,90 @@ import construction.history.ComponentMemento;
 import construction.history.MementoType;
 import domain.geometry.Point;
 import visualization.componentIcons.ComponentIconCreator;
-import visualization.componentIcons.DeviceIcon;
+import visualization.componentIcons.SourceIcon;
 
 import java.util.List;
 import java.util.UUID;
 
-public class ATS extends Device {
+public class ATS extends Source {
 
-    public ATS(String name, Point position) {
-        super(name, position);
+    private Wire outWire; // this is on the bottom of the source when oriented up
+
+
+   //   Added by Ali
+    private Wire mainLineNode;
+    private Wire generatorLineNode;
+    private Wire outputLineNode;
+    private boolean connectedToPower;
+    private boolean changeTheState;
+    // the states which the ATS can be in
+    private int STATE = 0;
+    private final int POWEREDBYGENERATOR = 2;
+    private final int POWEREDBYMAIN = 1;
+    private  boolean energized = true;
+
+    public ATS(String name, Point position, boolean on) {
+        super(name, position, on);
         createComponentIcon();
     }
 
     public ATS(JsonNode node) {
         super(UUID.fromString(node.get("id").asText()), node.get("name").asText(),
                 Point.fromString(node.get("pos").asText()), node.get("angle").asDouble(),
-                node.get("namepos").asBoolean());
+                node.get("on").asBoolean());
         createComponentIcon();
     }
 
     public ATS(ATSSnapshot snapshot) {
-        super(UUID.fromString(snapshot.id), snapshot.name, snapshot.pos, snapshot.angle, snapshot.namepos);
+        super(UUID.fromString(snapshot.id), snapshot.name, snapshot.pos, snapshot.angle, snapshot.on);
         createComponentIcon();
     }
 
-    protected void createComponentIcon() {
-        DeviceIcon icon = ComponentIconCreator.getATSIcon(getPosition(),false);
-        icon.setDeviceEnergyStates(false, false);
+    public void connectWire(Wire outWire) {
+        this.outWire = outWire;
+    }
+
+    private boolean isOutWireEnergized() {
+        if (outWire == null) return false;
+        return outWire.isEnergized();
+    }
+
+    @Override
+    public void toggleState() {
+        setOn(!isOn());
+        createComponentIcon();
+    }
+
+    @Override
+    public void delete() {
+        outWire.disconnect(getId());
+    }
+
+    @Override
+    public List<Component> getConnections() {
+        if (outWire == null) {
+            return List.of();
+        }
+        return List.of(outWire);
+    }
+
+    @Override
+    public void setConnections(List<Component> connections) {
+        outWire = (Wire)connections.get(0);
+    }
+
+    @Override
+    public ObjectNode getObjectNode(ObjectMapper mapper) {
+        ObjectNode ats = super.getObjectNode(mapper);
+        ats.put("outWire", outWire.getId().toString());
+        return ats;
+    }
+
+    public void createComponentIcon() {
+        //changed name field to fix double name printing bug
+        SourceIcon icon = ComponentIconCreator.getATSIcon(getPosition(),energized);
+        icon.setSourceNodeEnergyState(isOn());
+        icon.setWireEnergyState(false, 0);
         icon.setComponentIconID(getId().toString());
         icon.setAngle(getAngle(), getPosition());
         icon.setComponentName(getName(), isNameRight());
@@ -42,25 +99,80 @@ public class ATS extends Device {
     }
 
     @Override
-    public ComponentMemento makeSnapshot() {
-        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), getInWireID().toString(), getOutWireID().toString(), isNameRight());
-    }
+    public ComponentType getComponentType() { return ComponentType.ATS; }
 
     @Override
     public void updateComponentIcon() {
-        System.out.println(isInWireEnergized());
-        DeviceIcon icon = (DeviceIcon)getComponentIcon();
-        icon.setDeviceEnergyStates(isInWireEnergized(), isOutWireEnergized());
+        // Added by Ali to see if ATS can be dynamic
+        if (mainLineNode != null ) {
+            System.out.println(mainLineNode.isEnergized());
+
+
+// go by checking the state, not the isenergized.
+            // if changeTheState = false,
+            //  check if its energized, if it is, toggle
+            //  if it isnt energized, change the state = false;
+            //
+            if (mainLineNode.isEnergized() && STATE != POWEREDBYMAIN) {
+                energized = true;
+                STATE = POWEREDBYMAIN;
+            }
+
+            if (!mainLineNode.isEnergized() && STATE != POWEREDBYGENERATOR) {
+                energized = false;
+                STATE = POWEREDBYGENERATOR;
+            }
+
+
+        }
+
+        SourceIcon icon = (SourceIcon) getComponentIcon();
+        icon.setWireEnergyState(isOutWireEnergized(), 0);
+
+
+
     }
 
     @Override
     public void updateComponentIconName() {
-        DeviceIcon icon = (DeviceIcon)getComponentIcon();
-        icon.setComponentName(getName(), isNameRight());
+        SourceIcon icon = (SourceIcon)getComponentIcon();
+        icon.setComponentName(getName(), true);
     }
 
     @Override
-    public ComponentType getComponentType() { return ComponentType.ATS; }
+    public ComponentMemento makeSnapshot() {
+        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), isOn(), outWire.getId().toString());
+    }
+
+    @Override
+    public void toggleLockedState() {
+        toggleLocked(); // Changes the locked state in the parent class (closeable)
+        createComponentIcon(); // Updates the component icon to show the new state
+    }
+
+    public Wire getMainLineNode() {
+        return mainLineNode;
+    }
+    public Wire getOutputLineNode () {
+        return outputLineNode;
+    }
+    public Wire getGeneratorLineNode () {
+        return generatorLineNode;
+    }
+
+    public void setMainLineNode(Wire newMainLine) {
+        this.mainLineNode = newMainLine;
+    }
+
+    public void setGeneratorLineNode(Wire newGeneratorLine) {
+        this.generatorLineNode = newGeneratorLine;
+    }
+    public void setOutputLineNode(Wire newOutputLine) {
+        this.outputLineNode = newOutputLine;
+    }
+
+
+
 }
 
 class ATSSnapshot implements ComponentMemento {
@@ -68,18 +180,16 @@ class ATSSnapshot implements ComponentMemento {
     String name;
     double angle;
     Point pos;
-    String inNodeId;
-    String outNodeId;
-    boolean namepos;
+    boolean on;
+    String outWireID;
 
-    public ATSSnapshot(String id, String name, double angle, Point pos, String inNodeId, String outNodeId, boolean namepos) {
+    public ATSSnapshot(String id, String name, double angle, Point pos, boolean on, String outWireID) {
         this.id = id;
         this.name = name;
         this.angle = angle;
         this.pos = pos.copy();
-        this.inNodeId = inNodeId;
-        this.outNodeId = outNodeId;
-        this.namepos = namepos;
+        this.on = on;
+        this.outWireID = outWireID;
     }
 
     @Override
@@ -89,6 +199,6 @@ class ATSSnapshot implements ComponentMemento {
 
     @Override
     public List<String> getConnectionIDs() {
-        return List.of(inNodeId, outNodeId);
+        return List.of(outWireID);
     }
 }

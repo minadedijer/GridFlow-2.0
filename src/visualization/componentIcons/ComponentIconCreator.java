@@ -233,10 +233,10 @@ public class ComponentIconCreator {
     }
 
     //THIS JUST MAKES A TRANSFORMER NEEDS UPDATE
-    public static DeviceIcon getATSIcon(Point p,boolean energized) {
+    public static SourceIcon getATSIcon(Point p,boolean energized) {
 
         // change to new icon that can't be split energy maybe
-        DeviceIcon ATSIcon = new DeviceIcon();
+        SourceIcon ATSIcon = new SourceIcon(ComponentType.ATS);
 
         Line inLine = createLine(p, p.translate(0, .9 * Globals.UNIT));
         //LeftDashed
@@ -280,7 +280,7 @@ public class ComponentIconCreator {
         Arc BotG = createHalfArc(p.translate(2.5*Globals.UNIT, 1 * Globals.UNIT), 0.25 * Globals.UNIT, ArcOrientation.DOWN);
         Line LineG = createLine(p.translate(2.5*Globals.UNIT, 1 * Globals.UNIT),p.translate(2.75*Globals.UNIT, 1 * Globals.UNIT));
 
-        ATSIcon.addStaticNodes(inEdgeL1,inEdgeL2,inEdgeL3,inEdgeT1,inEdgeT2,inEdgeT3,
+        ATSIcon.addStaticNodeShapes(inEdgeL1,inEdgeL2,inEdgeL3,inEdgeT1,inEdgeT2,inEdgeT3,
                 inEdgeR1,inEdgeR2,inEdgeR3,inEdgeB1,inEdgeB2,inEdgeB3);
 
 
@@ -288,8 +288,8 @@ public class ComponentIconCreator {
 
         if(energized)
         {
-            ATSIcon.addInNodeShapes(inLine,inCirc);
-            ATSIcon.addStaticNodes(genCirc,genLine,Generator);
+            ATSIcon.addSourceNodeShapes(inLine,inCirc);
+            ATSIcon.addStaticNodeShapes(genCirc,genLine,Generator);
             SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
                     p.translate(0,1*Globals.UNIT));
 
@@ -297,15 +297,15 @@ public class ComponentIconCreator {
         else
         {
             Generator.setFill(Color.RED);
-            ATSIcon.addInNodeShapes(genCirc,genLine,Generator);
-            ATSIcon.addStaticNodes(inLine,inCirc);
+            ATSIcon.addSourceNodeShapes(genCirc,genLine,Generator);
+            ATSIcon.addStaticNodeShapes(inLine,inCirc);
             SwitchLine = createLine(p.translate(.5*Globals.UNIT,2*Globals.UNIT),
                     p.translate(1*Globals.UNIT,1*Globals.UNIT));
 
         }
 
-        ATSIcon.addInNodeShapes(SwitchLine);
-        ATSIcon.addStaticNodes(LeftG,BotG,LineG);
+        ATSIcon.addSourceNodeShapes(SwitchLine);
+        ATSIcon.addStaticNodeShapes(LeftG,BotG,LineG);
 
         //SwitchWire
         //PSEUDOCODE//
@@ -324,7 +324,8 @@ public class ComponentIconCreator {
 
         Circle outCirc = createCircle(p.translate(.5*Globals.UNIT,2*Globals.UNIT),2);
 
-        ATSIcon.addOutNodeShapes(outLine,outCircConnect,outCirc);
+        ATSIcon.addSourceNodeShapes(outCircConnect,outCirc);
+        ATSIcon.addOutputLine(outLine);
 
         ATSIcon.setBoundingRect(new Dimensions(4.5, 3), p.translate(1.25*Globals.UNIT,0));
         ATSIcon.setFittingRect(new Dimensions(5, 3, -0.25, -0.25, -1, -.25), p.translate(1*Globals.UNIT,0));
