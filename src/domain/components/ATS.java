@@ -60,7 +60,7 @@ public class ATS extends Device {
     }
 
     @Override
-    public ComponentType getComponentType() { return ComponentType.TRANSFORMER; }
+    public ComponentType getComponentType() { return ComponentType.ATS; }
 }
 
 class ATSSnapshot implements ComponentMemento {

@@ -326,8 +326,8 @@ public class ComponentIconCreator {
 
         ATSIcon.addOutNodeShapes(outLine,outCircConnect,outCirc);
 
-        ATSIcon.setBoundingRect(new Dimensions(3, 3), p.translate(.5*Globals.UNIT,0));
-        ATSIcon.setFittingRect(new Dimensions(3, 3, -0.5, -0.5, -1, 0), p);
+        ATSIcon.setBoundingRect(new Dimensions(4.5, 3), p.translate(1.25*Globals.UNIT,0));
+        ATSIcon.setFittingRect(new Dimensions(5, 3, -0.25, -0.25, -1, -.25), p.translate(1*Globals.UNIT,0));
         return ATSIcon;
 
     }
