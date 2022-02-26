@@ -58,8 +58,9 @@ public class ATS extends Source {
 
     @Override
     public void toggleState() {
-        setOn(!isOn());
-        createComponentIcon();
+        return;
+        //setOn(!isOn());
+        //createComponentIcon();
     }
 
     @Override
@@ -91,7 +92,8 @@ public class ATS extends Source {
         //changed name field to fix double name printing bug
         SourceIcon icon = ComponentIconCreator.getATSIcon(getPosition(),energized);
         icon.setSourceNodeEnergyState(isOn());
-        icon.setWireEnergyState(false, 0);
+       // icon.setWireEnergyState(false, 0);
+        icon.setWireEnergyState(true, 0);
         icon.setComponentIconID(getId().toString());
         icon.setAngle(getAngle(), getPosition());
         icon.setComponentName(getName(), isNameRight());
@@ -125,8 +127,9 @@ public class ATS extends Source {
 
 
         }
-
+        System.out.println("This is energized:  " + energized);
         SourceIcon icon = (SourceIcon) getComponentIcon();
+        createComponentIcon();
         icon.setWireEnergyState(isOutWireEnergized(), 0);
 
 
@@ -146,8 +149,10 @@ public class ATS extends Source {
 
     @Override
     public void toggleLockedState() {
-        toggleLocked(); // Changes the locked state in the parent class (closeable)
-        createComponentIcon(); // Updates the component icon to show the new state
+        return;
+
+        //toggleLocked(); // Changes the locked state in the parent class (closeable)
+        //createComponentIcon(); // Updates the component icon to show the new state
     }
 
     public Wire getMainLineNode() {

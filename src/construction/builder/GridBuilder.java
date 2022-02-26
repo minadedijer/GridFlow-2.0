@@ -280,7 +280,7 @@ public class GridBuilder {
                 checkIfComponentIsACopy(ats);
                 if(!verifyPlacement(ats)) return false;
 
-                Wire outWire = new Wire(position);
+                Wire outWire = new Wire(position.translate(0, 60));
                 Component conflictComponent = verifySingleWirePosition(outWire);
                 if(conflictComponent == null) { // use new wire
                     ats.connectWire(outWire);
@@ -297,7 +297,7 @@ public class GridBuilder {
                     conflictComponent.getComponentIcon().showError();
                     return false;
                 }
-                Point sensorPoint = position.translate(0, 60);
+                Point sensorPoint = position.translate(0, 0);
                 Wire sensorWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
                 Wire tempWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
 
