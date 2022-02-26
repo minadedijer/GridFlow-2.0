@@ -35,6 +35,9 @@ public class GridBuilderController {
     private Grid grid;
     private GridCanvasFacade canvasFacade;
 
+    // If user wants to trace back function information, set DEBUG to true
+    private boolean DEBUG = false;
+
     // these Contexts store data needed for actions that take place over time
     // used change borders of an association
     private AssociationMoveContext associationMoveContext = new AssociationMoveContext();
@@ -203,10 +206,11 @@ public class GridBuilderController {
 
 
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
-        System.out.println("This is coordPoint: " + coordPoint);
+        if (DEBUG) {
+            System.out.println("This is coordPoint: " + coordPoint);
+        }
         SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
         boolean res = model.placeComponent(coordPoint, buildData.componentType);
-        System.out.println("Got past placemnet");
         if (res) {
             if(!model.getIsDragging()) gridFlowEventManager.sendEvent(e); // save the pre place grid state
             gridFlowEventManager.sendEvent(new GridChangedEvent());

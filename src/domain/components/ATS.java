@@ -20,10 +20,7 @@ public class ATS extends Source {
 
    //   Added by Ali
     private Wire mainLineNode;
-    private Wire generatorLineNode;
-    private Wire outputLineNode;
-    private boolean connectedToPower;
-    private boolean changeTheState;
+
     // the states which the ATS can be in
     private int STATE = 0;
     private final int POWEREDBYGENERATOR = 2;
@@ -39,11 +36,16 @@ public class ATS extends Source {
         super(UUID.fromString(node.get("id").asText()), node.get("name").asText(),
                 Point.fromString(node.get("pos").asText()), node.get("angle").asDouble(),
                 node.get("on").asBoolean());
+        this.energized = node.get("energized").asBoolean();
+        this.STATE = node.get("STATE").asInt();
         createComponentIcon();
     }
 
     public ATS(ATSSnapshot snapshot) {
         super(UUID.fromString(snapshot.id), snapshot.name, snapshot.pos, snapshot.angle, snapshot.on);
+        this.energized = snapshot.energized;
+        this.mainLineNode = snapshot.mainLineNode;
+        this.STATE = snapshot.STATE;
         createComponentIcon();
     }
 
@@ -79,12 +81,17 @@ public class ATS extends Source {
     @Override
     public void setConnections(List<Component> connections) {
         outWire = (Wire)connections.get(0);
+        mainLineNode = (Wire) connections.get(1);
     }
 
     @Override
     public ObjectNode getObjectNode(ObjectMapper mapper) {
         ObjectNode ats = super.getObjectNode(mapper);
         ats.put("outWire", outWire.getId().toString());
+        ats.put("mainLineNode", mainLineNode.getId().toString());
+        ats.put("energized", energized);
+        ats.put("STATE", STATE);
+
         return ats;
     }
 
@@ -106,21 +113,31 @@ public class ATS extends Source {
     @Override
     public void updateComponentIcon() {
         // Added by Ali to see if ATS can be dynamic
-        if (mainLineNode != null ) {
-            System.out.println(mainLineNode.isEnergized());
+        if (mainLineNode == null) {
+            System.out.println("GOT TO NULL\n");
+        }
 
+        if (mainLineNode != null ) {
 
 // go by checking the state, not the isenergized.
             // if changeTheState = false,
             //  check if its energized, if it is, toggle
             //  if it isnt energized, change the state = false;
             //
+
+            System.out.println("\nMainlineNode energized: " + mainLineNode.isEnergized());
+            System.out.println(" STATE: " + STATE);
+            System.out.println("Name of MainLineNode  " + mainLineNode.getId() + "\n");
+
             if (mainLineNode.isEnergized() && STATE != POWEREDBYMAIN) {
+
+
                 energized = true;
                 STATE = POWEREDBYMAIN;
             }
 
             if (!mainLineNode.isEnergized() && STATE != POWEREDBYGENERATOR) {
+
                 energized = false;
                 STATE = POWEREDBYGENERATOR;
             }
@@ -144,7 +161,8 @@ public class ATS extends Source {
 
     @Override
     public ComponentMemento makeSnapshot() {
-        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), isOn(), outWire.getId().toString());
+        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), isOn(), outWire.getId().toString(),
+                STATE,  energized, mainLineNode.getId().toString(), mainLineNode);
     }
 
     @Override
@@ -158,23 +176,11 @@ public class ATS extends Source {
     public Wire getMainLineNode() {
         return mainLineNode;
     }
-    public Wire getOutputLineNode () {
-        return outputLineNode;
-    }
-    public Wire getGeneratorLineNode () {
-        return generatorLineNode;
-    }
 
     public void setMainLineNode(Wire newMainLine) {
         this.mainLineNode = newMainLine;
     }
 
-    public void setGeneratorLineNode(Wire newGeneratorLine) {
-        this.generatorLineNode = newGeneratorLine;
-    }
-    public void setOutputLineNode(Wire newOutputLine) {
-        this.outputLineNode = newOutputLine;
-    }
 
 
 
@@ -187,14 +193,30 @@ class ATSSnapshot implements ComponentMemento {
     Point pos;
     boolean on;
     String outWireID;
+    String mainLineNodeID;
+    Wire mainLineNode;
+    // the states which the ATS can be in
+    int STATE = 0;
+    boolean energized = true;
 
-    public ATSSnapshot(String id, String name, double angle, Point pos, boolean on, String outWireID) {
+
+
+
+
+
+    public ATSSnapshot(String id, String name, double angle, Point pos, boolean on, String outWireID,
+                       int STATE, boolean energized, String mainLineNodeID, Wire mainLineNode) {
         this.id = id;
         this.name = name;
         this.angle = angle;
         this.pos = pos.copy();
         this.on = on;
         this.outWireID = outWireID;
+        this.STATE = STATE;
+        this.energized = energized;
+        this.mainLineNodeID = mainLineNodeID;
+        this.mainLineNode = mainLineNode;
+
     }
 
     @Override
@@ -204,6 +226,6 @@ class ATSSnapshot implements ComponentMemento {
 
     @Override
     public List<String> getConnectionIDs() {
-        return List.of(outWireID);
+        return List.of(outWireID, mainLineNodeID);
     }
 }

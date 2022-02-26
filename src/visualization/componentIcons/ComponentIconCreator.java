@@ -285,7 +285,6 @@ public class ComponentIconCreator {
 
 
         Line SwitchLine;
-        System.out.println("energized in creator  " + energized);
         if(energized)
         {
             ATSIcon.addSourceNodeShapes(inLine,inCirc);

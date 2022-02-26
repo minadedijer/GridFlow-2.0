@@ -22,6 +22,9 @@ public class GridBuilder {
     private Grid grid;
     private PropertiesData properties;
 
+    // If user wants to trace back function information, set DEBUG to true
+    private boolean DEBUG = false;
+
     // Additional variables so that the copy and drag functions can be implemented after components
     //      have been clicked on.
     private String copiedComponentName;
@@ -48,8 +51,9 @@ public class GridBuilder {
 
     // This is what runs when a component is placed on the canvas standalone
     public boolean placeComponent(Point position, ComponentType componentType) {
-        System.out.println("Function: placeComponent, in src/construction/builder/GridBuilder\n");
-
+        if (DEBUG) {
+            System.out.println("Function: placeComponent, in src/construction/builder/GridBuilder\n");
+        }
         if (isGroup(componentType)) {
             return placeGroup(position, componentType);
         }
@@ -122,8 +126,10 @@ public class GridBuilder {
         Device device = createDevice(position, componentType);
         if (device == null) return false;
         device.setAngle(properties.getRotation());
-        System.out.println("placeDevice in GridBuilder: \n ");
-        System.out.println("\n Copying:  " + isCopying);
+        if (DEBUG) {
+            System.out.println("placeDevice in GridBuilder: \n ");
+            System.out.println("\n Copying:  " + isCopying);
+        }
         checkIfComponentIsACopy(device);
 
         if(!verifyPlacement(device)) return false;
@@ -274,12 +280,13 @@ public class GridBuilder {
             //      de-energized. Otherwise, the sensorWire has no effect on the power output of the ATS.
             //      This means that the ATS will always be supplying power, with no option to turn off said power.
             case ATS -> {
-                System.out.println("got to ATS");
                 ATS ats = new ATS("", position, true);
                 ats.setAngle(properties.getRotation());
                 checkIfComponentIsACopy(ats);
                 if(!verifyPlacement(ats)) return false;
-
+                if (DEBUG) {
+                    System.out.println("Got past verify placement");
+                }
                 Wire outWire = new Wire(position.translate(0, 60));
                 Component conflictComponent = verifySingleWirePosition(outWire);
                 if(conflictComponent == null) { // use new wire
@@ -489,8 +496,9 @@ public class GridBuilder {
                 conflicts = conflicts + 1;
             }
         }
-        System.out.println("Conflicts found in src/construction/builder/GridBuilder/verifyPlacement: " + conflicts);
-
+        if (DEBUG) {
+            System.out.println("Conflicts found in src/construction/builder/GridBuilder/verifyPlacement: " + conflicts);
+        }
         return conflicts == 0;
     }
 
