@@ -232,6 +232,22 @@ public class ComponentIconCreator {
         return poleIcon;
     }
 
+
+    public static DeviceIcon getConnectedLoadTextIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        DeviceIcon poleIcon = new DeviceIcon();
+
+        Circle circle = createCircle(p);
+        poleIcon.addInNodeShapes(circle);
+
+        poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
+        poleIcon.setFittingRect(new Dimensions(0, 0), p);
+
+        poleIcon.addTextElement(new Text("Hey!!"));
+        return poleIcon;
+    }
+
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
         DeviceIcon jumperIcon = new DeviceIcon();
 

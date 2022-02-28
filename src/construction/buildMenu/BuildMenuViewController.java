@@ -146,6 +146,13 @@ public class BuildMenuViewController {
         currentButton = PoleButton;
     }
 
+    /*public void selectConnectedLoadTextTool() {
+        currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
+        buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.CONNECTED_LOAD_TEXT);
+        PoleButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
+        currentButton = PoleButton;
+    }*/
+
     public void selectCutoutTool() {
         currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
         buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.CUTOUT);

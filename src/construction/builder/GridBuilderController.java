@@ -258,6 +258,26 @@ public class GridBuilderController {
         event.consume();
     };
 
+    //This is just to test Connected Load Text please delete it later Regina
+    private final EventHandler<MouseEvent> testConnectedLoadText = event -> {
+        if (buildData.toolType == ToolType.SELECT) return;
+
+        buildData.componentType = ComponentType.CONNECTED_LOAD_TEXT;
+        Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
+        SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
+        boolean res = model.placeComponent(coordPoint, buildData.componentType);
+
+        if (res) {
+            if(!model.getIsDragging()) gridFlowEventManager.sendEvent(e); // save the pre place grid state
+            gridFlowEventManager.sendEvent(new GridChangedEvent());
+        } else {
+            gridFlowEventManager.sendEvent(new PlacementFailedEvent());
+            if(model.getIsDragging()) gridFlowEventManager.sendEvent(new InternalUndoEvent());
+            gridFlowEventManager.sendEvent(new GridChangedEvent());
+        }
+        event.consume();
+    };
+
 // Changed to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
@@ -470,6 +490,11 @@ public class GridBuilderController {
         canvasFacade.getCanvas().setCursor(Cursor.DEFAULT);
         event.consume();
     };
+
+    //Regina delete this later
+    public EventHandler<MouseEvent> getTestCLT() {
+        return testConnectedLoadText;
+    }
 
     public EventHandler<MouseEvent> getPlaceWireEventHandler() {
         return placeWireEventHandler;

@@ -12,6 +12,10 @@ import java.util.UUID;
 
 public class ConnectedLoadText extends Device {
 
+    private String buildings = "Bldg";
+    private String transformerSize = "Transformer Size";
+    private String warnings = "No Warnings";
+
     public ConnectedLoadText(String name, Point position) {
         super(name, position);
         createComponentIcon();
@@ -30,7 +34,7 @@ public class ConnectedLoadText extends Device {
     }
 
     protected void createComponentIcon() {
-        DeviceIcon icon = ComponentIconCreator.getPoleIcon(getPosition());
+        DeviceIcon icon = ComponentIconCreator.getConnectedLoadTextIcon(getPosition());
         icon.setDeviceEnergyStates(false, false);
         icon.setComponentIconID(getId().toString());
         icon.setAngle(-45, getPosition());
@@ -40,7 +44,7 @@ public class ConnectedLoadText extends Device {
 
     @Override
     public ComponentMemento makeSnapshot() {
-        return new PoleSnapshot(getId().toString(), getName(), getAngle(), getPosition(), getInWireID().toString(), getOutWireID().toString(), isNameRight());
+        return new ConnectedLoadTextSnapshot(getId().toString(), getName(), getAngle(), getPosition(), getInWireID().toString(), getOutWireID().toString(), isNameRight());
     }
 
     @Override
@@ -57,6 +61,30 @@ public class ConnectedLoadText extends Device {
 
     @Override
     public ComponentType getComponentType() { return ComponentType.CONNECTED_LOAD_TEXT; }
+
+    public String getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(String buildings) {
+        this.buildings = buildings;
+    }
+
+    public String getTransformerSize() {
+        return transformerSize;
+    }
+
+    public void setTransformerSize(String transformerSize) {
+        this.transformerSize = transformerSize;
+    }
+
+    public String getWarnings() {
+        return warnings;
+    }
+
+    public void setWarnings(String warnings) {
+        this.warnings = warnings;
+    }
 }
 
 class ConnectedLoadTextSnapshot implements ComponentMemento {

@@ -52,6 +52,19 @@
             <Label fx:id="numSelectedLabel" prefWidth="43"/>
             <Button text="Link" onAction="#linkBreakers" styleClass="properties-button" focusTraversable="false" prefWidth="56"/>
         </HBox>
+        <HBox fx:id="buildingControl" alignment="CENTER">
+            <Label text="Buildings" prefWidth="100"/>
+            <TextField fx:id="buildingsField" focusTraversable="false"/>
+        </HBox>
+        <HBox fx:id="transformerControl" alignment="CENTER">
+            <Label text="Transformer Size" prefWidth="100"/>
+            <TextField fx:id="transformerField" focusTraversable="false"/>
+
+        </HBox>
+        <HBox fx:id="warningsControl" alignment="CENTER">
+            <Label text="Warnings" prefWidth="100"/>
+            <TextField fx:id="warningsField" focusTraversable="false"/>
+        </HBox>
 
     </VBox>
     <HBox AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="0" prefWidth="250" alignment="CENTER">
