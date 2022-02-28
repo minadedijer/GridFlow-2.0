@@ -20,7 +20,7 @@ public class AssociationData extends ObjectData {
     }
 
     @Override
-    public ObjectData applySettings(String name, boolean nameRight, boolean isClosed, String label, String subLabel, String acronym) {
+    public ObjectData applySettings(String name, boolean nameRight, boolean isClosed, String label, String subLabel, String acronym, String transformerSize, String buildings, String warnings) {
         return new AssociationData(label, subLabel, acronym);
     }
 

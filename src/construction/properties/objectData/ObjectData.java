@@ -8,5 +8,7 @@ public abstract class ObjectData {
     public abstract void accept(Visitor v);
 
     // Creates a new ObjectData object with the updated settings
-    public abstract ObjectData applySettings(String name, boolean nameRight, boolean isClosed, String label, String subLabel, String acronym);
+    public abstract ObjectData applySettings(String name, boolean nameRight, boolean isClosed,
+                                             String label, String subLabel, String acronym,
+                                             String transformerSize, String buildings, String warnings);
 }

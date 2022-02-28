@@ -115,6 +115,7 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
 
         if(selectedIDs.size() == 1 && checkConnectedLoadTextMenu()){
             setCLTMenu();
+            applyButton.setVisible(true);
             return;
         }
 
@@ -257,8 +258,13 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         String subLabel = subLabelField.getText();
         String acronym = acronymField.getText();
 
+        //CLT
+        String building = buildingsField.getText();
+        String transformSize = transformerField.getText();
+        String warnings = warningsField.getText();
+
         // Modify the object data
-        ObjectData newData = currentObjectData.applySettings(name, nameRight, isClosed, label, subLabel, acronym);
+        ObjectData newData = currentObjectData.applySettings(name, nameRight, isClosed, label, subLabel, acronym, transformSize, building, warnings);
 
         // Send it to construction controller for application
         propertiesMenuFunctions.setObjectData(selectedIDs.get(0), newData);

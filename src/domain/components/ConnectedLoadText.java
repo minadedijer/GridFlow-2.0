@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import construction.ComponentType;
 import construction.history.ComponentMemento;
+import construction.properties.objectData.ComponentData;
+import construction.properties.objectData.ObjectData;
 import domain.geometry.Point;
 import visualization.componentIcons.CLTIcon;
 import visualization.componentIcons.ComponentIconCreator;
@@ -15,7 +17,7 @@ import java.util.UUID;
 
 public class ConnectedLoadText extends Device {
 
-    private String buildings = "Bldg";
+    private String buildings = "Bldg(s)";
     private String transformerSize = "Transformer Size";
     private String warnings = "No Warnings";
 
@@ -44,9 +46,9 @@ public class ConnectedLoadText extends Device {
         icon.setComponentIconID(getId().toString());
         icon.setAngle(0, getPosition());
         icon.setComponentName(getName(), isNameRight());
-        icon.setBuildingText("Bldg 716", false);
-        icon.setTransformerText("750 kVA", false);
-        icon.setWarningText("Fuel Stand", false);
+        icon.setBuildingText(getBuildings(), false);
+        icon.setTransformerText(getTransformerSize(), false);
+        icon.setWarningText(getWarnings(), false);
 
         setComponentIcon(icon);
     }
@@ -58,14 +60,31 @@ public class ConnectedLoadText extends Device {
 
     @Override
     public void updateComponentIcon() {
-        DeviceIcon icon = (DeviceIcon)getComponentIcon();
+        CLTIcon icon = (CLTIcon)getComponentIcon();
         icon.setDeviceEnergyStates(isInWireEnergized(), isOutWireEnergized());
     }
 
     @Override
     public void updateComponentIconName() {
-        DeviceIcon icon = (DeviceIcon)getComponentIcon();
+        CLTIcon icon = (CLTIcon)getComponentIcon();
         icon.setComponentName(getName(), isNameRight());
+        icon.setTransformerText(getTransformerSize(), false);
+        icon.setBuildingText(getBuildings(), false);
+        icon.setWarningText(getWarnings(), false);
+
+    }
+
+    @Override
+    public void applyComponentData(ObjectData objectData) {
+        ComponentData data = (ComponentData) objectData;
+        if (true) {
+            setName(data.getName());
+            setNameRight(data.isNamePos());
+            setBuildings(data.getBuildings());
+            setTransformerSize(data.getTransformerSize());
+            setWarnings(data.getWarnings());
+            updateComponentIconName();
+        }
     }
 
     @Override

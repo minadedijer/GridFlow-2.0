@@ -238,11 +238,12 @@ public class ComponentIconCreator {
         // change to new icon that can't be split energy maybe
         CLTIcon cltIcon = new CLTIcon();
 
+//        Circle circle = createCircle(p);
+//        cltIcon.addInNodeShapes(circle);
 
-        cltIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
+        cltIcon.setBoundingRect(new Dimensions(4, 4), p.translate(0,-.75*Globals.UNIT));
         cltIcon.setFittingRect(new Dimensions(0, 0), p);
 
-        //cltIcon.addTextElement(new Text("Hey!!"));
         return cltIcon;
     }
 
