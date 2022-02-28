@@ -1,9 +1,12 @@
 package domain.components;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import construction.ComponentType;
 import construction.history.ComponentMemento;
 import domain.geometry.Point;
+import visualization.componentIcons.CLTIcon;
 import visualization.componentIcons.ComponentIconCreator;
 import visualization.componentIcons.DeviceIcon;
 
@@ -34,11 +37,17 @@ public class ConnectedLoadText extends Device {
     }
 
     protected void createComponentIcon() {
-        DeviceIcon icon = ComponentIconCreator.getConnectedLoadTextIcon(getPosition());
+        //DeviceIcon icon = ComponentIconCreator.getConnectedLoadTextIcon(getPosition());
+        CLTIcon icon = ComponentIconCreator.getConnectedLoadTextIcon(getPosition());
+
         icon.setDeviceEnergyStates(false, false);
         icon.setComponentIconID(getId().toString());
-        icon.setAngle(-45, getPosition());
+        icon.setAngle(0, getPosition());
         icon.setComponentName(getName(), isNameRight());
+        icon.setBuildingText("Bldg 716", false);
+        icon.setTransformerText("750 kVA", false);
+        icon.setWarningText("Fuel Stand", false);
+
         setComponentIcon(icon);
     }
 

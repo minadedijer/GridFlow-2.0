@@ -260,7 +260,7 @@ public class GridBuilderController {
 
     //This is just to test Connected Load Text please delete it later Regina
     private final EventHandler<MouseEvent> testConnectedLoadText = event -> {
-        if (buildData.toolType == ToolType.SELECT) return;
+        if (buildData.toolType == ToolType.SELECT || buildData.toolType == ToolType.PLACE) return;
 
         buildData.componentType = ComponentType.CONNECTED_LOAD_TEXT;
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());

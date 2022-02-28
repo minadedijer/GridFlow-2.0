@@ -104,6 +104,14 @@ public class GridBuilder {
             outPoint = position.translate(0, device.getComponentIcon().getHeight());
         }
 
+
+        //Stop out wire Regina
+        if(componentType == ComponentType.CONNECTED_LOAD_TEXT){
+            device.connectOutWire(inWire);
+            grid.addComponent(device);
+            return true;
+        }
+
         Wire outWire = new Wire(outPoint.rotate(properties.getRotation(), position));
 
         conflictComponent = verifySingleWirePosition(outWire);

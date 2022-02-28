@@ -233,19 +233,17 @@ public class ComponentIconCreator {
     }
 
 
-    public static DeviceIcon getConnectedLoadTextIcon(Point p) {
+    public static CLTIcon getConnectedLoadTextIcon(Point p) {
 
         // change to new icon that can't be split energy maybe
-        DeviceIcon poleIcon = new DeviceIcon();
+        CLTIcon cltIcon = new CLTIcon();
 
-        Circle circle = createCircle(p);
-        poleIcon.addInNodeShapes(circle);
 
-        poleIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
-        poleIcon.setFittingRect(new Dimensions(0, 0), p);
+        cltIcon.setBoundingRect(new Dimensions(1.5, 1.5), p.translate(0,-.75*Globals.UNIT));
+        cltIcon.setFittingRect(new Dimensions(0, 0), p);
 
-        poleIcon.addTextElement(new Text("Hey!!"));
-        return poleIcon;
+        //cltIcon.addTextElement(new Text("Hey!!"));
+        return cltIcon;
     }
 
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
