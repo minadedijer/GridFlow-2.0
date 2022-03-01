@@ -18,6 +18,7 @@ import construction.properties.PropertiesData;
 import construction.properties.objectData.ObjectData;
 import construction.selector.observable.Observer;
 import domain.Grid;
+import domain.components.ATS;
 import domain.components.Component;
 import domain.components.Wire;
 import domain.geometry.Point;
@@ -36,7 +37,7 @@ public class SelectionManagerController {
     private PropertiesData propertiesData;
     private GridBuilder modelGrid;
     private DoubleClickPlacementContext doubleClickContext;
-
+    private boolean DEBUG = false;
     // To implement copying and pasting, the selection manager needs to be able to copy data and place a new component.
     //      To do that, SMC needs the functonality of the below controllers.
     //      Ghost controls visual placement, gridBuilder control placement of the component logically.
@@ -87,7 +88,9 @@ public class SelectionManagerController {
         if (buildMenuData.toolType != ToolType.SELECT) return;
         if(targetIDForSingleComponent == ((Node)event.getTarget()).getId() && (targetIDForSingleComponent != null)) return;
 
-        System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
+        if (DEBUG) {
+            System.out.println("Function: StartSelectionEventHandler, in src/construction/selector/selectionManagerController\n");
+        }
         targetIDForSingleComponent = ((Node)event.getTarget()).getId();
         dragSelecting = true;
         dragMoving = false;
@@ -132,9 +135,9 @@ public class SelectionManagerController {
         if (!event.isPrimaryButtonDown()) return;
         if (buildMenuData.toolType != ToolType.SELECT) return;
 
-
-        System.out.println("Function: selectSingleComponentHandler, in src/construction/selector/selectionManagerController\n");
-
+        if (DEBUG) {
+            System.out.println("Function: selectSingleComponentHandler, in src/construction/selector/selectionManagerController\n");
+        }
 
         String targetID = ((Node)event.getTarget()).getId();
 
@@ -227,7 +230,9 @@ public class SelectionManagerController {
     // Drags a single component. To use, click-and-hold on a single component and move mouse.
     public void dragSingleComponent(Point eventPoint)
     {
-        System.out.println("Function: DragSingleComponent, in src/construction/selector/selectionManagerController\n");
+        if (DEBUG) {
+            System.out.println("Function: DragSingleComponent, in src/construction/selector/selectionManagerController\n");
+        }
         if (this.model.getSelectedIDs().size() == 1) {
             // In the case that an association was selected
             if (grid.getComponent(targetIDForSingleComponent) == null) {
@@ -236,6 +241,10 @@ public class SelectionManagerController {
             else {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
+                if (comp.getComponentType() == ComponentType.ATS) {
+                    ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                }
 
                 //Can't Drag Wires yet
                 if(comp.getComponentType()==ComponentType.WIRE){
@@ -286,15 +295,17 @@ public class SelectionManagerController {
                 buildMenuData.componentType = comp.getComponentType();
 
                 buildMenuData.toolType = ToolType.PLACE;
-                //System.out.println("DRAG GHOST");
+                if (DEBUG) {
+                    System.out.println("DRAG GHOST");
+                }
                 ghostController.dragGhost();
 
                 // Gather the component's data to be sent to the right class object
-                String compName = comp.getName();
+                String compName = comp.getId().toString();
                 ObjectData originalComponentData = comp.getComponentObjectData();
 
                 // Set the details of the copied component in the modelGrid
-                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setCopiedComponentID(compName);
                 modelGrid.setOriginalComponentData(originalComponentData);
 
                 modelGrid.setIsDragging(true);
@@ -314,9 +325,10 @@ public class SelectionManagerController {
 
         if (this.model.getSelectedIDs().size() == 1) {
             // In the case that an association was selected
-            System.out.println("This is targetID :  \n");
-            System.out.println(targetIDForSingleComponent);
-
+            if (DEBUG) {
+                System.out.println("This is targetID :  \n");
+                System.out.println(targetIDForSingleComponent);
+            }
             if (grid.getComponent(targetIDForSingleComponent) == null) {
                 return;
             }
@@ -324,17 +336,21 @@ public class SelectionManagerController {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
 
+                if (comp.getComponentType() == ComponentType.ATS) {
+                    ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                }
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
                 buildMenuData.toolType = ToolType.PLACE;
                 ghostController.buildMenuDataChanged();
 
                 // Gather the component's data to be sent to the right class object
-                String compName = comp.getName();
+                String compID = comp.getId().toString();
                 ObjectData originalComponentData = comp.getComponentObjectData();
 
                 // Set the details of the copied component in the modelGrid
-                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setCopiedComponentID(compID);
                 modelGrid.setIsCopying(true);
                 modelGrid.setOriginalComponentData(originalComponentData);
 

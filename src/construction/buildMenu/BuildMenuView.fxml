@@ -140,6 +140,15 @@
                     </graphic>
                     <tooltip><Tooltip text="Pole (P)"/></tooltip>
                 </Button>
+                <Button fx:id="ATSButton" styleClass="component-button" onMousePressed="#selectATSTool" prefHeight="$ButtonSize" prefWidth="$ButtonSize">
+                    <graphic>
+                        <ImageView fitHeight="$ButtonSize" fitWidth="$ButtonSize" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../resources/ATSIcon.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="ATS (T)"/></tooltip>
+                </Button>
                 <Button fx:id="ConnectedLoadTextButton" styleClass="component-button" onMousePressed="#selectConnectedLoadTextTool" prefHeight="$ButtonSize" prefWidth="$ButtonSize">
                     <graphic>
                         <ImageView fitHeight="$ButtonSize" fitWidth="$ButtonSize" pickOnBounds="true"

@@ -11,5 +11,6 @@ public enum ComponentType {
     POLE,
     TURBINE,
     WIRE,
-    CONNECTED_LOAD_TEXT
+    CONNECTED_LOAD_TEXT,
+    ATS
 }

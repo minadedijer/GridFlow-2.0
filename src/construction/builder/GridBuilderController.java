@@ -36,6 +36,9 @@ public class GridBuilderController {
     private Grid grid;
     private GridCanvasFacade canvasFacade;
 
+    // If user wants to trace back function information, set DEBUG to true
+    private boolean DEBUG = false;
+
     // these Contexts store data needed for actions that take place over time
     // used change borders of an association
     private AssociationMoveContext associationMoveContext = new AssociationMoveContext();
@@ -219,6 +222,7 @@ public class GridBuilderController {
     private final EventHandler<MouseEvent> placeAssociationEventHandler = event -> {
         if (buildData.toolType != ToolType.ASSOCIATION) return;
         if (!event.isPrimaryButtonDown()) return;
+
         if (doubleClickPlacementContext.placing) { // end placement
             doubleClickPlacementContext.placing = false;
             Point endPoint = Point.nearestCoordinate(event.getX(), event.getY());
@@ -258,9 +262,7 @@ public class GridBuilderController {
         event.consume();
     };
 
-
-
-// Changed to add the copy feature in place component
+// Changed by Ali to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
             return;
@@ -276,7 +278,9 @@ public class GridBuilderController {
 
 
         Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
-        System.out.println("THis is coordPoint: " + coordPoint);
+        if (DEBUG) {
+            System.out.println("This is coordPoint: " + coordPoint);
+        }
         SaveStateEvent e = new SaveStateEvent(grid.makeSnapshot()); // create a snapshot of the grid before placing component
         boolean res = model.placeComponent(coordPoint, buildData.componentType);
 

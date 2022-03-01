@@ -63,6 +63,8 @@ public class GhostManager {
             case CONNECTED_LOAD_TEXT -> ComponentIconCreator.getConnectedLoadTextIcon(pos);
             case TURBINE -> ComponentIconCreator.getTurbineIcon(pos, true, false);
             case WIRE -> ComponentIconCreator.getWireIcon(pos, pos, List.of());
+            //Need to update with ATS ICON
+            case ATS -> ComponentIconCreator.getATSCutIcon(pos,false);
         };
     }
 

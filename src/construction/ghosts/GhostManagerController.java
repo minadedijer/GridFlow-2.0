@@ -17,6 +17,10 @@ public class GhostManagerController implements GridFlowEventListener {
     private DoubleClickPlacementContext doubleClickContext;
     private BuildMenuData buildData;
 
+    // If user wants to trace back function information, set DEBUG to true
+    private boolean DEBUG = false;
+
+
     public GhostManagerController(GridCanvasFacade canvasFacade, DoubleClickPlacementContext doubleClickContext,
                                   BuildMenuData buildMenuData, PropertiesData properties) {
         this.ghostModel = new GhostManager(canvasFacade, properties);
@@ -46,9 +50,10 @@ public class GhostManagerController implements GridFlowEventListener {
     // switches the ghosts on or off when a different tool is selected
     public void buildMenuDataChanged() {
         if (buildData.toolType == ToolType.PLACE || buildData.toolType == ToolType.WIRE) {
-            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
-            System.out.println("Ghost is enabled\n");
-
+            if (DEBUG) {
+                System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+                System.out.println("Ghost is enabled\n");
+            }
             ghostModel.setGhostEnabled(true);
             ghostModel.setGhostIcon(buildData.componentType);
             associationModel.setGhostEnabled(false);
@@ -57,8 +62,10 @@ public class GhostManagerController implements GridFlowEventListener {
             associationModel.setAssociationGhost();
             ghostModel.setGhostEnabled(false);
         } else {
-            System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
-            System.out.println("Ghost is disabled\n");
+            if (DEBUG) {
+                System.out.println("Function: buildMenuDataChanged, in src/construction/ghosts/GhostManagerController\n");
+                System.out.println("Ghost is disabled\n");
+            }
             ghostModel.setGhostEnabled(false);
             associationModel.setGhostEnabled(false);
         }
@@ -88,8 +95,9 @@ public class GhostManagerController implements GridFlowEventListener {
             if (doubleClickContext.placing) {
                 Point endPoint = coordPoint.clampPerpendicular(doubleClickContext.beginPoint);
                 ghostModel.extendGhostWire(doubleClickContext.beginPoint, endPoint);
-                //System.out.println("Placing the wire component\n");
-
+                if (DEBUG) {
+                    System.out.println("Placing the wire component\n");
+                }
 
             } else {
                 ghostModel.updateGhostPosition(coordPoint);
@@ -98,8 +106,9 @@ public class GhostManagerController implements GridFlowEventListener {
             Point coordPoint = Point.nearestCoordinate(event.getX(), event.getY());
             if (doubleClickContext.placing) {
                 associationModel.setAssociationRectangleGhost(doubleClickContext.beginPoint, coordPoint);
-                System.out.println("Placing the association component\n");
-
+                if (DEBUG) {
+                    System.out.println("Placing the association component\n");
+                }
             } else {
                 associationModel.updateGhostPosition(coordPoint);
             }

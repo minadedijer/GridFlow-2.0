@@ -69,6 +69,8 @@ public class GridFileManager {
                 case "Transformer" -> new Transformer(componentJSON);
                 case "Turbine" -> new Turbine(componentJSON);
                 case "Wire" -> createWireFromJson(componentJSON);
+                case "Pole" -> new Pole(componentJSON);
+                case "ATS" -> new ATS(componentJSON);
                 default -> throw new UnsupportedOperationException();
             };
             grid.addComponent(component);

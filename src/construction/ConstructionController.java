@@ -59,6 +59,10 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
     // Map of hotkeys to buttons
     private final Map<KeyCode, Runnable> componentShortcutMap = new HashMap<>();
 
+    // If user wants to trace back function information, set DEBUG to true
+    private boolean DEBUG = false;
+
+
     public ConstructionController(Grid grid, GridFlowEventManager gridFlowEventManager, Stage stage) {
         // shared objects
         this.gridFlowEventManager = gridFlowEventManager;
@@ -186,6 +190,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     private final EventHandler<KeyEvent> handleRKeyRotation = event -> {
         if (event.getCode() != KeyCode.R) return;
+
         rotate(event.isControlDown());
         event.consume();
     };
@@ -233,6 +238,7 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         componentShortcutMap.put(KeyCode.DIGIT6, () -> buildMenuViewController.selectTransformerTool());
         componentShortcutMap.put(KeyCode.DIGIT7, () -> buildMenuViewController.selectJumperTool());
         componentShortcutMap.put(KeyCode.DIGIT8, () -> buildMenuViewController.selectCutoutTool());
+        componentShortcutMap.put(KeyCode.T, () -> buildMenuViewController.selectATSTool());
     }
 
     private final EventHandler<KeyEvent> handleComponentShortcut = event -> {
@@ -280,7 +286,9 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     @Override
     public void delete() {
-        System.out.println("This is in Construction Controller, function delete\n");
+        if (DEBUG) {
+            System.out.println("This is in Construction Controller, function delete\n");
+        }
         selectionManagerController.delete();
     }
 
