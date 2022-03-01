@@ -18,14 +18,17 @@ public class ATS extends Source {
     private Wire outWire; // this is on the bottom of the source when oriented up
 
 
-   //   Added by Ali
+    //   To keep track of the components needed to create an ATS
+
     private Wire mainLineNode;
+    private String atsCutOutID;
+
 
     // the states which the ATS can be in
     private int STATE = 0;
     private final int POWEREDBYGENERATOR = 2;
     private final int POWEREDBYMAIN = 1;
-    private  boolean energized = true;
+    private  boolean energized = false;
 
     public ATS(String name, Point position, boolean on) {
         super(name, position, on);
@@ -38,6 +41,7 @@ public class ATS extends Source {
                 node.get("on").asBoolean());
         this.energized = node.get("energized").asBoolean();
         this.STATE = node.get("STATE").asInt();
+        this.atsCutOutID = node.get("atsCutOutID").asText();
         createComponentIcon();
     }
 
@@ -91,6 +95,7 @@ public class ATS extends Source {
         ats.put("mainLineNode", mainLineNode.getId().toString());
         ats.put("energized", energized);
         ats.put("STATE", STATE);
+        ats.put("atsCutOutID", atsCutOutID);
 
         return ats;
     }
@@ -153,6 +158,7 @@ public class ATS extends Source {
 
     }
 
+
     @Override
     public void updateComponentIconName() {
         SourceIcon icon = (SourceIcon)getComponentIcon();
@@ -162,7 +168,7 @@ public class ATS extends Source {
     @Override
     public ComponentMemento makeSnapshot() {
         return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), isOn(), outWire.getId().toString(),
-                STATE,  energized, mainLineNode.getId().toString(), mainLineNode);
+                STATE,  energized, mainLineNode.getId().toString(), mainLineNode, atsCutOutID);
     }
 
     @Override
@@ -181,6 +187,13 @@ public class ATS extends Source {
         this.mainLineNode = newMainLine;
     }
 
+    public String getATSCutOutID() {
+        return atsCutOutID;
+    }
+
+    public void setAtsCutOutID(String cutOutID) {
+        this.atsCutOutID = cutOutID;
+    }
 
 
 
@@ -194,6 +207,7 @@ class ATSSnapshot implements ComponentMemento {
     boolean on;
     String outWireID;
     String mainLineNodeID;
+    String atsCutOutID;
     Wire mainLineNode;
     // the states which the ATS can be in
     int STATE = 0;
@@ -205,7 +219,8 @@ class ATSSnapshot implements ComponentMemento {
 
 
     public ATSSnapshot(String id, String name, double angle, Point pos, boolean on, String outWireID,
-                       int STATE, boolean energized, String mainLineNodeID, Wire mainLineNode) {
+                       int STATE, boolean energized, String mainLineNodeID, Wire mainLineNode,
+                       String atsCutOutID) {
         this.id = id;
         this.name = name;
         this.angle = angle;
@@ -216,6 +231,7 @@ class ATSSnapshot implements ComponentMemento {
         this.energized = energized;
         this.mainLineNodeID = mainLineNodeID;
         this.mainLineNode = mainLineNode;
+        this.atsCutOutID = atsCutOutID;
 
     }
 

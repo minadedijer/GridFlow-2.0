@@ -36,13 +36,19 @@ public class GridBuilder {
     private SaveStateEvent preDragState = null;
 
     // Variables to enable group components to keep track of their individual components
-    private Source sourceComponent;
-    private Device deviceComponent;
+    private String peripherySourceComponent;
+    private String peripheryDeviceComponent;
     // Possible to have more components, ideally these variables will be wiped after the complete
     //      placement of the group component.
     //      Ie: An XYZ is made up of a generator and a switch. When creating a new XYZ, store the
     //      generator as the sourceComponent,amd the switch as a deviceComponent. Then,
 
+
+    // When copying components like the ATS, you want to make sure that the copy and drag functions
+    //      are only targeting the data of the main component, the ATS. Not the periphery components,
+    //      like the cutout and the connected load. Since COPY/DRAG can only work for single components,
+    //      we choose which component's data we want to copy.
+    private boolean isThisMainComponent = true;
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -124,6 +130,9 @@ public class GridBuilder {
     public boolean placeDevice(Point position, ComponentType componentType) {
 
         Device device = createDevice(position, componentType);
+        // If this is a periphery device, place the UUID into the variable, so that the
+        //      main component can catch it in it's respective function.
+        peripheryDeviceComponent = device.getId().toString();
         if (device == null) return false;
         device.setAngle(properties.getRotation());
         if (DEBUG) {
@@ -280,8 +289,21 @@ public class GridBuilder {
             //      de-energized. Otherwise, the sensorWire has no effect on the power output of the ATS.
             //      This means that the ATS will always be supplying power, with no option to turn off said power.
             case ATS -> {
+
+
+
+                // declare the CUTOUT as a periphery component
+                isThisMainComponent = false;
+                placeDevice(position.translate(0,-60), componentType.CUTOUT);
+
                 ATS ats = new ATS("", position, true);
+
+                // Set the ATS's CutOutID to the newly created CutOut.
+                ats.setAtsCutOutID(peripheryDeviceComponent);
+                peripheryDeviceComponent = null;
                 ats.setAngle(properties.getRotation());
+
+                // declare the ATS as the main component
                 checkIfComponentIsACopy(ats);
                 if(!verifyPlacement(ats)) return false;
                 if (DEBUG) {
@@ -304,6 +326,7 @@ public class GridBuilder {
                     conflictComponent.getComponentIcon().showError();
                     return false;
                 }
+/*
                 Point sensorPoint = position.translate(0, 0);
                 Wire sensorWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
                 Wire tempWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
@@ -322,9 +345,27 @@ public class GridBuilder {
                     conflictComponent.getComponentIcon().showError();
                     return false;
                 }
+*/
 
+                Wire inWire = new Wire(position);
+                conflictComponent = verifySingleWirePosition(inWire);
 
-                ats.setMainLineNode(sensorWire);
+                if(conflictComponent == null) { // use new wire
+                    ats.setMainLineNode(inWire);
+                   // inWire.connect(ats);
+                    grid.addComponent(inWire);
+                }
+                else if (conflictComponent instanceof Wire){
+                    inWire = (Wire) conflictComponent;
+                    ats.setMainLineNode(inWire);
+                   // inWire.connect(ats);
+                }
+                else{
+                    conflictComponent.getComponentIcon().showError();
+                    return false;
+                }
+
+               // ats.setMainLineNode(sensorWire);
                 grid.addComponents(ats);
             }
 
@@ -337,9 +378,13 @@ public class GridBuilder {
 
     private void checkIfComponentIsACopy (Component component) {
 
-        if (isCopying || isDragging) {
+        if ((isCopying || isDragging) && isThisMainComponent) {
             component.applyComponentData(originalComponentData);
+            if (component.getComponentType() == ComponentType.ATS) {
+            }
         }
+
+        isThisMainComponent = true;
     }
 
 
