@@ -113,11 +113,6 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
             return;
         }
 
-        if(selectedIDs.size() == 1 && checkConnectedLoadTextMenu()){
-            setCLTMenu();
-            applyButton.setVisible(true);
-            return;
-        }
 
         if (selectedIDs.size() != 1) return;
         if (!PropertiesWindow.isVisible()) PropertiesWindow.setVisible(true);
@@ -128,6 +123,16 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
             System.err.println("Selected ID did not match a component");
             return;
         }
+        else{
+            System.out.println(objectData.toString());
+        }
+
+        if(selectedIDs.size() == 1 && checkConnectedLoadTextMenu()){
+            setCLTMenu();
+//            applyButton.setVisible(true);
+//            return;
+        }
+
         applyButton.setVisible(true);
 
         // Determine which menu to display
@@ -172,7 +177,8 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
 
     public void setComponentMenu(ComponentData data) {
         currentObjectData = data;
-
+        ComponentType type = propertiesMenuFunctions.getComponentType(selectedIDs.get(0));
+        if(type == ComponentType.CONNECTED_LOAD_TEXT) return;
         // Show correct controls
         nameControl.setVisible(true);
         namePosControl.setVisible(true);
@@ -262,6 +268,8 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         String building = buildingsField.getText();
         String transformSize = transformerField.getText();
         String warnings = warningsField.getText();
+
+        System.out.println("Here is the data:");
 
         // Modify the object data
         ObjectData newData = currentObjectData.applySettings(name, nameRight, isClosed, label, subLabel, acronym, transformSize, building, warnings);
