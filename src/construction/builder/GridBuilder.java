@@ -27,7 +27,7 @@ public class GridBuilder {
 
     // Additional variables so that the copy and drag functions can be implemented after components
     //      have been clicked on.
-    private String copiedComponentName;
+    private String copiedComponentID;
     private boolean isCopying;
     private ObjectData originalComponentData;
 
@@ -49,6 +49,8 @@ public class GridBuilder {
     //      like the cutout and the connected load. Since COPY/DRAG can only work for single components,
     //      we choose which component's data we want to copy.
     private boolean isThisMainComponent = true;
+    private List<String> attachedComponentIDs = new ArrayList<String>();
+
 
     public GridBuilder(Grid grid, PropertiesData properties) {
         this.grid = grid;
@@ -290,8 +292,6 @@ public class GridBuilder {
             //      This means that the ATS will always be supplying power, with no option to turn off said power.
             case ATS -> {
 
-
-
                 // declare the CUTOUT as a periphery component
                 isThisMainComponent = false;
                 placeDevice(position.translate(0,-60), componentType.CUTOUT);
@@ -301,10 +301,28 @@ public class GridBuilder {
                 // Set the ATS's CutOutID to the newly created CutOut.
                 ats.setAtsCutOutID(peripheryDeviceComponent);
                 peripheryDeviceComponent = null;
+
+                if (isDragging) {
+                    if (!attachedComponentIDs.isEmpty()) {
+                        for (int i = 0; i < attachedComponentIDs.size(); i++) {
+                            grid.deleteSelectedItem(attachedComponentIDs.get(i));
+                        }
+                        attachedComponentIDs.clear();
+                    }
+
+                }
+
                 ats.setAngle(properties.getRotation());
 
                 // declare the ATS as the main component
                 checkIfComponentIsACopy(ats);
+
+                /*
+                grid.deleteSelectedItem(ats.getATSCutOutID());
+                ats.setAtsCutOutID(ats.getTempID());
+
+                */
+
                 if(!verifyPlacement(ats)) return false;
                 if (DEBUG) {
                     System.out.println("Got past verify placement");
@@ -439,6 +457,7 @@ public class GridBuilder {
         }
         return true;
     }
+
 
     public static Point getConflictPoint(Wire wire1, Wire wire2) {
         
@@ -667,8 +686,8 @@ public class GridBuilder {
         };
     }
 
-    public String getCopiedComponentName () {
-        return copiedComponentName;
+    public String getCopiedComponentID () {
+        return copiedComponentID;
     }
     public boolean getIsCopying () {
         return isCopying;
@@ -676,8 +695,8 @@ public class GridBuilder {
     public ObjectData getOriginalComponentData () {
          return originalComponentData;
     }
-    public void setCopiedComponentName(String nameOfOriginalComponent) {
-        copiedComponentName = nameOfOriginalComponent;
+    public void setCopiedComponentID(String nameOfOriginalComponent) {
+        copiedComponentID= nameOfOriginalComponent;
     }
     public void setIsCopying(boolean isComponentBeingCopied) {
         isCopying = isComponentBeingCopied;
@@ -685,6 +704,10 @@ public class GridBuilder {
 
     public void setOriginalComponentData(ObjectData dataToBeCopied) {
         originalComponentData = dataToBeCopied;
+    }
+
+    public void addAttachedComponentIDs(String attachedComponentID) {
+        attachedComponentIDs.add(attachedComponentID);
     }
 
 

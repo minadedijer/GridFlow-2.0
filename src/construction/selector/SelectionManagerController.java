@@ -17,6 +17,7 @@ import construction.properties.PropertiesData;
 import construction.properties.objectData.ObjectData;
 import construction.selector.observable.Observer;
 import domain.Grid;
+import domain.components.ATS;
 import domain.components.Component;
 import domain.geometry.Point;
 import javafx.collections.ListChangeListener;
@@ -120,7 +121,7 @@ public class SelectionManagerController {
         model.endSelection();
         if (this.model.getSelectedIDs().size() != 0) {
             targetIDForSingleComponent = this.model.getSelectedIDs().get(0);
-            System.out.println(targetIDForSingleComponent);
+
 
         }
         event.consume();
@@ -187,6 +188,11 @@ public class SelectionManagerController {
             else {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
+                if (comp.getComponentType() == ComponentType.ATS) {
+                    ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                }
+
                 //Can't Drag Wires yet
                 if(comp.getComponentType()==ComponentType.WIRE){
                     return;
@@ -208,11 +214,11 @@ public class SelectionManagerController {
                 ghostController.dragGhost();
 
                 // Gather the component's data to be sent to the right class object
-                String compName = comp.getName();
+                String compName = comp.getId().toString();
                 ObjectData originalComponentData = comp.getComponentObjectData();
 
                 // Set the details of the copied component in the modelGrid
-                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setCopiedComponentID(compName);
                 modelGrid.setOriginalComponentData(originalComponentData);
 
                 modelGrid.setIsDragging(true);
@@ -243,17 +249,21 @@ public class SelectionManagerController {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
 
+                if (comp.getComponentType() == ComponentType.ATS) {
+                    ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                }
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
                 buildMenuData.toolType = ToolType.PLACE;
                 ghostController.buildMenuDataChanged();
 
                 // Gather the component's data to be sent to the right class object
-                String compName = comp.getName();
+                String compID = comp.getId().toString();
                 ObjectData originalComponentData = comp.getComponentObjectData();
 
                 // Set the details of the copied component in the modelGrid
-                modelGrid.setCopiedComponentName(compName);
+                modelGrid.setCopiedComponentID(compID);
                 modelGrid.setIsCopying(true);
                 modelGrid.setOriginalComponentData(originalComponentData);
 

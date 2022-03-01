@@ -22,7 +22,7 @@ public class ATS extends Source {
 
     private Wire mainLineNode;
     private String atsCutOutID;
-
+    private String tempID;
 
     // the states which the ATS can be in
     private int STATE = 0;
@@ -117,39 +117,20 @@ public class ATS extends Source {
 
     @Override
     public void updateComponentIcon() {
-        // Added by Ali to see if ATS can be dynamic
-        if (mainLineNode == null) {
-            System.out.println("GOT TO NULL\n");
-        }
 
         if (mainLineNode != null ) {
-
-// go by checking the state, not the isenergized.
-            // if changeTheState = false,
-            //  check if its energized, if it is, toggle
-            //  if it isnt energized, change the state = false;
-            //
-
-            System.out.println("\nMainlineNode energized: " + mainLineNode.isEnergized());
-            System.out.println(" STATE: " + STATE);
-            System.out.println("Name of MainLineNode  " + mainLineNode.getId() + "\n");
-
             if (mainLineNode.isEnergized() && STATE != POWEREDBYMAIN) {
-
-
                 energized = true;
                 STATE = POWEREDBYMAIN;
             }
 
             if (!mainLineNode.isEnergized() && STATE != POWEREDBYGENERATOR) {
-
                 energized = false;
                 STATE = POWEREDBYGENERATOR;
             }
 
 
         }
-        System.out.println("This is energized:  " + energized);
         SourceIcon icon = (SourceIcon) getComponentIcon();
         createComponentIcon();
         icon.setWireEnergyState(isOutWireEnergized(), 0);
@@ -189,6 +170,13 @@ public class ATS extends Source {
 
     public String getATSCutOutID() {
         return atsCutOutID;
+    }
+    public void setTempID (String temp) {
+        this.tempID = temp;
+    }
+
+    public String getTempID () {
+        return this.tempID;
     }
 
     public void setAtsCutOutID(String cutOutID) {
