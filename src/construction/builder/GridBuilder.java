@@ -105,7 +105,7 @@ public class GridBuilder {
         }
 
 
-        //Stop out wire Regina
+        //Stop out wire
         if(componentType == ComponentType.CONNECTED_LOAD_TEXT){
             device.connectOutWire(inWire);
             grid.addComponent(device);

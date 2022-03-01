@@ -186,7 +186,6 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
 
     private final EventHandler<KeyEvent> handleRKeyRotation = event -> {
         if (event.getCode() != KeyCode.R) return;
-
         rotate(event.isControlDown());
         event.consume();
     };
@@ -346,8 +345,6 @@ public class ConstructionController implements BaseMenuFunctions, BuildMenuFunct
         canvasFacade.addCanvasEventFilter(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceWireEventHandler());
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, gridBuilderController.getPlaceAssociationEventHandler());
 
-        //Regina Delete this later
-        canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_PRESSED, gridBuilderController.getTestCLT());
 
         // Tracks when the mouse is dragging a component, and places newly moved component
         canvasFacade.addCanvasEventHandler(MouseEvent.MOUSE_RELEASED, gridBuilderController.getPlaceComponentEventHandler());

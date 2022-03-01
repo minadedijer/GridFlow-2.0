@@ -54,6 +54,17 @@ public class ConnectedLoadText extends Device {
     }
 
     @Override
+    public ObjectData getComponentObjectData() {
+        return new ComponentData(getName(), isNameRight(), getAngle(), getTransformerSize(), getBuildings(), getWarnings());
+    }
+
+//    @Override
+//    public ObjectData getComponentObjectData() {
+//        return new ComponentData(getName(), isNameRight(), getAngle(), transformerSize, buildings, warnings);
+//    }
+
+
+    @Override
     public ComponentMemento makeSnapshot() {
         return new ConnectedLoadTextSnapshot(getId().toString(), getName(), getAngle(), getPosition(), getInWireID().toString(), getOutWireID().toString(), isNameRight());
     }
@@ -78,6 +89,7 @@ public class ConnectedLoadText extends Device {
     public void applyComponentData(ObjectData objectData) {
         ComponentData data = (ComponentData) objectData;
         if (true) {
+            System.out.println("Change the data in the CLT! "+data.getTransformerSize());
             setName(data.getName());
             setNameRight(data.isNamePos());
             setBuildings(data.getBuildings());
