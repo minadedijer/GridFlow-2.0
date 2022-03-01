@@ -8,6 +8,10 @@ public class ComponentData extends ObjectData {
     private String name;
     private double angle;
 
+    private String buildings;
+    private String transformerSize;
+    private String warnings;
+
     // Name Pos is relative to angle
     // 0 - false is left, true is right
     // 90 - false is top, true is bottom
@@ -15,10 +19,19 @@ public class ComponentData extends ObjectData {
     // 270 - true is top, false is bottom
     private boolean namePos;
 
-    public ComponentData(String name, boolean namePos, double angle) {
+//    public ComponentData(String name, boolean namePos, double angle) {
+//        this.name = name;
+//        this.namePos = namePos;
+//        this.angle = angle;
+//    }
+
+    public ComponentData(String name, boolean namePos, double angle, String transformer, String building, String warnings) {
         this.name = name;
         this.namePos = namePos;
         this.angle = angle;
+        this.transformerSize = transformer;
+        this.buildings = building;
+        this.warnings = warnings;
     }
 
     public boolean isVertical() {
@@ -65,11 +78,23 @@ public class ComponentData extends ObjectData {
     }
 
     @Override
-    public ObjectData applySettings(String name, boolean nameRightOrTop, boolean isClosed, String label, String subLabel, String acronym) {
-        return new ComponentData(name, getNamePos(nameRightOrTop), angle);
+    public ObjectData applySettings(String name, boolean nameRightOrTop, boolean isClosed, String label, String subLabel, String acronym, String transformerSize, String buildings, String warnings) {
+        return new ComponentData(name, getNamePos(nameRightOrTop), angle, transformerSize, buildings, warnings);
     }
 
     public double getAngle() {
         return angle;
+    }
+
+    public String getBuildings() {
+        return buildings;
+    }
+
+    public String getTransformerSize() {
+        return transformerSize;
+    }
+
+    public String getWarnings() {
+        return warnings;
     }
 }

@@ -258,6 +258,8 @@ public class GridBuilderController {
         event.consume();
     };
 
+
+
 // Changed to add the copy feature in place component
     private final EventHandler<MouseEvent> placeComponentEventHandler = event -> {
         if(event.getEventType()==MouseEvent.MOUSE_PRESSED && model.getIsDragging()) {
@@ -470,6 +472,7 @@ public class GridBuilderController {
         canvasFacade.getCanvas().setCursor(Cursor.DEFAULT);
         event.consume();
     };
+
 
     public EventHandler<MouseEvent> getPlaceWireEventHandler() {
         return placeWireEventHandler;

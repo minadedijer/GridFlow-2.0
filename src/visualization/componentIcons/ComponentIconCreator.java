@@ -232,6 +232,24 @@ public class ComponentIconCreator {
         return poleIcon;
     }
 
+
+    public static CLTIcon getConnectedLoadTextIcon(Point p) {
+
+        // change to new icon that can't be split energy maybe
+        CLTIcon cltIcon = new CLTIcon();
+
+        Circle circle = createCircle(p,1,Color.TRANSPARENT,Color.BLACK);
+        cltIcon.addInNodeShapes(circle);
+
+        //Text tsize = createText(p.translate(0,1*Globals.UNIT), "Transformer Size", Color.BLACK, 10);
+        //cltIcon.addTextElement(tsize);
+
+        cltIcon.setBoundingRect(new Dimensions(4, 4), p.translate(0,-.75*Globals.UNIT));
+        cltIcon.setFittingRect(new Dimensions(0, 0), p);
+
+        return cltIcon;
+    }
+
     public static DeviceIcon getJumperIcon(Point p, boolean closed, boolean isLocked) {
         DeviceIcon jumperIcon = new DeviceIcon();
 

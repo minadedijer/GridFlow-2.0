@@ -3,6 +3,7 @@ package construction.properties;
 import construction.ComponentType;
 import construction.properties.objectData.*;
 import construction.selector.observable.Observer;
+import domain.components.ConnectedLoadText;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -31,6 +32,10 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
     public HBox acronymControl;
     public HBox linkBreakersControl;
     public HBox clearLinkedControl;
+    public HBox buildingControl;
+    public HBox transformerControl;
+    public HBox warningsControl;
+
 
     public TextField nameField;
     public Label numSelectedLabel;
@@ -39,6 +44,11 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
     public TextField acronymField;
     public Label numSelectedToClearLabel;
     public Button clearLinkedButton;
+
+    public TextField buildingsField;
+    public TextField transformerField;
+    public TextField warningsField;
+
 
     public ToggleButton toggleLeft;
     public ToggleButton toggleRight;
@@ -60,6 +70,9 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         acronymControl.managedProperty().bind(acronymControl.visibleProperty());
         linkBreakersControl.managedProperty().bind(linkBreakersControl.visibleProperty());
         clearLinkedControl.managedProperty().bind(clearLinkedControl.visibleProperty());
+        buildingControl.managedProperty().bind(buildingControl.visibleProperty());
+        transformerControl.managedProperty().bind(transformerControl.visibleProperty());
+        warningsControl.managedProperty().bind(warningsControl.visibleProperty());
 
         PropertiesWindow.setVisible(false);
         hideAllControls();
@@ -81,6 +94,9 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         linkBreakersControl.setVisible(false);
         clearLinkedControl.setVisible(false);
         applyButton.setVisible(false);
+        buildingControl.setVisible(false);
+        transformerControl.setVisible(false);
+        warningsControl.setVisible(false);
     }
 
     @Override
@@ -96,6 +112,8 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
             setLinkBreakersMenu();
             return;
         }
+
+
         if (selectedIDs.size() != 1) return;
         if (!PropertiesWindow.isVisible()) PropertiesWindow.setVisible(true);
 
@@ -105,6 +123,16 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
             System.err.println("Selected ID did not match a component");
             return;
         }
+        else{
+            System.out.println(objectData.toString());
+        }
+
+        if(selectedIDs.size() == 1 && checkConnectedLoadTextMenu()){
+            setCLTMenu();
+//            applyButton.setVisible(true);
+//            return;
+        }
+
         applyButton.setVisible(true);
 
         // Determine which menu to display
@@ -122,6 +150,20 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         }
         return true;
     }
+    private boolean checkConnectedLoadTextMenu() {
+        for (String ID : selectedIDs) {
+            ComponentType type = propertiesMenuFunctions.getComponentType(ID);
+            if (type != ComponentType.CONNECTED_LOAD_TEXT) {
+                return false ;
+            }
+        }
+        return true;
+    }
+    public void setCLTMenu(){
+        buildingControl.setVisible(true);
+        transformerControl.setVisible(true);
+        warningsControl.setVisible(true);
+    }
 
     private void orientRightLeft(boolean isVertical) {
         if (isVertical) {
@@ -135,7 +177,8 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
 
     public void setComponentMenu(ComponentData data) {
         currentObjectData = data;
-
+        ComponentType type = propertiesMenuFunctions.getComponentType(selectedIDs.get(0));
+        if(type == ComponentType.CONNECTED_LOAD_TEXT) return;
         // Show correct controls
         nameControl.setVisible(true);
         namePosControl.setVisible(true);
@@ -221,8 +264,15 @@ public class PropertiesMenuViewController implements Observer<String>, Visitor {
         String subLabel = subLabelField.getText();
         String acronym = acronymField.getText();
 
+        //CLT
+        String building = buildingsField.getText();
+        String transformSize = transformerField.getText();
+        String warnings = warningsField.getText();
+
+        System.out.println("Here is the data:");
+
         // Modify the object data
-        ObjectData newData = currentObjectData.applySettings(name, nameRight, isClosed, label, subLabel, acronym);
+        ObjectData newData = currentObjectData.applySettings(name, nameRight, isClosed, label, subLabel, acronym, transformSize, building, warnings);
 
         // Send it to construction controller for application
         propertiesMenuFunctions.setObjectData(selectedIDs.get(0), newData);

@@ -6,7 +6,7 @@ public class CloseableData extends ComponentData {
     private boolean defaultState;
 
     public CloseableData(String name, boolean nameRight, boolean defaultState, double angle) {
-        super(name, nameRight, angle);
+        super(name, nameRight, angle, "", "", "'");
         this.defaultState = defaultState;
     }
 
@@ -19,7 +19,7 @@ public class CloseableData extends ComponentData {
     }
 
     @Override
-    public ObjectData applySettings(String name, boolean nameRightOrTop, boolean isClosed, String label, String subLabel, String acronym) {
+    public ObjectData applySettings(String name, boolean nameRightOrTop, boolean isClosed, String label, String subLabel, String acronym, String transformerSize, String buildings, String warnings) {
         return new CloseableData(name, getNamePos(nameRightOrTop), isClosed, getAngle());
     }
 }

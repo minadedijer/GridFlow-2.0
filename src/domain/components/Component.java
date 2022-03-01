@@ -73,7 +73,7 @@ public abstract class Component implements Selectable {
     }
 
     public ObjectData getComponentObjectData() {
-        return new ComponentData(name, nameRight, angle);
+        return new ComponentData(name, nameRight, angle, "", "", "");
     }
 
     protected abstract void createComponentIcon();

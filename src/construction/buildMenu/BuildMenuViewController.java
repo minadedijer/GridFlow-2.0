@@ -39,6 +39,7 @@ public class BuildMenuViewController {
     public Button PoleButton;
     public Button JumperButton;
     public Button CutoutButton;
+    public Button ConnectedLoadTextButton;
 
     //messing with buttons
     public Button TestButton;
@@ -144,6 +145,13 @@ public class BuildMenuViewController {
         buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.POLE);
         PoleButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
         currentButton = PoleButton;
+    }
+
+    public void selectConnectedLoadTextTool() {
+        currentButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), false);
+        buildMenuFunctions.setBuildMenuData(ToolType.PLACE, ComponentType.CONNECTED_LOAD_TEXT);
+        ConnectedLoadTextButton.pseudoClassStateChanged(PseudoClass.getPseudoClass("current"), true);
+        currentButton = ConnectedLoadTextButton;
     }
 
     public void selectCutoutTool() {
