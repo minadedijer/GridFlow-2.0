@@ -140,6 +140,15 @@
                     </graphic>
                     <tooltip><Tooltip text="Pole (P)"/></tooltip>
                 </Button>
+                <Button fx:id="ConnectedLoadTextButton" styleClass="component-button" onMousePressed="#selectConnectedLoadTextTool" prefHeight="$ButtonSize" prefWidth="$ButtonSize">
+                    <graphic>
+                        <ImageView fitHeight="$ButtonSize" fitWidth="$ButtonSize" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <Image url="@../../resources/ConnectedLoadTextIcon.png"/>
+                        </ImageView>
+                    </graphic>
+                    <tooltip><Tooltip text="Connected Load (L)"/></tooltip>
+                </Button>
             </HBox>
             <Button fx:id="ShowMenuButton" onMousePressed="#toggleMenu" alignment="CENTER" contentDisplay="CENTER" prefHeight="25" prefWidth="25" maxWidth="25" minWidth="25" styleClass="expand-button" focusTraversable="false">
                 <graphic>
