@@ -20,6 +20,7 @@ import construction.selector.observable.Observer;
 import domain.Grid;
 import domain.components.ATS;
 import domain.components.Component;
+import domain.components.ConnectedLoadText;
 import domain.components.Wire;
 import domain.geometry.Point;
 import javafx.collections.ListChangeListener;
@@ -241,9 +242,19 @@ public class SelectionManagerController {
             else {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
+                modelGrid.clearAttachedComponentIDs();
+
                 if (comp.getComponentType() == ComponentType.ATS) {
                     ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
                     modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                    System.out.println("this is cl id : " + selectedATS.getConnectedLoadID());
+                    modelGrid.addAttachedComponentIDs(selectedATS.getConnectedLoadID());
+                }
+                if (comp.getComponentType() == ComponentType.CONNECTED_LOAD_TEXT) {
+                    ConnectedLoadText selectedCLT =
+                            (ConnectedLoadText) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedCLT.getPoleID());
+                    modelGrid.addAttachedComponentIDs(selectedCLT.getCutOutID());
                 }
 
                 //Can't Drag Wires yet
@@ -335,11 +346,22 @@ public class SelectionManagerController {
             else {
                 // Find the specific component from the targetID
                 Component comp = grid.getComponent(targetIDForSingleComponent);
+                modelGrid.clearAttachedComponentIDs();
 
                 if (comp.getComponentType() == ComponentType.ATS) {
                     ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
                     modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                    System.out.println("this is cl id : " + selectedATS.getConnectedLoadID());
+                    modelGrid.addAttachedComponentIDs(selectedATS.getConnectedLoadID());
                 }
+
+                if (comp.getComponentType() == ComponentType.CONNECTED_LOAD_TEXT) {
+                    ConnectedLoadText selectedCLT =
+                            (ConnectedLoadText) grid.getComponent(targetIDForSingleComponent);
+                    modelGrid.addAttachedComponentIDs(selectedCLT.getPoleID());
+                    modelGrid.addAttachedComponentIDs(selectedCLT.getCutOutID());
+                }
+
                 // Activate the ghost mode to place the new component
                 buildMenuData.componentType = comp.getComponentType();
                 buildMenuData.toolType = ToolType.PLACE;

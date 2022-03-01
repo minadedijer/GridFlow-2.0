@@ -76,11 +76,41 @@ public class GridBuilder {
 
     public boolean placeGroup(Point position, ComponentType componentType) {
 
-        if (componentType == componentType.ATS)
+        if (componentType == componentType.ATS) {
 
             return placeSource(position, componentType);
-        else
-            return false;
+        }
+        if (componentType == componentType.CONNECTED_LOAD_TEXT) {
+
+            placeDevice(position, componentType.CONNECTED_LOAD_TEXT);
+            ConnectedLoadText clt = (ConnectedLoadText) grid.getComponent(peripheryDeviceComponent);
+            // declare the CUTOUT as a periphery component
+            isThisMainComponent = false;
+            placeDevice(position.translate(0,-60), ComponentType.CUTOUT);
+            clt.setCutOutID(peripheryDeviceComponent);
+
+            // declare the CUTOUT as a periphery component
+            isThisMainComponent = false;
+            placeDevice(position.translate(0, -60), ComponentType.POLE);
+            clt.setPoleID(peripheryDeviceComponent);
+
+
+            if (isDragging) {
+                if (!attachedComponentIDs.isEmpty()) {
+                    for (int i = 0; i < attachedComponentIDs.size(); i++) {
+                        int temp = grid.deleteSelectedItem(attachedComponentIDs.get(i));
+                        System.out.println("Here is i:  " + i);
+                    }
+                    attachedComponentIDs.clear();
+                }
+
+            }
+            
+            return true;
+
+        }
+        return false;
+
 /*
             double rotation = 0;
             boolean cutOutPlacement = true;
@@ -301,20 +331,28 @@ public class GridBuilder {
             //      This means that the ATS will always be supplying power, with no option to turn off said power.
             case ATS -> {
 
+                ATS ats = new ATS("", position, true);
+
                 // declare the CUTOUT as a periphery component
                 isThisMainComponent = false;
                 placeDevice(position.translate(0,-60), componentType.CUTOUT);
 
-                ATS ats = new ATS("", position, true);
-
                 // Set the ATS's CutOutID to the newly created CutOut.
                 ats.setAtsCutOutID(peripheryDeviceComponent);
+
+                // declare the CUTOUT as a periphery component
+                isThisMainComponent = false;
+                placeDevice(position.translate(0,60), componentType.CONNECTED_LOAD_TEXT);
+                ats.setConnectedLoadID(peripheryDeviceComponent);
+
+
                 peripheryDeviceComponent = null;
 
                 if (isDragging) {
                     if (!attachedComponentIDs.isEmpty()) {
                         for (int i = 0; i < attachedComponentIDs.size(); i++) {
-                            grid.deleteSelectedItem(attachedComponentIDs.get(i));
+                            int temp = grid.deleteSelectedItem(attachedComponentIDs.get(i));
+                            System.out.println("Here is i:  " + i);
                         }
                         attachedComponentIDs.clear();
                     }
@@ -676,6 +714,7 @@ public class GridBuilder {
     private boolean isGroup(ComponentType componentType) {
         return switch (componentType) {
             case ATS -> true;
+            case CONNECTED_LOAD_TEXT -> true;
             default -> false;
         };
     }
@@ -717,6 +756,9 @@ public class GridBuilder {
 
     public void addAttachedComponentIDs(String attachedComponentID) {
         attachedComponentIDs.add(attachedComponentID);
+    }
+    public void clearAttachedComponentIDs(){
+        attachedComponentIDs.clear();
     }
 
 

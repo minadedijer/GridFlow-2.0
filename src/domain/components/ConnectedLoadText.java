@@ -21,6 +21,9 @@ public class ConnectedLoadText extends Device {
     private String transformerSize = "Transformer Size";
     private String warnings = "No Warnings";
 
+    private String CutOutID;
+    private String poleID;
+
     public ConnectedLoadText(String name, Point position) {
         super(name, position);
         createComponentIcon();
@@ -52,6 +55,24 @@ public class ConnectedLoadText extends Device {
 
         setComponentIcon(icon);
     }
+    public String getCutOutID() {
+        return CutOutID;
+    }
+    public void setCutOutID (String CutOutID) {
+        this.CutOutID = CutOutID;
+    }
+
+    public String getPoleID () {
+        return this.poleID;
+    }
+
+    public void setPoleID(String poleID) {
+        this.poleID = poleID;
+    }
+
+
+
+
 
     @Override
     public ObjectData getComponentObjectData() {
