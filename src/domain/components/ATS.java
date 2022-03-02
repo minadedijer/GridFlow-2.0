@@ -51,6 +51,8 @@ public class ATS extends Source {
         this.STATE = node.get("STATE").asInt();
         this.atsCutOutID = node.get("atsCutOutID").asText();
         this.connectedLoadID = node.get("connectedLoadID").asText();
+        this.attachedComponentIDs = node.get("attachedComponentIDs").;
+
         createComponentIcon();
     }
 
@@ -60,6 +62,7 @@ public class ATS extends Source {
         this.mainLineNode = snapshot.mainLineNode;
         this.STATE = snapshot.STATE;
         this.connectedLoadID = snapshot.connectedLoadID;
+        this.attachedComponentIDs = snapshot.attachedComponentIDs;
         createComponentIcon();
     }
 
@@ -159,8 +162,10 @@ public class ATS extends Source {
 
     @Override
     public ComponentMemento makeSnapshot() {
-        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(), isOn(), outWire.getId().toString(),
-                STATE,  energized, mainLineNode.getId().toString(), mainLineNode, atsCutOutID, connectedLoadID);
+        return new ATSSnapshot(getId().toString(), getName(), getAngle(), getPosition(),
+                isOn(), outWire.getId().toString(),
+                STATE,  energized, mainLineNode.getId().toString(),
+                mainLineNode, atsCutOutID, connectedLoadID, attachedComponentIDs);
     }
 
     @Override
@@ -225,7 +230,7 @@ class ATSSnapshot implements ComponentMemento {
     // the states which the ATS can be in
     int STATE = 0;
     boolean energized = true;
-
+    List<String> attachedComponentIDs;
 
 
 
@@ -233,7 +238,7 @@ class ATSSnapshot implements ComponentMemento {
 
     public ATSSnapshot(String id, String name, double angle, Point pos, boolean on, String outWireID,
                        int STATE, boolean energized, String mainLineNodeID, Wire mainLineNode,
-                       String atsCutOutID, String connectedLoadID) {
+                       String atsCutOutID, String connectedLoadID, List<String> attachedComponentIDs) {
         this.id = id;
         this.name = name;
         this.angle = angle;
@@ -246,6 +251,7 @@ class ATSSnapshot implements ComponentMemento {
         this.mainLineNode = mainLineNode;
         this.atsCutOutID = atsCutOutID;
         this.connectedLoadID = connectedLoadID;
+        this.attachedComponentIDs = attachedComponentIDs;
 
     }
 
