@@ -246,9 +246,12 @@ public class SelectionManagerController {
 
                 if (comp.getComponentType() == ComponentType.ATS) {
                     ATS selectedATS = (ATS) grid.getComponent(targetIDForSingleComponent);
-                    modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
-                    System.out.println("this is cl id : " + selectedATS.getConnectedLoadID());
-                    modelGrid.addAttachedComponentIDs(selectedATS.getConnectedLoadID());
+                    //modelGrid.addAttachedComponentIDs(selectedATS.getATSCutOutID());
+                    selectedATS.addAttachedIDs(selectedATS.getATSCutOutID());
+                    selectedATS.addAttachedIDs(selectedATS.getConnectedLoadID());
+                    modelGrid.clearAttachedComponentIDs();
+                    modelGrid.setAttachedComponentIDs(selectedATS.getAttachedComponentIDs());
+                    // modelGrid.addAttachedComponentIDs(selectedATS.getConnectedLoadID());
                 }
                 if (comp.getComponentType() == ComponentType.CONNECTED_LOAD_TEXT) {
                     ConnectedLoadText selectedCLT =
@@ -316,7 +319,9 @@ public class SelectionManagerController {
                 ObjectData originalComponentData = comp.getComponentObjectData();
 
                 // Set the details of the copied component in the modelGrid
-                modelGrid.setCopiedComponentID(compName);
+                System.out.println("IN SMC: targetID: " + targetIDForSingleComponent);
+                System.out.println("IN SMC: compID:  " + compName);
+                modelGrid.setCopiedComponentID(targetIDForSingleComponent);
                 modelGrid.setOriginalComponentData(originalComponentData);
 
                 modelGrid.setIsDragging(true);

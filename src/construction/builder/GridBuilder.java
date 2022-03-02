@@ -105,7 +105,7 @@ public class GridBuilder {
                 }
 
             }
-            
+
             return true;
 
         }
@@ -340,21 +340,26 @@ public class GridBuilder {
                 // Set the ATS's CutOutID to the newly created CutOut.
                 ats.setAtsCutOutID(peripheryDeviceComponent);
 
+                ats.addAttachedIDs(peripheryDeviceComponent);
+
                 // declare the CUTOUT as a periphery component
                 isThisMainComponent = false;
                 placeDevice(position.translate(0,60), componentType.CONNECTED_LOAD_TEXT);
                 ats.setConnectedLoadID(peripheryDeviceComponent);
-
+                ats.addAttachedIDs(peripheryDeviceComponent);
 
                 peripheryDeviceComponent = null;
 
                 if (isDragging) {
+
+                    System.out.println("In ATS Delete: comp ID:  " + copiedComponentID);
+
                     if (!attachedComponentIDs.isEmpty()) {
                         for (int i = 0; i < attachedComponentIDs.size(); i++) {
-                            int temp = grid.deleteSelectedItem(attachedComponentIDs.get(i));
+                             int temp = grid.deleteSelectedItem(attachedComponentIDs.get(i));
                             System.out.println("Here is i:  " + i);
                         }
-                        attachedComponentIDs.clear();
+                        this.clearAttachedComponentIDs();
                     }
 
                 }
@@ -364,12 +369,6 @@ public class GridBuilder {
                 // declare the ATS as the main component
                 checkIfComponentIsACopy(ats);
 
-                /*
-                grid.deleteSelectedItem(ats.getATSCutOutID());
-                ats.setAtsCutOutID(ats.getTempID());
-
-                */
-
                 if(!verifyPlacement(ats)) return false;
                 if (DEBUG) {
                     System.out.println("Got past verify placement");
@@ -378,12 +377,15 @@ public class GridBuilder {
                 Component conflictComponent = verifySingleWirePosition(outWire);
                 if(conflictComponent == null) { // use new wire
                     ats.connectWire(outWire);
+                    ats.addAttachedIDs(outWire.getId().toString());
                     outWire.connect(ats);
                     grid.addComponent(outWire);
                 }
                 else if (conflictComponent instanceof Wire){ // there is a wire conflict, connect this wire
                     outWire = (Wire) conflictComponent;
                     ats.connectWire(outWire);
+                    ats.addAttachedIDs(outWire.getId().toString());
+
                     outWire.connect(ats);
                 }
 
@@ -391,46 +393,25 @@ public class GridBuilder {
                     conflictComponent.getComponentIcon().showError();
                     return false;
                 }
-/*
-                Point sensorPoint = position.translate(0, 0);
-                Wire sensorWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
-                Wire tempWire = new Wire(sensorPoint.rotate(properties.getRotation(), position));
-
-                conflictComponent = verifySingleWirePosition(sensorWire);
-
-                if(conflictComponent == null) { // use new wire
-
-                    grid.addComponent(sensorWire);
-                }
-                else if (conflictComponent instanceof Wire){
-                    tempWire = (Wire) conflictComponent;
-                    sensorWire.connect(tempWire);
-                }
-                else{
-                    conflictComponent.getComponentIcon().showError();
-                    return false;
-                }
-*/
 
                 Wire inWire = new Wire(position);
                 conflictComponent = verifySingleWirePosition(inWire);
 
                 if(conflictComponent == null) { // use new wire
                     ats.setMainLineNode(inWire);
-                   // inWire.connect(ats);
+                    ats.addAttachedIDs(inWire.getId().toString());
                     grid.addComponent(inWire);
                 }
                 else if (conflictComponent instanceof Wire){
                     inWire = (Wire) conflictComponent;
                     ats.setMainLineNode(inWire);
-                   // inWire.connect(ats);
+                    ats.addAttachedIDs(inWire.getId().toString());
                 }
                 else{
                     conflictComponent.getComponentIcon().showError();
                     return false;
                 }
 
-               // ats.setMainLineNode(sensorWire);
                 grid.addComponents(ats);
             }
 
@@ -759,6 +740,10 @@ public class GridBuilder {
     }
     public void clearAttachedComponentIDs(){
         attachedComponentIDs.clear();
+    }
+
+    public void setAttachedComponentIDs(List<String> componentIDs) {
+        this.attachedComponentIDs = componentIDs;
     }
 
 

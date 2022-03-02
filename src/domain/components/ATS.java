@@ -10,6 +10,7 @@ import domain.geometry.Point;
 import visualization.componentIcons.ComponentIconCreator;
 import visualization.componentIcons.SourceIcon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,13 @@ public class ATS extends Source {
     private Wire mainLineNode;
     private String atsCutOutID;
     private String connectedLoadID;
+
+    // This is a precursor implementation to keep track of the various ID's associated
+    //      with the component. If this implementation works, this list should be abstracted
+    //      to all components, as all devices are connected to multiple components (wires, periphery, etc).
+
+    private List<String> attachedComponentIDs = new ArrayList<String>();
+
 
     // the states which the ATS can be in
     private int STATE = 0;
@@ -185,6 +193,19 @@ public class ATS extends Source {
     public void setAtsCutOutID(String cutOutID) {
         this.atsCutOutID = cutOutID;
     }
+
+    public void addAttachedIDs(String attachedID) {
+        this.attachedComponentIDs.add(attachedID);
+    }
+
+    public void clearAttachedIDs() {
+        this.attachedComponentIDs.clear();
+    }
+
+    public List<String> getAttachedComponentIDs (){
+        return attachedComponentIDs;
+    }
+
 
 
 
