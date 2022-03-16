@@ -71,6 +71,7 @@ public class GridFileManager {
                 case "Wire" -> createWireFromJson(componentJSON);
                 case "Pole" -> new Pole(componentJSON);
                 case "ATS" -> new ATS(componentJSON);
+                case "ConnectedLoadText" -> new ConnectedLoadText(componentJSON);
                 default -> throw new UnsupportedOperationException();
             };
             grid.addComponent(component);
@@ -101,7 +102,7 @@ public class GridFileManager {
     private List<Component> getConnectionsList(JsonNode node) {
         List<Component> connections = new ArrayList<>();
         switch (node.get("type").asText()) {
-            case "Breaker", "Cutout", "Jumper", "Switch", "Transformer" -> {
+            case "Breaker", "Cutout", "Jumper", "Switch", "Transformer", "Pole", "ConnectedLoadText" -> {
                 connections.add(grid.getComponent(node.get("inWire").asText()));
                 connections.add(grid.getComponent(node.get("outWire").asText()));
             }
@@ -112,6 +113,13 @@ public class GridFileManager {
                 connections.add(grid.getComponent(node.get("outWire1").asText()));
                 connections.add(grid.getComponent(node.get("outWire2").asText()));
             }
+            case "ATS" -> {
+
+                connections.add(grid.getComponent(node.get("outWire").asText()));
+                connections.add(grid.getComponent(node.get("mainLineNode").asText()));
+            }
+
+
             case "Wire" -> {
                 ArrayNode jsonConnections = (ArrayNode)node.get("connections");
                 jsonConnections.forEach(jsonConnection ->

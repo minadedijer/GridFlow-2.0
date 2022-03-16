@@ -1,0 +1,23 @@
+{
+  "components" : [ {
+    "id" : "d05e568e-d3f0-4d5f-afae-944653dab3bf",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9860.0,4880.0",
+    "end" : "9860.0,4880.0",
+    "connections" : [ "9bb1b029-8767-41b0-be02-8b1a8a85a33e", "9bb1b029-8767-41b0-be02-8b1a8a85a33e" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "9bb1b029-8767-41b0-be02-8b1a8a85a33e",
+    "type" : "Pole",
+    "name" : "",
+    "pos" : "9860.0,4880.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "d05e568e-d3f0-4d5f-afae-944653dab3bf",
+    "outWire" : "d05e568e-d3f0-4d5f-afae-944653dab3bf"
+  } ],
+  "associations" : [ ]
+}

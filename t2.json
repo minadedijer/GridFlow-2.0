@@ -1,0 +1,88 @@
+{
+  "components" : [ {
+    "id" : "d40e2c37-0ffa-4e4f-8107-1d5713fed612",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9740.0,4960.0",
+    "end" : "9740.0,4960.0",
+    "connections" : [ "a1e44841-b79f-4ffe-b530-b650ad6f0b8d" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "a1e44841-b79f-4ffe-b530-b650ad6f0b8d",
+    "type" : "PowerSource",
+    "name" : "",
+    "pos" : "9740.0,4960.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "on" : false,
+    "outWire" : "d40e2c37-0ffa-4e4f-8107-1d5713fed612"
+  }, {
+    "id" : "04412a01-ce8b-4960-adaf-ecf7c61ba605",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9860.0,4900.0",
+    "end" : "9860.0,4900.0",
+    "connections" : [ "e3fd7ec0-85c8-4463-b4b1-4facd4781cd4" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "5d8b5704-5f22-43fa-bdae-f42171b578db",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9860.0,4960.0",
+    "end" : "9860.0,4960.0",
+    "connections" : [ "e3fd7ec0-85c8-4463-b4b1-4facd4781cd4" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "e3fd7ec0-85c8-4463-b4b1-4facd4781cd4",
+    "type" : "Cutout",
+    "name" : "",
+    "pos" : "9860.0,4900.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "04412a01-ce8b-4960-adaf-ecf7c61ba605",
+    "outWire" : "5d8b5704-5f22-43fa-bdae-f42171b578db",
+    "closed" : true,
+    "closedByDefault" : true,
+    "locked" : false
+  }, {
+    "id" : "314cc1eb-f511-458b-92da-86bac31f2ca6",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9860.0,5020.0",
+    "end" : "9860.0,5020.0",
+    "connections" : [ "5650c4eb-f24e-4b4b-8ed7-5a0bc50fea9d", "38c7211d-0a85-4fa0-bc04-a8d63cf81a95" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "5650c4eb-f24e-4b4b-8ed7-5a0bc50fea9d",
+    "type" : "ConnectedLoadText",
+    "name" : "",
+    "pos" : "9860.0,5020.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "314cc1eb-f511-458b-92da-86bac31f2ca6",
+    "outWire" : "314cc1eb-f511-458b-92da-86bac31f2ca6"
+  }, {
+    "id" : "38c7211d-0a85-4fa0-bc04-a8d63cf81a95",
+    "type" : "ATS",
+    "name" : "",
+    "pos" : "9860.0,4960.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "on" : true,
+    "outWire" : "314cc1eb-f511-458b-92da-86bac31f2ca6",
+    "mainLineNode" : "5d8b5704-5f22-43fa-bdae-f42171b578db",
+    "energized" : false,
+    "STATE" : 2,
+    "atsCutOutID" : "e3fd7ec0-85c8-4463-b4b1-4facd4781cd4",
+    "connectedLoadID" : "5650c4eb-f24e-4b4b-8ed7-5a0bc50fea9d"
+  } ],
+  "associations" : [ ]
+}

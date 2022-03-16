@@ -36,7 +36,9 @@ public class GridBuilderController {
     private Grid grid;
     private GridCanvasFacade canvasFacade;
 
-    // If user wants to trace back function information, set DEBUG to true
+    // If user wants to trace back
+    //      specific  function information,
+    //      set DEBUG to true
     private boolean DEBUG = false;
 
     // these Contexts store data needed for actions that take place over time

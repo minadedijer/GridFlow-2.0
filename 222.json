@@ -1,0 +1,119 @@
+{
+  "components" : [ {
+    "id" : "ebaa90ca-e7b5-427c-b584-38e36eeb267e",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9900.0,4860.0",
+    "end" : "9900.0,4860.0",
+    "connections" : [ "985eeea4-0fb9-4766-9ef7-5cea346afa51", "5199be73-fb10-4eb1-b3b0-135eabcbe1f6" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "985eeea4-0fb9-4766-9ef7-5cea346afa51",
+    "type" : "ConnectedLoadText",
+    "name" : "",
+    "pos" : "9900.0,4860.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "ebaa90ca-e7b5-427c-b584-38e36eeb267e",
+    "outWire" : "ebaa90ca-e7b5-427c-b584-38e36eeb267e"
+  }, {
+    "id" : "51e09eb7-cf53-4209-ac60-edf832e8a932",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9900.0,4800.0",
+    "end" : "9900.0,4800.0",
+    "connections" : [ "5199be73-fb10-4eb1-b3b0-135eabcbe1f6", "77bbe87f-69d4-411c-9234-fcded573669e", "77bbe87f-69d4-411c-9234-fcded573669e" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "5199be73-fb10-4eb1-b3b0-135eabcbe1f6",
+    "type" : "Cutout",
+    "name" : "",
+    "pos" : "9900.0,4800.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "51e09eb7-cf53-4209-ac60-edf832e8a932",
+    "outWire" : "ebaa90ca-e7b5-427c-b584-38e36eeb267e",
+    "closed" : true,
+    "closedByDefault" : true,
+    "locked" : false
+  }, {
+    "id" : "77bbe87f-69d4-411c-9234-fcded573669e",
+    "type" : "Pole",
+    "name" : "",
+    "pos" : "9900.0,4800.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "51e09eb7-cf53-4209-ac60-edf832e8a932",
+    "outWire" : "51e09eb7-cf53-4209-ac60-edf832e8a932"
+  }, {
+    "id" : "a0dfda72-1683-4e98-94f3-acb4c52ace7c",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9660.0,4860.0",
+    "end" : "9660.0,4860.0",
+    "connections" : [ "fc3386b9-dddd-4479-b490-4a2ddc2316c7" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "f7962036-b429-48ba-b518-86922a744e58",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9660.0,4920.0",
+    "end" : "9660.0,4920.0",
+    "connections" : [ "fc3386b9-dddd-4479-b490-4a2ddc2316c7" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "fc3386b9-dddd-4479-b490-4a2ddc2316c7",
+    "type" : "Cutout",
+    "name" : "",
+    "pos" : "9660.0,4860.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "a0dfda72-1683-4e98-94f3-acb4c52ace7c",
+    "outWire" : "f7962036-b429-48ba-b518-86922a744e58",
+    "closed" : true,
+    "closedByDefault" : true,
+    "locked" : false
+  }, {
+    "id" : "51c06bc2-df8d-40c2-9fea-e5c6020f6601",
+    "type" : "Wire",
+    "name" : "",
+    "angle" : 0.0,
+    "namepos" : true,
+    "start" : "9660.0,4980.0",
+    "end" : "9660.0,4980.0",
+    "connections" : [ "aa068d2d-3531-4800-9e2f-0ccadea3b8c0", "c57205a1-cd29-451f-8533-6bab97fb249b" ],
+    "bridgePoints" : [ ]
+  }, {
+    "id" : "aa068d2d-3531-4800-9e2f-0ccadea3b8c0",
+    "type" : "ConnectedLoadText",
+    "name" : "",
+    "pos" : "9660.0,4980.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "inWire" : "51c06bc2-df8d-40c2-9fea-e5c6020f6601",
+    "outWire" : "51c06bc2-df8d-40c2-9fea-e5c6020f6601"
+  }, {
+    "id" : "c57205a1-cd29-451f-8533-6bab97fb249b",
+    "type" : "ATS",
+    "name" : "",
+    "pos" : "9660.0,4920.0",
+    "angle" : 0.0,
+    "namepos" : true,
+    "on" : true,
+    "outWire" : "51c06bc2-df8d-40c2-9fea-e5c6020f6601",
+    "mainLineNode" : "f7962036-b429-48ba-b518-86922a744e58",
+    "energized" : false,
+    "STATE" : 2,
+    "atsCutOutID" : "fc3386b9-dddd-4479-b490-4a2ddc2316c7",
+    "connectedLoadID" : "aa068d2d-3531-4800-9e2f-0ccadea3b8c0"
+  } ],
+  "associations" : [ ]
+}

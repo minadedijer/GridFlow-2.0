@@ -51,7 +51,7 @@ public class ATS extends Source {
         this.STATE = node.get("STATE").asInt();
         this.atsCutOutID = node.get("atsCutOutID").asText();
         this.connectedLoadID = node.get("connectedLoadID").asText();
-        this.attachedComponentIDs = node.get("attachedComponentIDs").;
+        //this.attachedComponentIDs = node.get("attachedComponentIDs").;
 
         createComponentIcon();
     }
