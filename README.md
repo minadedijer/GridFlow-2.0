@@ -29,7 +29,14 @@ These instructions are for IntelliJ IDEA
 11. Press Run.
 
 ## Credits
-### Programming Team
+### Programming Team (GridFlow 2.0)
+* Ali Mohammed [(@saadmohammad122)](https://github.com/saadmohammad122)
+* Regina Chapuis [(@regchapuis)](https://github.com/regchapuis)
+* Leland Mika [(@LelandJMika)](https://github.com/LelandJMika)
+* Mina Dedijer [(@minadedijer)](https://github.com/minadedijer)
+
+
+### Programming Team (GridFlow 1.0)
 * Connor McKee [(@Connor1McKee)](https://github.com/Connor1McKee)
 * Iñaki Madrigal [(@inaki332)](https://github.com/inaki332)
 * Davis Reschenberg [(@dreschen)](https://github.com/dreschen)
