@@ -35,6 +35,8 @@ These instructions are for IntelliJ IDEA
 * Leland Mika [(@LelandJMika)](https://github.com/LelandJMika)
 * Mina Dedijer [(@minadedijer)](https://github.com/minadedijer)
 
+![Programming Team Members](src/resources/gridflow2team.jpg)
+
 
 ### Programming Team (GridFlow 1.0)
 * Connor McKee [(@Connor1McKee)](https://github.com/Connor1McKee)
